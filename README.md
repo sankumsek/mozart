@@ -11,8 +11,6 @@ Mozart is constructed from fully decoupled components (bundles in Symfony2 gloss
 
 ## License ##
 
-Author [Furculita Alexandru @afurculita](http://twitter.com/afurculita)
-
-Copyright © 2014 [Rhetina Studios @rhetina_studios](http://twitter.com/rhetina_studios)
+Copyright © 2014 - 2099 [Furculita Alexandru @afurculita](http://twitter.com/afurculita)
 
 Licensed under the GPL-3.0+ license.

@@ -6,7 +6,7 @@ Description: Mozart is a web application framework for WordPress.
 Author: Alexandru Furculita (rhetina)
 Author URI: http://www.rhetina.com/
 Text Domain: mozart
-Domain Path: /backstage/translations
+Domain Path: /translations
 Version: 1.0.0
 */
 
