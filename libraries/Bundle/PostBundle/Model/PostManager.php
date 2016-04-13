@@ -1,11 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace  Mozart\Bundle\PostBundle\Model;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\DependencyInjection\Container;
 use Mozart\Bundle\NucleusBundle\Model\AbstractManager;
+use Symfony\Component\DependencyInjection\Container;
 
 class PostManager extends AbstractManager implements PostManagerInterface
 {
@@ -28,7 +37,7 @@ class PostManager extends AbstractManager implements PostManagerInterface
     {
         parent::__construct($container);
 
-        $this->em         = $this->getEntityManager();
+        $this->em = $this->getEntityManager();
         $this->repository = $this->em->getRepository('MozartPostBundle:Post');
     }
 

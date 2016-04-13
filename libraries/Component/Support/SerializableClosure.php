@@ -1,4 +1,15 @@
-<?php namespace Mozart\Component\Support;
+<?php
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Mozart\Component\Support;
 
 use Jeremeamia\SuperClosure\SerializableClosure as SuperClosure;
 
@@ -8,21 +19,21 @@ use Jeremeamia\SuperClosure\SerializableClosure as SuperClosure;
 class SerializableClosure extends SuperClosure
 {
     /**
-     * The code for the closure
+     * The code for the closure.
      *
      * @var string
      */
     protected $code;
 
     /**
-     * The variables that were "used" or imported from the parent scope
+     * The variables that were "used" or imported from the parent scope.
      *
      * @var array
      */
     protected $variables;
 
     /**
-     * Returns the code of the closure being serialized
+     * Returns the code of the closure being serialized.
      *
      * @return string
      */
@@ -34,7 +45,7 @@ class SerializableClosure extends SuperClosure
     }
 
     /**
-     * Returns the "used" variables of the closure being serialized
+     * Returns the "used" variables of the closure being serialized.
      *
      * @return array
      */
@@ -46,7 +57,7 @@ class SerializableClosure extends SuperClosure
     }
 
     /**
-     * Uses the serialize method directly to lazily fetch the code and variables if needed
+     * Uses the serialize method directly to lazily fetch the code and variables if needed.
      */
     protected function determineCodeAndVariables()
     {
@@ -54,5 +65,4 @@ class SerializableClosure extends SuperClosure
             list($this->code, $this->variables) = unserialize($this->serialize());
         }
     }
-
 }

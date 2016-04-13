@@ -1,9 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace  Mozart\Bundle\NucleusBundle\Security\Http;
 
-use  Mozart\Bundle\NucleusBundle\Security\Authentication\Token\WordpressToken;
-use  Mozart\Bundle\NucleusBundle\Wordpress\ConfigurationManager;
+use Mozart\Bundle\NucleusBundle\Security\Authentication\Token\WordpressToken;
+use Mozart\Bundle\NucleusBundle\Wordpress\ConfigurationManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,13 +56,12 @@ class WordpressCookieService
     /**
      * @param Request $request
      *
-     * @return null           Return null if failed to retrieve token.
      * @return WordpressToken Return WordpressToken if success.
      */
     public function autoLogin(Request $request)
     {
         if (null === $cookie = $request->cookies->get($this->configuration->getLoggedInCookieName())) {
-             return null;
+            return;
         }
 
         if (null !== $this->logger) {
@@ -86,7 +94,7 @@ class WordpressCookieService
 
         $this->cancelCookie($request);
 
-        return null;
+        return;
     }
 
     /**
@@ -98,6 +106,7 @@ class WordpressCookieService
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Security\Core\Exception\AuthenticationException
+     *
      * @return TokenInterface
      */
     protected function processAutoLoginCookie(array $cookieParts, Request $request)
@@ -137,6 +146,7 @@ class WordpressCookieService
      * @param $username
      * @param $expires
      * @param $password
+     *
      * @return string
      */
     protected function generateHmac($username, $expires, $password)
@@ -144,7 +154,7 @@ class WordpressCookieService
         $passwordFrag = substr($password, 8, 4);
 
         // from wp_salt()
-        $salt = $this->configuration->getLoggedInKey() . $this->configuration->getLoggedInSalt();
+        $salt = $this->configuration->getLoggedInKey().$this->configuration->getLoggedInSalt();
 
         // from wp_hash()
         $key = hash_hmac('md5', $username.$passwordFrag.'|'.$expires, $salt);
@@ -164,11 +174,11 @@ class WordpressCookieService
      */
     public function loginSuccess(Request $request, Response $response, TokenInterface $token)
     {
-        $user       = $token->getUser();
-        $username   = $user->getUsername();
-        $password   = $user->getPassword();
+        $user = $token->getUser();
+        $username = $user->getUsername();
+        $password = $user->getPassword();
         $expiration = time() + $this->options['lifetime'];
-        $hmac       = $this->generateHmac($username, $expiration, $password);
+        $hmac = $this->generateHmac($username, $expiration, $password);
 
         if (false === $request->cookies->has($this->configuration->getLoggedInCookieName())) {
             $response->headers->setCookie(
@@ -184,7 +194,7 @@ class WordpressCookieService
     }
 
     /**
-     * Deletes the WordPress cookie
+     * Deletes the WordPress cookie.
      *
      * @param Request $request
      */
@@ -207,7 +217,7 @@ class WordpressCookieService
     }
 
     /**
-     * Decodes the raw cookie value
+     * Decodes the raw cookie value.
      *
      * @param string $rawCookie
      *
@@ -219,7 +229,7 @@ class WordpressCookieService
     }
 
     /**
-     * Encodes the cookie parts
+     * Encodes the cookie parts.
      *
      * @param array $cookieParts
      *
@@ -229,5 +239,4 @@ class WordpressCookieService
     {
         return implode(self::COOKIE_DELIMITER, $cookieParts);
     }
-
 }

@@ -1,15 +1,23 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Component\Config\Page;
 
 use Mozart\Component\Support\Str;
 
 /**
- * Class ConfigPage
- * @package Mozart\Component\Config\Page
+ * Class ConfigPage.
  */
 abstract class ConfigPage implements ConfigPageInterface
 {
@@ -21,11 +29,11 @@ abstract class ConfigPage implements ConfigPageInterface
 
     protected function getClassBaseName()
     {
-        $className = get_class( $this );
+        $className = get_class($this);
         $className = str_replace('SettingsPage', '', $className);
         $className = str_replace('ConfigPage', '', $className);
 
-        return substr( strrchr( $className, '\\' ), 1 );
+        return substr(strrchr($className, '\\'), 1);
     }
 
     /**
@@ -34,8 +42,7 @@ abstract class ConfigPage implements ConfigPageInterface
     public function getKey()
     {
         if (null === $this->key) {
-
-            $this->key = Str::slug( Str::snake( static::DOMAIN . ' ' . $this->getClassBaseName() . ' Settings Page'  ), '-' );
+            $this->key = Str::slug(Str::snake(static::DOMAIN.' '.$this->getClassBaseName().' Settings Page'), '-');
         }
 
         return $this->key;
@@ -46,12 +53,12 @@ abstract class ConfigPage implements ConfigPageInterface
      */
     public function getName()
     {
-        return Str::title( static::DOMAIN . ': ' . Str::snake( $this->getClassBaseName(), ' ' ) . ' Settings' );
+        return Str::title(static::DOMAIN.': '.Str::snake($this->getClassBaseName(), ' ').' Settings');
     }
 
     public function getShortName()
     {
-        $shortName = Str::title( Str::snake( $this->getClassBaseName(), ' ' ) );
+        $shortName = Str::title(Str::snake($this->getClassBaseName(), ' '));
 
         return $shortName;
     }

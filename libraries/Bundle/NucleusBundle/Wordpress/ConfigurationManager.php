@@ -1,11 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\NucleusBundle\Wordpress;
 
 /**
- * Class ConfigurationManager
- *
- * @package Mozart\Bundle\NucleusBundle\Wordpress
+ * Class ConfigurationManager.
  */
 class ConfigurationManager
 {
@@ -39,15 +46,14 @@ class ConfigurationManager
      */
     public function __construct($siteUrl, $cookiePath = '/', $cookieDomain = null, $loggedInKey, $loggedInSalt)
     {
-        $this->siteUrl      = $siteUrl;
-        $this->cookiePath   = $cookiePath;
+        $this->siteUrl = $siteUrl;
+        $this->cookiePath = $cookiePath;
         $this->cookieDomain = $cookieDomain;
-        $this->loggedInKey  = $loggedInKey;
+        $this->loggedInKey = $loggedInKey;
         $this->loggedInSalt = $loggedInSalt;
     }
 
     /**
-     * @return null
      */
     public function getCookieDomain()
     {
@@ -91,6 +97,6 @@ class ConfigurationManager
      */
     public function getLoggedInCookieName()
     {
-        return 'wordpress_logged_in_' . md5( $this->getSiteUrl() );
+        return 'wordpress_logged_in_'.md5($this->getSiteUrl());
     }
 }

@@ -1,17 +1,24 @@
 <?php
 
-/**
- * Datatype for WordPress's meta value
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Datatype for WordPress's meta value.
+ */
 namespace Mozart\Bundle\NucleusBundle\Types;
 
-use Doctrine\DBAL\Types\TextType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\TextType;
 
 /**
- * Class WordpressMetaType
- * @package Mozart\Bundle\NucleusBundle\Types
+ * Class WordpressMetaType.
  */
 class WordpressMetaType extends TextType
 {
@@ -21,28 +28,30 @@ class WordpressMetaType extends TextType
     const NAME = 'wordpressmeta';
 
     /**
-     * @param  mixed            $value
-     * @param  AbstractPlatform $platform
+     * @param mixed            $value
+     * @param AbstractPlatform $platform
+     *
      * @return mixed
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        if ($this->isSerialized( $value )) {
-            return @unserialize( $value );
+        if ($this->isSerialized($value)) {
+            return @unserialize($value);
         }
 
         return $value;
     }
 
     /**
-     * @param  mixed            $value
-     * @param  AbstractPlatform $platform
+     * @param mixed            $value
+     * @param AbstractPlatform $platform
+     *
      * @return mixed|string
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if (is_array( $value ) || is_object( $value )) {
-            return serialize( $value );
+        if (is_array($value) || is_object($value)) {
+            return serialize($value);
         }
 
         return $value;
@@ -62,20 +71,21 @@ class WordpressMetaType extends TextType
      * If $data is not an string, then returned value will always be false.
      * Serialized data is always a string.
      *
-     * @param  mixed $data Value to check to see if was serialized.
-     * @return bool  False if not serialized and true if it was.
+     * @param mixed $data Value to check to see if was serialized.
+     *
+     * @return bool False if not serialized and true if it was.
      */
     private function isSerialized($data)
     {
         // if it isn't a string, it isn't serialized
-        if (!is_string( $data )) {
+        if (!is_string($data)) {
             return false;
         }
-        $data = trim( $data );
-        if ('N;' == $data) {
+        $data = trim($data);
+        if ('N;' === $data) {
             return true;
         }
-        $length = strlen( $data );
+        $length = strlen($data);
         if ($length < 4) {
             return false;
         }
@@ -94,11 +104,11 @@ class WordpressMetaType extends TextType
                 }
             case 'a' :
             case 'O' :
-                return (bool) preg_match( "/^{$token}:[0-9]+:/s", $data );
+                return (bool) preg_match("/^{$token}:[0-9]+:/s", $data);
             case 'b' :
             case 'i' :
             case 'd' :
-                return (bool) preg_match( "/^{$token}:[0-9.E-]+;\$/", $data );
+                return (bool) preg_match("/^{$token}:[0-9.E-]+;\$/", $data);
         }
 
         return false;

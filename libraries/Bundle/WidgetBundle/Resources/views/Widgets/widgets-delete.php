@@ -13,7 +13,7 @@
     ); ?>
     </div>
     <div class="buttons">
-        <button type="button" class="button-link btn-cancel"><?php _e( 'Cancel', CSB_LANG ); ?></button>
-        <button type="button" class="button-primary btn-delete"><?php _e( 'Yes, delete it', CSB_LANG ); ?></button>
+        <button type="button" class="button-link btn-cancel"><?php _e('Cancel', CSB_LANG); ?></button>
+        <button type="button" class="button-primary btn-delete"><?php _e('Yes, delete it', CSB_LANG); ?></button>
     </div>
 </div>

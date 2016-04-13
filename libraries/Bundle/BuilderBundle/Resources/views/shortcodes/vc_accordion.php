@@ -1,4 +1,14 @@
 <?php
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 wp_enqueue_script('jquery-ui-accordion');
 $output = $title = $interval = $el_class = $collapsible = $active_tab = '';
 //
@@ -7,11 +17,11 @@ extract(shortcode_atts(array(
     'interval' => 0,
     'el_class' => '',
     'collapsible' => 'no',
-    'active_tab' => '1'
+    'active_tab' => '1',
 ), $atts));
 
 $el_class = $this->getExtraClass($el_class);
-$css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, 'wpb_accordion wpb_content_element ' . $el_class . ' not-column-inherit', $this->settings['base'], $atts );
+$css_class = apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, 'wpb_accordion wpb_content_element '.$el_class.' not-column-inherit', $this->settings['base'], $atts);
 
 $output .= "\n\t".'<div class="'.$css_class.'" data-collapsible='.$collapsible.' data-active-tab="'.$active_tab.'">'; //data-interval="'.$interval.'"
 $output .= "\n\t\t".'<div class="wpb_wrapper wpb_accordion_wrapper ui-accordion">';

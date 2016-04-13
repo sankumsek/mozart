@@ -1,4 +1,14 @@
 <?php
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Component\Post\Connection\Side;
 
 use Mozart\Component\Post\Connection\Item\Item;
@@ -33,7 +43,7 @@ abstract class Side
 
     final public function is_same_type(Side $side)
     {
-        return $this->get_object_type() == $side->get_object_type();
+        return $this->get_object_type() === $side->get_object_type();
     }
 
     /**
@@ -43,20 +53,20 @@ abstract class Side
     {
         $class = $this->item_type;
 
-        if (is_a( $arg, 'Item' )) {
-            if (!is_a( $arg, $class )) {
+        if (is_a($arg, 'Item')) {
+            if (!is_a($arg, $class)) {
                 return false;
             }
 
             $arg = $arg->get_object();
         }
 
-        $raw_item = $this->recognize( $arg );
+        $raw_item = $this->recognize($arg);
         if (!$raw_item) {
             return false;
         }
 
-        return new $class( $raw_item );
+        return new $class($raw_item);
     }
 
     abstract protected function recognize($arg);

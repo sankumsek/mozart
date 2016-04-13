@@ -1,11 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\ShortcodeBundle;
 
 /**
- * Class ShortcodeChain
- *
- * @package Mozart\Bundle\ShortcodeBundle
+ * Class ShortcodeChain.
  */
 class ShortcodeChain
 {
@@ -25,7 +32,7 @@ class ShortcodeChain
     public function onWordpressInit()
     {
         foreach ($this->getShortcodes() as $name => $shortcode) {
-            add_shortcode( $name, array( $shortcode, 'process' ) );
+            add_shortcode($name, array($shortcode, 'process'));
         }
     }
 
@@ -58,13 +65,13 @@ class ShortcodeChain
      */
     public function process($content)
     {
-        if (empty( $this->shortcodes )) {
+        if (empty($this->shortcodes)) {
             return $content;
         }
 
         $pattern = $this->getShortcodeRegex();
 
-        return preg_replace_callback( "/$pattern/s", array( $this, 'doShortcodeTag' ), $content );
+        return preg_replace_callback("/$pattern/s", array($this, 'doShortcodeTag'), $content);
     }
 
     /**
@@ -86,40 +93,40 @@ class ShortcodeChain
      */
     private function getShortcodeRegex()
     {
-        $tagnames = array_keys( $this->shortcodes );
-        $tagregexp = join( '|', array_map( 'preg_quote', $tagnames ) );
+        $tagnames = array_keys($this->shortcodes);
+        $tagregexp = implode('|', array_map('preg_quote', $tagnames));
 
         // WARNING! Do not change this regex without changing do_shortcode_tag() and strip_shortcode_tag()
         // Also, see shortcode_unautop() and shortcode.js.
         return
             '\\[' // Opening bracket
-            . '(\\[?)' // 1: Optional second opening bracket for escaping shortcodes: [[tag]]
-            . "($tagregexp)" // 2: Shortcode name
-            . '(?![\\w-])' // Not followed by word character or hyphen
-            . '(' // 3: Unroll the loop: Inside the opening shortcode tag
-            . '[^\\]\\/]*' // Not a closing bracket or forward slash
-            . '(?:'
-            . '\\/(?!\\])' // A forward slash not followed by a closing bracket
-            . '[^\\]\\/]*' // Not a closing bracket or forward slash
-            . ')*?'
-            . ')'
-            . '(?:'
-            . '(\\/)' // 4: Self closing tag ...
-            . '\\]' // ... and closing bracket
-            . '|'
-            . '\\]' // Closing bracket
-            . '(?:'
-            . '(' // 5: Unroll the loop: Optionally, anything between the opening and closing shortcode tags
-            . '[^\\[]*+' // Not an opening bracket
-            . '(?:'
-            . '\\[(?!\\/\\2\\])' // An opening bracket not followed by the closing shortcode tag
-            . '[^\\[]*+' // Not an opening bracket
-            . ')*+'
-            . ')'
-            . '\\[\\/\\2\\]' // Closing shortcode tag
-            . ')?'
-            . ')'
-            . '(\\]?)'; // 6: Optional second closing brocket for escaping shortcodes: [[tag]]
+.'(\\[?)' // 1: Optional second opening bracket for escaping shortcodes: [[tag]]
+."($tagregexp)" // 2: Shortcode name
+.'(?![\\w-])' // Not followed by word character or hyphen
+.'(' // 3: Unroll the loop: Inside the opening shortcode tag
+.'[^\\]\\/]*' // Not a closing bracket or forward slash
+.'(?:'
+            .'\\/(?!\\])' // A forward slash not followed by a closing bracket
+.'[^\\]\\/]*' // Not a closing bracket or forward slash
+.')*?'
+            .')'
+            .'(?:'
+            .'(\\/)' // 4: Self closing tag ...
+.'\\]' // ... and closing bracket
+.'|'
+            .'\\]' // Closing bracket
+.'(?:'
+            .'(' // 5: Unroll the loop: Optionally, anything between the opening and closing shortcode tags
+.'[^\\[]*+' // Not an opening bracket
+.'(?:'
+            .'\\[(?!\\/\\2\\])' // An opening bracket not followed by the closing shortcode tag
+.'[^\\[]*+' // Not an opening bracket
+.')*+'
+            .')'
+            .'\\[\\/\\2\\]' // Closing shortcode tag
+.')?'
+            .')'
+            .'(\\]?)'; // 6: Optional second closing brocket for escaping shortcodes: [[tag]]
     }
 
     /**
@@ -132,19 +139,19 @@ class ShortcodeChain
     public function doShortcodeTag($m)
     {
         // allow [[foo]] syntax for escaping a tag
-        if ($m[1] == '[' && $m[6] == ']') {
-            return substr( $m[0], 1, -1 );
+        if ($m[1] === '[' && $m[6] === ']') {
+            return substr($m[0], 1, -1);
         }
 
         $tag = $m[2];
-        $attr = $this->parseAttributes( $m[3] );
+        $attr = $this->parseAttributes($m[3]);
 
-        if (isset( $m[5] )) {
+        if (isset($m[5])) {
             // enclosing tag - extra parameter
-            return $m[1] . $this->shortcodes[$tag]->process( $attr, $m[5] ) . $m[6];
+            return $m[1].$this->shortcodes[$tag]->process($attr, $m[5]).$m[6];
         } else {
             // self-closing tag
-            return $m[1] . $this->shortcodes[$tag]->process( $attr, null ) . $m[6];
+            return $m[1].$this->shortcodes[$tag]->process($attr, null).$m[6];
         }
     }
 
@@ -163,19 +170,19 @@ class ShortcodeChain
     {
         $atts = array();
         $pattern = '/(\w+)\s*=\s*"([^"]*)"(?:\s|$)|(\w+)\s*=\s*\'([^\']*)\'(?:\s|$)|(\w+)\s*=\s*([^\s\'"]+)(?:\s|$)|"([^"]*)"(?:\s|$)|(\S+)(?:\s|$)/';
-        $text = preg_replace( "/[\x{00a0}\x{200b}]+/u", " ", $text );
-        if (preg_match_all( $pattern, $text, $match, PREG_SET_ORDER )) {
+        $text = preg_replace("/[\x{00a0}\x{200b}]+/u", ' ', $text);
+        if (preg_match_all($pattern, $text, $match, PREG_SET_ORDER)) {
             foreach ($match as $m) {
-                if (!empty( $m[1] )) {
-                    $atts[strtolower( $m[1] )] = stripcslashes( $m[2] );
-                } elseif (!empty( $m[3] )) {
-                    $atts[strtolower( $m[3] )] = stripcslashes( $m[4] );
-                } elseif (!empty( $m[5] )) {
-                    $atts[strtolower( $m[5] )] = stripcslashes( $m[6] );
-                } elseif (isset( $m[7] ) && strlen( $m[7] ) > 0) {
-                    $atts[] = stripcslashes( $m[7] );
-                } elseif (isset( $m[8] )) {
-                    $atts[] = stripcslashes( $m[8] );
+                if (!empty($m[1])) {
+                    $atts[strtolower($m[1])] = stripcslashes($m[2]);
+                } elseif (!empty($m[3])) {
+                    $atts[strtolower($m[3])] = stripcslashes($m[4]);
+                } elseif (!empty($m[5])) {
+                    $atts[strtolower($m[5])] = stripcslashes($m[6]);
+                } elseif (isset($m[7]) && strlen($m[7]) > 0) {
+                    $atts[] = stripcslashes($m[7]);
+                } elseif (isset($m[8])) {
+                    $atts[] = stripcslashes($m[8]);
                 }
             }
         }

@@ -1,11 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\PostBundle\Model;
 
 /**
- * Class Attachment
- *
- * @package Mozart\Bundle\PostBundle\Model
+ * Class Attachment.
  */
 class Attachment extends Post implements AttachmentInterface
 {
@@ -34,7 +41,7 @@ class Attachment extends Post implements AttachmentInterface
         $this->metadata = $post->getMetas()
             ->filter(
                 function (PostMeta $meta) {
-                    return '_wp_attachment_metadata' == $meta->getKey();
+                    return '_wp_attachment_metadata' === $meta->getKey();
                 }
             )
             ->first();
@@ -57,11 +64,11 @@ class Attachment extends Post implements AttachmentInterface
     {
         $rawMetadata = $this->metadata->getValue();
 
-        if (isset( $rawMetadata['sizes'][$size] )) {
-            return dirname( $rawMetadata['file'] ) . '/' . $rawMetadata['sizes'][$size]['file'];
+        if (isset($rawMetadata['sizes'][$size])) {
+            return dirname($rawMetadata['file']).'/'.$rawMetadata['sizes'][$size]['file'];
         }
 
-        return null;
+        return;
     }
 
     /**

@@ -6,3 +6,4 @@
 /composer.phar
 /development
 *.lock
+.php_cs.cache

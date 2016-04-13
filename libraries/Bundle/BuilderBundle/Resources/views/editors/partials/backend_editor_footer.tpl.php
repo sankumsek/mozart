@@ -28,17 +28,17 @@ $edit_layout->render();
 		<a href="#" class="icon-remove"></a>
 	</li>
 </script>
-<?php foreach ( WPBMap::getShortCodes() as $sc_base => $el ): ?>
+<?php foreach (WPBMap::getShortCodes() as $sc_base => $el): ?>
 <script type="text/html" id="vc_shortcode-template-<?php echo $sc_base ?>">
 	<?php
-	echo visual_composer()->getShortCode( $sc_base )->template();
-	?>
+    echo visual_composer()->getShortCode($sc_base)->template();
+    ?>
 </script>
 <?php endforeach; ?>
 <script type="text/html" id="vc_row-inner-element-template">
 	<?php
-	echo visual_composer()->getShortCode( 'vc_row_inner' )->template();
-	?>
+    echo visual_composer()->getShortCode('vc_row_inner')->template();
+    ?>
 </script>
 <script type="text/html" id="vc_settings-page-param-block">
 	<div class="row-fluid wpb_el_type_<%= type %>">

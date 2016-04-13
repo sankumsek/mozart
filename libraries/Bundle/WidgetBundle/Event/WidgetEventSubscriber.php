@@ -1,8 +1,17 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\WidgetBundle\Event;
 
 use Mozart\Bundle\NucleusBundle\MozartEvents;
@@ -32,7 +41,6 @@ class WidgetEventSubscriber implements EventSubscriberInterface
      */
     public function __construct(WidgetLogic $widgetLogic, SidebarManager $sidebarManager, WidgetManager $widgetManager)
     {
-
         $this->widgetLogic = $widgetLogic;
         $this->sidebarManager = $sidebarManager;
         $this->widgetManager = $widgetManager;
@@ -60,9 +68,9 @@ class WidgetEventSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        $events[MozartEvents::INIT][] = array( 'onMozartInit', 255 );
-        $events[WidgetEvents::INIT][] = array( 'registerSidebars', -255 );
-        $events[WidgetEvents::INIT][] = array( 'registerWidgets', -255 );
+        $events[MozartEvents::INIT][] = array('onMozartInit', 255);
+        $events[WidgetEvents::INIT][] = array('registerSidebars', -255);
+        $events[WidgetEvents::INIT][] = array('registerWidgets', -255);
 
         return $events;
     }
@@ -74,7 +82,7 @@ class WidgetEventSubscriber implements EventSubscriberInterface
         add_action(
             WidgetEvents::INIT,
             function () {
-                \Mozart::dispatch( WidgetEvents::INIT );
+                \Mozart::dispatch(WidgetEvents::INIT);
             },
             0
         );
@@ -86,27 +94,25 @@ class WidgetEventSubscriber implements EventSubscriberInterface
             return false;
         }
 
-        add_theme_support( 'widgets' );
+        add_theme_support('widgets');
 
         $sidebars = $this->sidebarManager->getSidebars();
 
         foreach ($sidebars as $sidebar) {
-
             $GLOBALS['wp_registered_sidebars'][$sidebar->getKey()] = $sidebar->getConfiguration();
 
-            do_action( 'register_sidebar', $sidebar->getConfiguration() );
+            do_action('register_sidebar', $sidebar->getConfiguration());
         }
     }
 
     public function registerWidgets()
     {
-
-        if (false === isset( $GLOBALS['wp_widget_factory'] )) {
+        if (false === isset($GLOBALS['wp_widget_factory'])) {
             return false;
         }
 
         $widgets = $this->widgetManager->getWidgets();
 
-        $GLOBALS['wp_widget_factory']->widgets = array_merge( $GLOBALS['wp_widget_factory']->widgets, $widgets );
+        $GLOBALS['wp_widget_factory']->widgets = array_merge($GLOBALS['wp_widget_factory']->widgets, $widgets);
     }
 }

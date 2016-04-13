@@ -1,8 +1,17 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\PluginBundle\Event;
 
 use Mozart\Bundle\PluginBundle\PluginEvents;
@@ -16,10 +25,10 @@ class PluginEventSubscriber implements EventSubscriberInterface
             PluginEvents::BEFORE_ACTIVATION,
             function ($plugin, $network_deactivating) {
                 $event = new \Mozart\Bundle\PluginBundle\Event\PluginEvent();
-                $event->setBaseName( $plugin );
-                $event->setNetworkDeactivating( $network_deactivating );
+                $event->setBaseName($plugin);
+                $event->setNetworkDeactivating($network_deactivating);
 
-                \Mozart::dispatch( PluginEvents::BEFORE_ACTIVATION, $event );
+                \Mozart::dispatch(PluginEvents::BEFORE_ACTIVATION, $event);
             },
             10,
             2
@@ -28,10 +37,10 @@ class PluginEventSubscriber implements EventSubscriberInterface
             PluginEvents::AFTER_ACTIVATION,
             function ($plugin, $network_deactivating) {
                 $event = new \Mozart\Bundle\PluginBundle\Event\PluginEvent();
-                $event->setBaseName( $plugin );
-                $event->setNetworkDeactivating( $network_deactivating );
+                $event->setBaseName($plugin);
+                $event->setNetworkDeactivating($network_deactivating);
 
-                \Mozart::dispatch( PluginEvents::AFTER_ACTIVATION, $event );
+                \Mozart::dispatch(PluginEvents::AFTER_ACTIVATION, $event);
             },
             10,
             2
@@ -40,10 +49,10 @@ class PluginEventSubscriber implements EventSubscriberInterface
             PluginEvents::BEFORE_DEACTIVATION,
             function ($plugin, $network_deactivating) {
                 $event = new \Mozart\Bundle\PluginBundle\Event\PluginEvent();
-                $event->setBaseName( $plugin );
-                $event->setNetworkDeactivating( $network_deactivating );
+                $event->setBaseName($plugin);
+                $event->setNetworkDeactivating($network_deactivating);
 
-                \Mozart::dispatch( PluginEvents::BEFORE_DEACTIVATION, $event );
+                \Mozart::dispatch(PluginEvents::BEFORE_DEACTIVATION, $event);
             },
             10,
             2
@@ -52,10 +61,10 @@ class PluginEventSubscriber implements EventSubscriberInterface
             PluginEvents::AFTER_DEACTIVATION,
             function ($plugin, $network_deactivating) {
                 $event = new \Mozart\Bundle\PluginBundle\Event\PluginEvent();
-                $event->setBaseName( $plugin );
-                $event->setNetworkDeactivating( $network_deactivating );
+                $event->setBaseName($plugin);
+                $event->setNetworkDeactivating($network_deactivating);
 
-                \Mozart::dispatch( PluginEvents::AFTER_DEACTIVATION, $event );
+                \Mozart::dispatch(PluginEvents::AFTER_DEACTIVATION, $event);
             },
             10,
             2
@@ -64,41 +73,36 @@ class PluginEventSubscriber implements EventSubscriberInterface
 
     public function onBeforePluginActivation(PluginEvent $event)
     {
-
     }
 
     public function onAfterPluginActivation(PluginEvent $event)
     {
-
     }
 
     public function onBeforePluginDeactivation(PluginEvent $event)
     {
-
     }
 
     public function onAfterPluginDeactivation(PluginEvent $event)
     {
-
     }
 
     public function onPluginUninstall(PluginEvent $event)
     {
-
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
-        $events[PluginEvents::BEFORE_ACTIVATION][] = array( 'onBeforePluginActivation' );
-        $events[PluginEvents::AFTER_ACTIVATION][] = array( 'onAfterPluginActivation' );
+        $events[PluginEvents::BEFORE_ACTIVATION][] = array('onBeforePluginActivation');
+        $events[PluginEvents::AFTER_ACTIVATION][] = array('onAfterPluginActivation');
 
-        $events[PluginEvents::BEFORE_DEACTIVATION][] = array( 'onBeforePluginDeactivation' );
-        $events[PluginEvents::AFTER_DEACTIVATION][] = array( 'onAfterPluginDeactivation' );
+        $events[PluginEvents::BEFORE_DEACTIVATION][] = array('onBeforePluginDeactivation');
+        $events[PluginEvents::AFTER_DEACTIVATION][] = array('onAfterPluginDeactivation');
 
-        $events[PluginEvents::UNINSTALL][] = array( 'onPluginUninstall' );
+        $events[PluginEvents::UNINSTALL][] = array('onPluginUninstall');
 
         return $events;
     }

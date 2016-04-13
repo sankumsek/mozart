@@ -1,8 +1,18 @@
 <?php
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Component\Plugin;
 
-if (!class_exists( '\WP_Upgrader' )) {
-    require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+if (!class_exists('\WP_Upgrader')) {
+    require_once ABSPATH.'wp-admin/includes/class-wp-upgrader.php';
 }
 
 /**
@@ -29,7 +39,7 @@ class BulkInstaller extends \WP_Upgrader
      */
     private $update_current = 0;
     /**
-     * Holds result of bulk plugin installation
+     * Holds result of bulk plugin installation.
      *
      * @var string
      */
@@ -38,7 +48,7 @@ class BulkInstaller extends \WP_Upgrader
     /**
      * Flag to check if bulk installation is occurring or not.
      *
-     * @var boolean
+     * @var bool
      */
     public $bulk = false;
 
@@ -53,9 +63,10 @@ class BulkInstaller extends \WP_Upgrader
     /**
      * Processes the bulk installation of plugins.
      *
-     * @param  array          $packages     The plugin sources needed for installation.
-     * @param  bool           $is_automatic
-     * @return string|boolean Install confirmation messages on success, false on failure.
+     * @param array $packages     The plugin sources needed for installation.
+     * @param bool  $is_automatic
+     *
+     * @return string|bool Install confirmation messages on success, false on failure.
      */
     public function bulk_install($packages, $is_automatic = false)
     {
@@ -73,7 +84,7 @@ class BulkInstaller extends \WP_Upgrader
         $this->skin->header();
 
         // Connect to the Filesystem.
-        $res = $this->fs_connect( array( WP_CONTENT_DIR, WP_PLUGIN_DIR ) );
+        $res = $this->fs_connect(array(WP_CONTENT_DIR, WP_PLUGIN_DIR));
         if (!$res) {
             $this->skin->footer();
 
@@ -85,22 +96,22 @@ class BulkInstaller extends \WP_Upgrader
         $results = array();
 
         // Get the total number of packages being processed and iterate as each package is successfully installed.
-        $this->update_count = count( $packages );
+        $this->update_count = count($packages);
         $this->update_current = 0;
 
         // Loop through each plugin and process the installation.
         foreach ($packages as $plugin) {
-            $this->update_current++; // Increment counter.
+            ++$this->update_current; // Increment counter.
 
             // Do the plugin install.
             $result = $this->run(
                 array(
-                    'package'           => $plugin, // The plugin source.
-                    'destination'       => WP_PLUGIN_DIR, // The destination dir.
+                    'package' => $plugin, // The plugin source.
+                    'destination' => WP_PLUGIN_DIR, // The destination dir.
                     'clear_destination' => false, // Do we want to clear the destination or not?
-                    'clear_working'     => true, // Remove original install file.
-                    'is_multi'          => true, // Are we processing multiple installs?
-                    'hook_extra'        => array( 'plugin' => $plugin, ), // Pass plugin source as extra data.
+                    'clear_working' => true, // Remove original install file.
+                    'is_multi' => true, // Are we processing multiple installs?
+                    'hook_extra' => array('plugin' => $plugin), // Pass plugin source as extra data.
                 ),
                 $is_automatic
             );
@@ -120,7 +131,6 @@ class BulkInstaller extends \WP_Upgrader
 
         // Return our results.
         return $results;
-
     }
 
     /**
@@ -129,34 +139,33 @@ class BulkInstaller extends \WP_Upgrader
      * This method also activates the plugin in the automatic flag has been
      * set to true for the TGMPA class.
      *
-     * @param  array      $options The installation cofig options
-     * @return null/array Return early if error, array of installation data on success
+     * @param array $options The installation cofig options
      */
     public function run($options, $is_automatic = false)
     {
 
         // Default config options.
         $defaults = array(
-            'package'           => '',
-            'destination'       => '',
+            'package' => '',
+            'destination' => '',
             'clear_destination' => false,
-            'clear_working'     => true,
-            'is_multi'          => false,
-            'hook_extra'        => array(),
+            'clear_working' => true,
+            'is_multi' => false,
+            'hook_extra' => array(),
         );
 
         // Parse default options with config options from $this->bulk_upgrade and extract them.
-        $options = wp_parse_args( $options, $defaults );
+        $options = wp_parse_args($options, $defaults);
 
         // Connect to the Filesystem.
-        $res = $this->fs_connect( array( WP_CONTENT_DIR, $options['destination'] ) );
+        $res = $this->fs_connect(array(WP_CONTENT_DIR, $options['destination']));
         if (!$res) {
             return false;
         }
 
         // Return early if there is an error connecting to the Filesystem.
-        if (is_wp_error( $res )) {
-            $this->skin->error( $res );
+        if (is_wp_error($res)) {
+            $this->skin->error($res);
 
             return $res;
         }
@@ -170,21 +179,21 @@ class BulkInstaller extends \WP_Upgrader
         $this->skin->before();
 
         // Download the package (this just returns the filename of the file if the package is a local file).
-        $download = $this->download_package( $options['package'] );
-        if (is_wp_error( $download )) {
-            $this->skin->error( $download );
+        $download = $this->download_package($options['package']);
+        if (is_wp_error($download)) {
+            $this->skin->error($download);
             $this->skin->after();
 
             return $download;
         }
 
         // Don't accidentally delete a local file.
-        $delete_package = ( $download != $options['package'] );
+        $delete_package = ($download !== $options['package']);
 
         // Unzip file into a temporary working directory.
-        $working_dir = $this->unpack_package( $download, $delete_package );
-        if (is_wp_error( $working_dir )) {
-            $this->skin->error( $working_dir );
+        $working_dir = $this->unpack_package($download, $delete_package);
+        if (is_wp_error($working_dir)) {
+            $this->skin->error($working_dir);
             $this->skin->after();
 
             return $working_dir;
@@ -193,24 +202,24 @@ class BulkInstaller extends \WP_Upgrader
         // Install the package into the working directory with all passed config options.
         $result = $this->install_package(
             array(
-                'source'            => $working_dir,
-                'destination'       => $options['destination'],
+                'source' => $working_dir,
+                'destination' => $options['destination'],
                 'clear_destination' => $options['clear_destination'],
-                'clear_working'     => $options['clear_working'],
-                'hook_extra'        => $options['hook_extra'],
+                'clear_working' => $options['clear_working'],
+                'hook_extra' => $options['hook_extra'],
             )
         );
 
         // Pass the result of the installation.
-        $this->skin->set_result( $result );
+        $this->skin->set_result($result);
 
         // Set correct strings based on results.
-        if (is_wp_error( $result )) {
-            $this->skin->error( $result );
-            $this->skin->feedback( 'process_failed' );
+        if (is_wp_error($result)) {
+            $this->skin->error($result);
+            $this->skin->feedback('process_failed');
         } // The plugin install is successful.
         else {
-            $this->skin->feedback( 'process_success' );
+            $this->skin->feedback('process_success');
         }
 
         // Only process the activation of installed plugins if the automatic flag is set to true.
@@ -219,16 +228,16 @@ class BulkInstaller extends \WP_Upgrader
             wp_cache_flush();
 
             // Get the installed plugin file and activate it.
-            $plugin_info = $this->plugin_info( $options['package'] );
-            $activate = activate_plugin( $plugin_info );
+            $plugin_info = $this->plugin_info($options['package']);
+            $activate = activate_plugin($plugin_info);
 
             // Set correct strings based on results.
-            if (is_wp_error( $activate )) {
-                $this->skin->error( $activate );
-                $this->skin->feedback( 'activation_failed' );
+            if (is_wp_error($activate)) {
+                $this->skin->error($activate);
+                $this->skin->feedback('activation_failed');
             } // The plugin activation is successful.
             else {
-                $this->skin->feedback( 'activation_success' );
+                $this->skin->feedback('activation_success');
             }
         }
 
@@ -242,7 +251,6 @@ class BulkInstaller extends \WP_Upgrader
         }
 
         return $result;
-
     }
 
     /**
@@ -250,17 +258,15 @@ class BulkInstaller extends \WP_Upgrader
      */
     public function install_strings()
     {
-
-        $this->strings['no_package'] = __( 'Install package not available.', 'tgmpa' );
+        $this->strings['no_package'] = __('Install package not available.', 'tgmpa');
         $this->strings['downloading_package'] = __(
             'Downloading install package from <span class="code">%s</span>&#8230;',
             'tgmpa'
         );
-        $this->strings['unpack_package'] = __( 'Unpacking the package&#8230;', 'tgmpa' );
-        $this->strings['installing_package'] = __( 'Installing the plugin&#8230;', 'tgmpa' );
-        $this->strings['process_failed'] = __( 'Plugin install failed.', 'tgmpa' );
-        $this->strings['process_success'] = __( 'Plugin installed successfully.', 'tgmpa' );
-
+        $this->strings['unpack_package'] = __('Unpacking the package&#8230;', 'tgmpa');
+        $this->strings['installing_package'] = __('Installing the plugin&#8230;', 'tgmpa');
+        $this->strings['process_failed'] = __('Plugin install failed.', 'tgmpa');
+        $this->strings['process_success'] = __('Plugin installed successfully.', 'tgmpa');
     }
 
     /**
@@ -268,40 +274,36 @@ class BulkInstaller extends \WP_Upgrader
      */
     public function activate_strings()
     {
-
-        $this->strings['activation_failed'] = __( 'Plugin activation failed.', 'tgmpa' );
-        $this->strings['activation_success'] = __( 'Plugin activated successfully.', 'tgmpa' );
-
+        $this->strings['activation_failed'] = __('Plugin activation failed.', 'tgmpa');
+        $this->strings['activation_success'] = __('Plugin activated successfully.', 'tgmpa');
     }
 
     /**
      * Grabs the plugin file from an installed plugin.
      *
-     * @return string|boolean Return plugin file on success, false on failure
+     * @return string|bool Return plugin file on success, false on failure
      */
     public function plugin_info()
     {
 
         // Return false if installation result isn't an array or the destination name isn't set.
-        if (!is_array( $this->result )) {
+        if (!is_array($this->result)) {
             return false;
         }
 
-        if (empty( $this->result['destination_name'] )) {
+        if (empty($this->result['destination_name'])) {
             return false;
         }
 
         /// Get the installed plugin file or return false if it isn't set.
-        $plugin = get_plugins( '/' . $this->result['destination_name'] );
-        if (empty( $plugin )) {
+        $plugin = get_plugins('/'.$this->result['destination_name']);
+        if (empty($plugin)) {
             return false;
         }
 
         // Assume the requested plugin is the first in the list.
-        $pluginfiles = array_keys( $plugin );
+        $pluginfiles = array_keys($plugin);
 
-        return $this->result['destination_name'] . '/' . $pluginfiles[0];
-
+        return $this->result['destination_name'].'/'.$pluginfiles[0];
     }
-
 }

@@ -1,8 +1,17 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\WidgetBundle\Config;
 
 use Mozart\Bundle\WidgetBundle\WidgetInterface;
@@ -25,9 +34,9 @@ class WidgetFieldGroup extends FieldGroup
         return array(
             array(
                 array(
-                    'param'    => 'widget',
+                    'param' => 'widget',
                     'operator' => '==',
-                    'value'    => $this->widget->getAlias(),
+                    'value' => $this->widget->getAlias(),
                 ),
             ),
         );
@@ -48,5 +57,4 @@ class WidgetFieldGroup extends FieldGroup
     {
         $this->widget = $widget;
     }
-
 }

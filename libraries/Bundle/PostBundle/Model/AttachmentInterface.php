@@ -1,11 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\PostBundle\Model;
 
 /**
- * Interface AttachmentInterface
- *
- * @package Mozart\Bundle\PostBundle\Model
+ * Interface AttachmentInterface.
  */
 interface AttachmentInterface
 {
@@ -28,7 +35,7 @@ interface AttachmentInterface
      *
      * @return string
      */
-    public function getThumbnailUrl( $size = null );
+    public function getThumbnailUrl($size = null);
 
     /**
      * @return string

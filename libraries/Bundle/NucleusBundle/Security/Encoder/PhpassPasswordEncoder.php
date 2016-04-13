@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace  Mozart\Bundle\NucleusBundle\Security\Encoder;
 
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
@@ -21,7 +30,6 @@ use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
  * Obviously, since this code is in the public domain, the above are not
  * requirements (there can be none), but merely suggestions.
  */
-
 class PhpassPasswordEncoder implements PasswordEncoderInterface
 {
     public $itoa64;
@@ -33,13 +41,14 @@ class PhpassPasswordEncoder implements PasswordEncoderInterface
     {
         $this->itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
-        if ($iteration_count_log2 < 4 || $iteration_count_log2 > 31)
+        if ($iteration_count_log2 < 4 || $iteration_count_log2 > 31) {
             $iteration_count_log2 = 8;
+        }
         $this->iteration_count_log2 = $iteration_count_log2;
 
         $this->portable_hashes = $portable_hashes;
 
-        $this->random_state = microtime() . uniqid(rand(), TRUE); // removed getmypid() for compatibility reasons
+        $this->random_state = microtime().uniqid(rand(), true); // removed getmypid() for compatibility reasons
     }
 
     /**
@@ -61,7 +70,7 @@ class PhpassPasswordEncoder implements PasswordEncoderInterface
     private function getRandomBytes($count)
     {
         $output = '';
-        if ( @is_readable('/dev/urandom') &&
+        if (@is_readable('/dev/urandom') &&
             ($fh = @fopen('/dev/urandom', 'rb'))) {
             $output = fread($fh, $count);
             fclose($fh);
@@ -71,7 +80,7 @@ class PhpassPasswordEncoder implements PasswordEncoderInterface
             $output = '';
             for ($i = 0; $i < $count; $i += 16) {
                 $this->random_state =
-                    md5(microtime() . $this->random_state);
+                    md5(microtime().$this->random_state);
                 $output .=
                     pack('H*', md5($this->random_state));
             }
@@ -88,16 +97,20 @@ class PhpassPasswordEncoder implements PasswordEncoderInterface
         do {
             $value = ord($input[$i++]);
             $output .= $this->itoa64[$value & 0x3f];
-            if ($i < $count)
+            if ($i < $count) {
                 $value |= ord($input[$i]) << 8;
+            }
             $output .= $this->itoa64[($value >> 6) & 0x3f];
-            if ($i++ >= $count)
+            if ($i++ >= $count) {
                 break;
-            if ($i < $count)
+            }
+            if ($i < $count) {
                 $value |= ord($input[$i]) << 16;
+            }
             $output .= $this->itoa64[($value >> 12) & 0x3f];
-            if ($i++ >= $count)
+            if ($i++ >= $count) {
                 break;
+            }
             $output .= $this->itoa64[($value >> 18) & 0x3f];
         } while ($i < $count);
 
@@ -117,23 +130,27 @@ class PhpassPasswordEncoder implements PasswordEncoderInterface
     private function cryptPrivate($password, $setting)
     {
         $output = '*0';
-        if (substr($setting, 0, 2) == $output)
+        if (substr($setting, 0, 2) === $output) {
             $output = '*1';
+        }
 
         $id = substr($setting, 0, 3);
         # We use "$P$", phpBB3 uses "$H$" for the same thing
-        if ($id != '$P$' && $id != '$H$')
+        if ($id !== '$P$' && $id !== '$H$') {
             return $output;
+        }
 
         $count_log2 = strpos($this->itoa64, $setting[3]);
-        if ($count_log2 < 7 || $count_log2 > 30)
+        if ($count_log2 < 7 || $count_log2 > 30) {
             return $output;
+        }
 
         $count = 1 << $count_log2;
 
         $salt = substr($setting, 4, 8);
-        if (strlen($salt) != 8)
+        if (strlen($salt) !== 8) {
             return $output;
+        }
 
         # We're kind of forced to use MD5 here since it's the only
         # cryptographic primitive available in all versions of PHP
@@ -142,14 +159,14 @@ class PhpassPasswordEncoder implements PasswordEncoderInterface
         # consequently in lower iteration counts and hashes that are
         # quicker to crack (by non-PHP code).
         if (PHP_VERSION >= '5') {
-            $hash = md5($salt . $password, TRUE);
+            $hash = md5($salt.$password, true);
             do {
-                $hash = md5($hash . $password, TRUE);
+                $hash = md5($hash.$password, true);
             } while (--$count);
         } else {
-            $hash = pack('H*', md5($salt . $password));
+            $hash = pack('H*', md5($salt.$password));
             do {
-                $hash = pack('H*', md5($hash . $password));
+                $hash = pack('H*', md5($hash.$password));
             } while (--$count);
         }
 
@@ -222,30 +239,35 @@ class PhpassPasswordEncoder implements PasswordEncoderInterface
     {
         $random = '';
 
-        if (CRYPT_BLOWFISH == 1 && !$this->portable_hashes) {
+        if (CRYPT_BLOWFISH === 1 && !$this->portable_hashes) {
             $random = $this->getRandomBytes(16);
             $hash =
                 crypt($password, $this->gensaltBlowfish($random));
-            if (strlen($hash) == 60)
+            if (strlen($hash) === 60) {
                 return $hash;
+            }
         }
 
-        if (CRYPT_EXT_DES == 1 && !$this->portable_hashes) {
-            if (strlen($random) < 3)
+        if (CRYPT_EXT_DES === 1 && !$this->portable_hashes) {
+            if (strlen($random) < 3) {
                 $random = $this->getRandomBytes(3);
+            }
             $hash =
                 crypt($password, $this->gensaltExtended($random));
-            if (strlen($hash) == 20)
+            if (strlen($hash) === 20) {
                 return $hash;
+            }
         }
 
-        if (strlen($random) < 6)
+        if (strlen($random) < 6) {
             $random = $this->getRandomBytes(6);
+        }
         $hash =
             $this->cryptPrivate($password,
             $this->gensaltPrivate($random));
-        if (strlen($hash) == 34)
+        if (strlen($hash) === 34) {
             return $hash;
+        }
 
         # Returning '*' on error is safe here, but would _not_ be safe
         # in a crypt(3)-like function used _both_ for generating new
@@ -257,9 +279,10 @@ class PhpassPasswordEncoder implements PasswordEncoderInterface
     private function checkPassword($password, $stored_hash)
     {
         $hash = $this->cryptPrivate($password, $stored_hash);
-        if ($hash[0] == '*')
+        if ($hash[0] === '*') {
             $hash = crypt($password, $stored_hash);
+        }
 
-        return $hash == $stored_hash;
+        return $hash === $stored_hash;
     }
 }

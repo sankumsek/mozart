@@ -1,21 +1,30 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace  Mozart\Bundle\UserBundle\Model;
 
 class UserMeta
 {
     /**
-     * @var int $id
+     * @var int
      */
     protected $id;
 
     /**
-     * @var string $key
+     * @var string
      */
     protected $key;
 
     /**
-     * @var string $value
+     * @var string
      */
     protected $value;
 
@@ -25,7 +34,7 @@ class UserMeta
     protected $user;
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -35,7 +44,7 @@ class UserMeta
     }
 
     /**
-     * Set key
+     * Set key.
      *
      * @param string $key
      */
@@ -45,7 +54,7 @@ class UserMeta
     }
 
     /**
-     * Get key
+     * Get key.
      *
      * @return string
      */
@@ -55,7 +64,7 @@ class UserMeta
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
      */
@@ -65,7 +74,7 @@ class UserMeta
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -75,7 +84,7 @@ class UserMeta
     }
 
     /**
-     * Set user
+     * Set user.
      *
      * @param UserInterface $user
      */
@@ -85,7 +94,7 @@ class UserMeta
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @return UserInterface|null
      */

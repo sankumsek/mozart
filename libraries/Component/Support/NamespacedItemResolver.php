@@ -1,4 +1,15 @@
-<?php namespace Mozart\Component\Support;
+<?php
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Mozart\Component\Support;
 
 class NamespacedItemResolver
 {
@@ -12,7 +23,8 @@ class NamespacedItemResolver
     /**
      * Parse a key into namespace, group, and item.
      *
-     * @param  string $key
+     * @param string $key
+     *
      * @return array
      */
     public function parseKey($key)
@@ -44,7 +56,8 @@ class NamespacedItemResolver
     /**
      * Parse an array of basic segments.
      *
-     * @param  array $segments
+     * @param array $segments
+     *
      * @return array
      */
     protected function parseBasicSegments(array $segments)
@@ -54,7 +67,7 @@ class NamespacedItemResolver
         // just pulling an entire group out of the array and not a single item.
         $group = $segments[0];
 
-        if (count($segments) == 1) {
+        if (count($segments) === 1) {
             return array(null, $group, null);
         }
 
@@ -71,7 +84,8 @@ class NamespacedItemResolver
     /**
      * Parse an array of namespaced segments.
      *
-     * @param  string $key
+     * @param string $key
+     *
      * @return array
      */
     protected function parseNamespacedSegments($key)
@@ -91,13 +105,11 @@ class NamespacedItemResolver
     /**
      * Set the parsed value of a key.
      *
-     * @param  string $key
-     * @param  array  $parsed
-     * @return void
+     * @param string $key
+     * @param array  $parsed
      */
     public function setParsedKey($key, $parsed)
     {
         $this->parsed[$key] = $parsed;
     }
-
 }

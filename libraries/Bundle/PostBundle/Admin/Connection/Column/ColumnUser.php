@@ -1,16 +1,25 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\PostBundle\Admin\Connection\Column;
 
 class ColumnUser extends Column
 {
     public function __construct($directed)
     {
-        parent::__construct( $directed );
+        parent::__construct($directed);
 
-        add_action( 'pre_user_query', array( __CLASS__, 'user_query' ), 9 );
+        add_action('pre_user_query', array(__CLASS__, 'user_query'), 9);
 
-        add_filter( 'manage_users_custom_column', array( $this, 'display_column' ), 10, 3 );
+        add_filter('manage_users_custom_column', array($this, 'display_column'), 10, 3);
     }
 
     protected function get_items()
@@ -23,15 +32,17 @@ class ColumnUser extends Column
     // Add the query vars to the global user query (on the user admin screen)
     public static function user_query($query)
     {
-        if ( isset( $query->_p2p_capture ) )
+        if (isset($query->_p2p_capture)) {
             return;
+        }
 
         // Don't overwrite existing P2P query
-        if ( isset( $query->query_vars['connected_type'] ) )
+        if (isset($query->query_vars['connected_type'])) {
             return;
+        }
 
-        _p2p_append( $query->query_vars, wp_array_slice_assoc( $_GET,
-            P2P_URL_Query::get_custom_qv() ) );
+        _p2p_append($query->query_vars, wp_array_slice_assoc($_GET,
+            P2P_URL_Query::get_custom_qv()));
     }
 
     public function get_admin_link($item)
@@ -42,11 +53,11 @@ class ColumnUser extends Column
             'connected_items' => $item->get_id(),
         );
 
-        return add_query_arg( $args, admin_url( 'users.php' ) );
+        return add_query_arg($args, admin_url('users.php'));
     }
 
     public function display_column($content, $column, $item_id)
     {
-        return $content . parent::render_column( $column, $item_id );
+        return $content.parent::render_column($column, $item_id);
     }
 }

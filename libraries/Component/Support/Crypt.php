@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\Crypt.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -14,7 +22,7 @@ namespace Mozart\Component\Support;
  */
 class Crypt
 {
-  /**
+    /**
    * Returns a string of highly randomized bytes (over the full 8-bit range).
    *
    * This function is better than simply calling mt_rand() or any other built-in
@@ -30,26 +38,26 @@ class Crypt
    */
   public static function randomBytes($count)
   {
-    // $random_state does not use drupal_static as it stores random bytes.
+      // $random_state does not use drupal_static as it stores random bytes.
     static $random_state, $bytes;
 
-    $missing_bytes = $count - strlen($bytes);
+      $missing_bytes = $count - strlen($bytes);
 
-    if ($missing_bytes > 0) {
-      // openssl_random_pseudo_bytes() will find entropy in a system-dependent
+      if ($missing_bytes > 0) {
+          // openssl_random_pseudo_bytes() will find entropy in a system-dependent
       // way.
       if (function_exists('openssl_random_pseudo_bytes')) {
-        $bytes .= openssl_random_pseudo_bytes($missing_bytes);
+          $bytes .= openssl_random_pseudo_bytes($missing_bytes);
       }
 
       // Else, read directly from /dev/urandom, which is available on many *nix
       // systems and is considered cryptographically secure.
       elseif ($fh = @fopen('/dev/urandom', 'rb')) {
-        // PHP only performs buffered reads, so in reality it will always read
+          // PHP only performs buffered reads, so in reality it will always read
         // at least 4096 bytes. Thus, it costs nothing extra to read and store
         // that much so as to speed any additional invocations.
         $bytes .= fread($fh, max(4096, $missing_bytes));
-        fclose($fh);
+          fclose($fh);
       }
 
       // If we couldn't get enough entropy, this simple hash-based PRNG will
@@ -61,28 +69,28 @@ class Crypt
       // directly leaking $random_state via the $output stream, which could
       // allow for trivial prediction of further "random" numbers.
       if (strlen($bytes) < $count) {
-        // Initialize on the first call. The contents of $_SERVER includes a mix
+          // Initialize on the first call. The contents of $_SERVER includes a mix
         // of user-specific and system information that varies a little with
         // each page.
         if (!isset($random_state)) {
-          $random_state = print_r($_SERVER, TRUE);
-          if (function_exists('getmypid')) {
-            // Further initialize with the somewhat random PHP process ID.
+            $random_state = print_r($_SERVER, true);
+            if (function_exists('getmypid')) {
+                // Further initialize with the somewhat random PHP process ID.
             $random_state .= getmypid();
-          }
-          $bytes = '';
+            }
+            $bytes = '';
         }
 
-        do {
-          $random_state = hash('sha256', microtime() . mt_rand() . $random_state);
-          $bytes .= hash('sha256', mt_rand() . $random_state, TRUE);
-        } while (strlen($bytes) < $count);
+          do {
+              $random_state = hash('sha256', microtime().mt_rand().$random_state);
+              $bytes .= hash('sha256', mt_rand().$random_state, true);
+          } while (strlen($bytes) < $count);
       }
-    }
-    $output = substr($bytes, 0, $count);
-    $bytes = substr($bytes, $count);
+      }
+      $output = substr($bytes, 0, $count);
+      $bytes = substr($bytes, $count);
 
-    return $output;
+      return $output;
   }
 
   /**
@@ -99,15 +107,15 @@ class Crypt
    */
   public static function hmacBase64($data, $key)
   {
-    // $data and $key being strings here is necessary to avoid empty string
+      // $data and $key being strings here is necessary to avoid empty string
     // results of the hash function if they are not scalar values. As this
     // function is used in security-critical contexts like token validation it
     // is important that it never returns an empty string.
     if (!is_scalar($data) || !is_scalar($key)) {
-      throw new \InvalidArgumentException('Both parameters passed to \Mozart\Component\Support\Crypt::hmacBase64 must be scalar values.');
+        throw new \InvalidArgumentException('Both parameters passed to \Mozart\Component\Support\Crypt::hmacBase64 must be scalar values.');
     }
 
-    $hmac = base64_encode(hash_hmac('sha256', $data, $key, TRUE));
+      $hmac = base64_encode(hash_hmac('sha256', $data, $key, true));
     // Modify the hmac so it's safe to use in URLs.
     return strtr($hmac, array('+' => '-', '/' => '_', '=' => ''));
   }
@@ -124,7 +132,7 @@ class Crypt
    */
   public static function hashBase64($data)
   {
-    $hash = base64_encode(hash('sha256', $data, TRUE));
+      $hash = base64_encode(hash('sha256', $data, true));
     // Modify the hash so it's safe to use in URLs.
     return strtr($hash, array('+' => '-', '/' => '_', '=' => ''));
   }
@@ -142,7 +150,6 @@ class Crypt
    */
   public static function randomBytesBase64($count = 32)
   {
-    return strtr(base64_encode(static::randomBytes($count)), array('+' => '-', '/' => '_', '=' => ''));
+      return strtr(base64_encode(static::randomBytes($count)), array('+' => '-', '/' => '_', '=' => ''));
   }
-
 }

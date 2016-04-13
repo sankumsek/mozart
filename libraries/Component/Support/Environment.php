@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\Environment.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -12,7 +20,7 @@ namespace Mozart\Component\Support;
  */
 class Environment
 {
-  /**
+    /**
    * Compares the memory required for an operation to the available memory.
    *
    * @param string $required
@@ -29,18 +37,17 @@ class Environment
    *   TRUE if there is sufficient memory to allow the operation, or FALSE
    *   otherwise.
    */
-  public static function checkMemoryLimit($required, $memory_limit = NULL)
+  public static function checkMemoryLimit($required, $memory_limit = null)
   {
-    if (!isset($memory_limit)) {
-      $memory_limit = ini_get('memory_limit');
-    }
+      if (!isset($memory_limit)) {
+          $memory_limit = ini_get('memory_limit');
+      }
 
     // There is sufficient memory if:
     // - No memory limit is set.
     // - The memory limit is set to unlimited (-1).
     // - The memory limit is greater than or equal to the memory required for
     //   the operation.
-    return ((!$memory_limit) || ($memory_limit == -1) || (Bytes::toInt($memory_limit) >= Bytes::toInt($required)));
+    return (!$memory_limit) || ($memory_limit === -1) || (Bytes::toInt($memory_limit) >= Bytes::toInt($required));
   }
-
 }

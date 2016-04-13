@@ -1,13 +1,21 @@
 <?php
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\UserBundle\Widget;
 
 use Mozart\Bundle\WidgetBundle\Widget;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
- * Class RegisterWidget
- *
- * @package Mozart\Bundle\UserBundle\Widget
+ * Class RegisterWidget.
  */
 class RegisterWidget extends Widget
 {
@@ -28,42 +36,42 @@ class RegisterWidget extends Widget
     public function getFieldGroup()
     {
         return array(
-            'key'                   => 'group_53c2f1621e0e0',
-            'title'                 => 'Register Widget',
-            'fields'                => array(
+            'key' => 'group_53c2f1621e0e0',
+            'title' => 'Register Widget',
+            'fields' => array(
                 array(
-                    'key'               => 'field_53c2f16572c5d',
-                    'label'             => 'Title',
-                    'name'              => 'mozart.user_register_widget_title',
-                    'prefix'            => '',
-                    'type'              => 'text',
-                    'instructions'      => '',
-                    'required'          => 0,
+                    'key' => 'field_53c2f16572c5d',
+                    'label' => 'Title',
+                    'name' => 'mozart.user_register_widget_title',
+                    'prefix' => '',
+                    'type' => 'text',
+                    'instructions' => '',
+                    'required' => 0,
                     'conditional_logic' => 0,
-                    'default_value'     => 'Register',
-                    'placeholder'       => 'Register',
-                    'prepend'           => '',
-                    'append'            => '',
-                    'maxlength'         => '',
-                    'readonly'          => 0,
-                    'disabled'          => 0,
+                    'default_value' => 'Register',
+                    'placeholder' => 'Register',
+                    'prepend' => '',
+                    'append' => '',
+                    'maxlength' => '',
+                    'readonly' => 0,
+                    'disabled' => 0,
                 ),
             ),
-            'location'              => array(
+            'location' => array(
                 array(
                     array(
-                        'param'    => 'widget',
+                        'param' => 'widget',
                         'operator' => '==',
-                        'value'    => 'register_widget_mozart',
+                        'value' => 'register_widget_mozart',
                     ),
                 ),
             ),
-            'menu_order'            => 0,
-            'position'              => 'normal',
-            'style'                 => 'default',
-            'label_placement'       => 'top',
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
             'instruction_placement' => 'label',
-            'hide_on_screen'        => '',
+            'hide_on_screen' => '',
         );
     }
 
@@ -76,13 +84,12 @@ class RegisterWidget extends Widget
         echo $this->templating->render(
             'MozartUserBundle:Account:widgets/register.html.twig',
             array(
-                'title'         => apply_filters( 'widget_title', $instance['mozart.user_register_widget_title'] ),
+                'title' => apply_filters('widget_title', $instance['mozart.user_register_widget_title']),
                 'before_widget' => $args['before_widget'],
-                'after_widget'  => $args['after_widget'],
-                'before_title'  => $args['before_title'],
-                'after_title'   => $args['after_title']
+                'after_widget' => $args['after_widget'],
+                'before_title' => $args['before_title'],
+                'after_title' => $args['after_title'],
             )
         );
     }
-
 }

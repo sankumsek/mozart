@@ -1,12 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\ShortcodeBundle\Shortcode;
+
 use Mozart\Bundle\ShortcodeBundle\ShortcodeInterface;
 
 /**
- * Class ContentBoxShortcode
- *
- * @package Mozart\Bundle\ShortcodeBundle\Shortcode
+ * Class ContentBoxShortcode.
  */
 class RowShortcode implements ShortcodeInterface
 {
@@ -18,7 +26,7 @@ class RowShortcode implements ShortcodeInterface
      */
     public function process($params, $content = null)
     {
-        $result = '<div class="row">' . do_shortcode($content) . '</div>';
+        $result = '<div class="row">'.do_shortcode($content).'</div>';
 
         return force_balance_tags($result);
     }

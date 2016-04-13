@@ -1,30 +1,38 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\NucleusBundle\DependencyInjection\Security\Factory;
 
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
+use Symfony\Component\DependencyInjection\Reference;
 
 class WordpressFactory extends AbstractFactory
 {
     protected $options = array(
-        'name'     => 'wordpress_logged_in_12345',
+        'name' => 'wordpress_logged_in_12345',
         'lifetime' => 31536000,
-        'path'     => '/',
-        'domain'   => null,
-        'secure'   => false,
+        'path' => '/',
+        'domain' => null,
+        'secure' => false,
         'httponly' => true,
     );
 
     public function create(ContainerBuilder $container, $id, $config, $userProviderId, $defaultEntryPointId)
     {
-        $this->options = array_intersect_key( $config, $this->options );
+        $this->options = array_intersect_key($config, $this->options);
 
-        return parent::create( $container, $id, $config, $userProviderId, $defaultEntryPointId );
+        return parent::create($container, $id, $config, $userProviderId, $defaultEntryPointId);
     }
 
     /**
@@ -39,12 +47,12 @@ class WordpressFactory extends AbstractFactory
      */
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId)
     {
-        $templateId     = 'mozart.security.authentication.provider';
-        $authProviderId = $templateId . '.' . $id;
+        $templateId = 'mozart.security.authentication.provider';
+        $authProviderId = $templateId.'.'.$id;
 
         $container
-            ->setDefinition( $authProviderId, new DefinitionDecorator( $templateId ) )
-            ->addArgument( new Reference( 'security.user_checker' ) );
+            ->setDefinition($authProviderId, new DefinitionDecorator($templateId))
+            ->addArgument(new Reference('security.user_checker'));
 
         return $authProviderId;
     }
@@ -60,35 +68,35 @@ class WordpressFactory extends AbstractFactory
     protected function createListener($container, $id, $config, $userProviderId)
     {
         // Create the WordPress cookie service
-        $templateId      = 'mozart.security.cookie.service';
-        $cookieServiceId = $templateId . '.' . $id;
+        $templateId = 'mozart.security.cookie.service';
+        $cookieServiceId = $templateId.'.'.$id;
 
         /** @var $cookieService Definition */
-        $cookieService = $container->setDefinition( $cookieServiceId, new DefinitionDecorator( $templateId ) );
-        $cookieService->addArgument( new Reference( 'mozart.configuration.manager' ) );
-        $cookieService->addArgument( new Reference( $userProviderId ) );
-        $cookieService->addArgument( $this->options );
-        $cookieService->addArgument( new Reference( 'logger' ) );
+        $cookieService = $container->setDefinition($cookieServiceId, new DefinitionDecorator($templateId));
+        $cookieService->addArgument(new Reference('mozart.configuration.manager'));
+        $cookieService->addArgument(new Reference($userProviderId));
+        $cookieService->addArgument($this->options);
+        $cookieService->addArgument(new Reference('logger'));
 
         // Add CookieClearingLogoutHandler to logout
-        if ($container->hasDefinition( 'security.logout_listener.' . $id )) {
-            $cookieHandlerId = 'mozart.security.logout.handler.cookie_clearing.' . $id;
+        if ($container->hasDefinition('security.logout_listener.'.$id)) {
+            $cookieHandlerId = 'mozart.security.logout.handler.cookie_clearing.'.$id;
             $container->setDefinition(
                 $cookieHandlerId,
-                new DefinitionDecorator( 'mozart.security.logout.handler.cookie_clearing' )
+                new DefinitionDecorator('mozart.security.logout.handler.cookie_clearing')
             );
 
             $container
-                ->getDefinition( 'security.logout_listener.' . $id )
-                ->addMethodCall( 'addHandler', array( new Reference( $cookieHandlerId ) ) );
+                ->getDefinition('security.logout_listener.'.$id)
+                ->addMethodCall('addHandler', array(new Reference($cookieHandlerId)));
         }
 
         $listenerId = $this->getListenerId();
-        $listener   = $container->setDefinition(
+        $listener = $container->setDefinition(
             $listenerId,
-            new DefinitionDecorator( 'mozart.security.authentication.listener' )
+            new DefinitionDecorator('mozart.security.authentication.listener')
         );
-        $listener->replaceArgument( 1, new Reference( $cookieServiceId ) );
+        $listener->replaceArgument(1, new Reference($cookieServiceId));
 
         return $listenerId;
     }

@@ -1,16 +1,24 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\NucleusBundle\DependencyInjection;
 
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class MozartNucleusExtension extends Extension
 {
-
     /**
      * Loads the services based on your application configuration.
      *
@@ -19,7 +27,7 @@ class MozartNucleusExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-//
+        //
 //        $processor = new Processor();
 //        $configuration = new Configuration();
 //        $configs = $processor->processConfiguration($configuration, $configs);
@@ -31,7 +39,7 @@ class MozartNucleusExtension extends Extension
 //            }
 //        }
 
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
         $this->addClassesToCompile(array(
@@ -43,5 +51,4 @@ class MozartNucleusExtension extends Extension
     {
         return 'mozart_nucleus';
     }
-
 }

@@ -1,10 +1,19 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use  Mozart\Bundle\NucleusBundle\Annotation as Mozart;
-use  Mozart\Bundle\BlogBundle\Model\Blog as BaseBlog;
+use Mozart\Bundle\BlogBundle\Model\Blog as BaseBlog;
+use Mozart\Bundle\NucleusBundle\Annotation as Mozart;
 
 /**
  * @ORM\Table(name="blogs")
@@ -14,7 +23,7 @@ use  Mozart\Bundle\BlogBundle\Model\Blog as BaseBlog;
 class Blog extends BaseBlog
 {
     /**
-     * @var int $id
+     * @var int
      *
      * @ORM\Column(name="blog_id", type="bigint", length=20)
      * @ORM\Id
@@ -22,77 +31,77 @@ class Blog extends BaseBlog
     protected $id;
 
     /**
-     * @var int $siteId
+     * @var int
      *
      * @ORM\Column(name="site_id", type="bigint", length=20)
      */
     protected $siteId;
 
     /**
-     * @var string $domain
+     * @var string
      *
      * @ORM\Column(name="domain", type="string", length=200)
      */
     protected $domain;
 
     /**
-     * @var string $path
+     * @var string
      *
      * @ORM\Column(name="path", type="string", length=200)
      */
     protected $path;
 
     /**
-     * @var \DateTime $registeredDate
+     * @var \DateTime
      *
      * @ORM\Column(name="registered", type="datetime")
      */
     protected $registeredDate;
 
     /**
-     * @var \DateTime $lastUpdatedDate
+     * @var \DateTime
      *
      * @ORM\Column(name="last_updated", type="datetime")
      */
     protected $lastUpdatedDate;
 
     /**
-     * @var integer $public
+     * @var int
      *
      * @ORM\Column(name="public", type="smallint", length=2)
      */
     protected $public;
 
     /**
-     * @var integer $archived
+     * @var int
      *
      * @ORM\Column(name="archived", type="smallint")
      */
     protected $archived;
 
     /**
-     * @var integer $mature
+     * @var int
      *
      * @ORM\Column(name="mature", type="smallint", length=2)
      */
     protected $mature;
 
     /**
-     * @var integer $spam
+     * @var int
      *
      * @ORM\Column(name="spam", type="smallint", length=2)
      */
     protected $spam;
 
     /**
-     * @var integer $deleted
+     * @var int
      *
      * @ORM\Column(name="deleted", type="smallint", length=2)
      */
     protected $deleted;
 
     /**
-     * @var integer $langId
+     * @var int
      *
      * @ORM\Column(name="lang_id", type="integer", length=11)
      */

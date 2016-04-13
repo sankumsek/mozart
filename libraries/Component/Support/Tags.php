@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\Tags.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -14,7 +22,7 @@ namespace Mozart\Component\Support;
  */
 class Tags
 {
-  /**
+    /**
    * Explodes a string of tags into an array.
    *
    * @param string $tags
@@ -25,24 +33,24 @@ class Tags
    */
   public static function explode($tags)
   {
-    // This regexp allows the following types of user input:
+      // This regexp allows the following types of user input:
     // this, "somecompany, llc", "and ""this"" w,o.rks", foo bar
     $regexp = '%(?:^|,\ *)("(?>[^"]*)(?>""[^"]* )*"|(?: [^",]*))%x';
-    preg_match_all($regexp, $tags, $matches);
-    $typed_tags = array_unique($matches[1]);
+      preg_match_all($regexp, $tags, $matches);
+      $typed_tags = array_unique($matches[1]);
 
-    $tags = array();
-    foreach ($typed_tags as $tag) {
-      // If a user has escaped a term (to demonstrate that it is a group,
+      $tags = array();
+      foreach ($typed_tags as $tag) {
+          // If a user has escaped a term (to demonstrate that it is a group,
       // or includes a comma or quote character), we remove the escape
       // formatting so to save the term into the database as the user intends.
       $tag = trim(str_replace('""', '"', preg_replace('/^"(.*)"$/', '\1', $tag)));
-      if ($tag != "") {
-        $tags[] = $tag;
+          if ($tag !== '') {
+              $tags[] = $tag;
+          }
       }
-    }
 
-    return $tags;
+      return $tags;
   }
 
   /**
@@ -56,11 +64,11 @@ class Tags
    */
   public static function encode($tag)
   {
-    if (strpos($tag, ',') !== FALSE || strpos($tag, '"') !== FALSE) {
-      return '"' . str_replace('"', '""', $tag) . '"';
-    }
+      if (strpos($tag, ',') !== false || strpos($tag, '"') !== false) {
+          return '"'.str_replace('"', '""', $tag).'"';
+      }
 
-    return $tag;
+      return $tag;
   }
 
   /**
@@ -74,12 +82,11 @@ class Tags
    */
   public static function implode($tags)
   {
-    $encoded_tags = array();
-    foreach ($tags as $tag) {
-      $encoded_tags[] = self::encode($tag);
-    }
+      $encoded_tags = array();
+      foreach ($tags as $tag) {
+          $encoded_tags[] = self::encode($tag);
+      }
 
-    return implode(', ', $encoded_tags);
+      return implode(', ', $encoded_tags);
   }
-
 }

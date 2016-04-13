@@ -1,4 +1,14 @@
 <?php
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Component\Post\Connection\Side;
 
 class SideAttachment extends SidePost
@@ -9,7 +19,7 @@ class SideAttachment extends SidePost
     {
         $this->query_vars = $query_vars;
 
-        $this->query_vars['post_type'] = array( 'attachment' );
+        $this->query_vars['post_type'] = array('attachment');
     }
 
     public function can_create_item()
@@ -19,8 +29,8 @@ class SideAttachment extends SidePost
 
     public function get_base_qv($q)
     {
-        return array_merge( parent::get_base_qv( $q ), array(
-            'post_status' => 'inherit'
-        ) );
+        return array_merge(parent::get_base_qv($q), array(
+            'post_status' => 'inherit',
+        ));
     }
 }

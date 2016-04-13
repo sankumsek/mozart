@@ -1,15 +1,23 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\PluginBundle\Model;
 
 use Mozart\Component\Plugin\PluginInterface;
 
 /**
- * Class Plugin
- * @package Mozart\Bundle\PluginBundle\Model
+ * Class Plugin.
  */
 class Plugin implements PluginInterface
 {
@@ -65,7 +73,7 @@ class Plugin implements PluginInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isForceActivation()
     {
@@ -73,7 +81,7 @@ class Plugin implements PluginInterface
     }
 
     /**
-     * @param boolean $force_activation
+     * @param bool $force_activation
      */
     public function setForceActivation($force_activation)
     {
@@ -81,7 +89,7 @@ class Plugin implements PluginInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isForceDeactivation()
     {
@@ -89,7 +97,7 @@ class Plugin implements PluginInterface
     }
 
     /**
-     * @param boolean $force_deactivation
+     * @param bool $force_deactivation
      */
     public function setForceDeactivation($force_deactivation)
     {
@@ -113,7 +121,7 @@ class Plugin implements PluginInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isRequired()
     {
@@ -121,7 +129,7 @@ class Plugin implements PluginInterface
     }
 
     /**
-     * @param boolean $required
+     * @param bool $required
      */
     public function setRequired($required)
     {
@@ -185,10 +193,10 @@ class Plugin implements PluginInterface
     public function getBasename()
     {
         if ('' === $this->basename) {
-            $keys = array_keys( get_plugins() );
+            $keys = array_keys(get_plugins());
 
             foreach ($keys as $key) {
-                if (preg_match( '|^' . $this->slug . '/|', $key )) {
+                if (preg_match('|^'.$this->slug.'/|', $key)) {
                     $this->basename = $key;
                 }
             }
@@ -197,7 +205,6 @@ class Plugin implements PluginInterface
         }
 
         return $this->basename;
-
     }
 
     /**
@@ -214,20 +221,20 @@ class Plugin implements PluginInterface
      */
     public function forceActivate()
     {
-        if (false == $this->force_activation) {
+        if (false === $this->force_activation) {
             return;
         }
 
         $installed_plugins = get_plugins();
         $pluginPath = $this->getBasename();
 
-        if (!isset( $installed_plugins[$pluginPath] )
-            || is_plugin_active( $pluginPath )
+        if (!isset($installed_plugins[$pluginPath])
+            || is_plugin_active($pluginPath)
         ) {
             return;
         }
 
-        activate_plugin( $pluginPath );
+        activate_plugin($pluginPath);
     }
 
     /**
@@ -242,26 +249,25 @@ class Plugin implements PluginInterface
      */
     public function forceDeactivate()
     {
-        if (false == $this->force_deactivation) {
+        if (false === $this->force_deactivation) {
             return;
         }
 
         $pluginPath = $this->getBasename();
 
-        if (is_plugin_active( $pluginPath )) {
-            deactivate_plugins( $pluginPath );
+        if (is_plugin_active($pluginPath)) {
+            deactivate_plugins($pluginPath);
         }
     }
 
     public function isActive()
     {
-        return is_plugin_active( $this->getBasename() );
+        return is_plugin_active($this->getBasename());
     }
 
     public function install($options)
     {
-
-        check_admin_referer( 'tgmpa-install' );
+        check_admin_referer('tgmpa-install');
 
         $plugin['name'] = $_GET['plugin_name']; // Plugin name.
         $plugin['slug'] = $_GET['plugin']; // Plugin slug.
@@ -271,70 +277,70 @@ class Plugin implements PluginInterface
         $url = wp_nonce_url(
             add_query_arg(
                 array(
-                    'page'          => $options['menu'],
-                    'plugin'        => $plugin['slug'],
-                    'plugin_name'   => $plugin['name'],
+                    'page' => $options['menu'],
+                    'plugin' => $plugin['slug'],
+                    'plugin_name' => $plugin['name'],
                     'plugin_source' => $plugin['source'],
                     'tgmpa-install' => 'install-plugin',
                 ),
-                network_admin_url( 'themes.php' )
+                network_admin_url('themes.php')
             ),
             'tgmpa-install'
         );
         $method = ''; // Leave blank so WP_Filesystem can populate it as necessary.
-        $fields = array( 'tgmpa-install' ); // Extra fields to pass to WP_Filesystem.
+        $fields = array('tgmpa-install'); // Extra fields to pass to WP_Filesystem.
 
-        if (false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $fields ) )) {
+        if (false === ($creds = request_filesystem_credentials($url, $method, false, false, $fields))) {
             return true;
         }
 
-        if (!WP_Filesystem( $creds )) {
-            request_filesystem_credentials( $url, $method, true, false, $fields ); // Setup WP_Filesystem.
+        if (!WP_Filesystem($creds)) {
+            request_filesystem_credentials($url, $method, true, false, $fields); // Setup WP_Filesystem.
 
             return true;
         }
 
-        require_once ABSPATH . 'wp-admin/includes/plugin-install.php'; // Need for plugins_api.
-        require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php'; // Need for upgrade classes.
+        require_once ABSPATH.'wp-admin/includes/plugin-install.php'; // Need for plugins_api.
+        require_once ABSPATH.'wp-admin/includes/class-wp-upgrader.php'; // Need for upgrade classes.
 
         // Set plugin source to WordPress API link if available.
-        if (isset( $plugin['source'] ) && 'repo' == $plugin['source']) {
+        if (isset($plugin['source']) && 'repo' === $plugin['source']) {
             $api = plugins_api(
                 'plugin_information',
-                array( 'slug' => $plugin['slug'], 'fields' => array( 'sections' => false ) )
+                array('slug' => $plugin['slug'], 'fields' => array('sections' => false))
             );
 
-            if (is_wp_error( $api )) {
-                wp_die( $this->messages['oops'] . var_dump( $api ) );
+            if (is_wp_error($api)) {
+                wp_die($this->messages['oops'].var_dump($api));
             }
 
-            if (isset( $api->download_link )) {
+            if (isset($api->download_link)) {
                 $plugin['source'] = $api->download_link;
             }
         }
 
         // Set type, based on whether the source starts with http:// or https://.
-        $type = preg_match( '|^http(s)?://|', $plugin['source'] ) ? 'web' : 'upload';
+        $type = preg_match('|^http(s)?://|', $plugin['source']) ? 'web' : 'upload';
 
         // Prep variables for Plugin_Installer_Skin class.
-        $title = sprintf( $this->messages['installing'], $plugin['name'] );
-        $url = add_query_arg( array( 'action' => 'install-plugin', 'plugin' => $plugin['slug'] ), 'update.php' );
-        if (isset( $_GET['from'] )) {
-            $url .= add_query_arg( 'from', urlencode( stripslashes( $_GET['from'] ) ), $url );
+        $title = sprintf($this->messages['installing'], $plugin['name']);
+        $url = add_query_arg(array('action' => 'install-plugin', 'plugin' => $plugin['slug']), 'update.php');
+        if (isset($_GET['from'])) {
+            $url .= add_query_arg('from', urlencode(stripslashes($_GET['from'])), $url);
         }
 
-        $nonce = 'install-plugin_' . $plugin['slug'];
+        $nonce = 'install-plugin_'.$plugin['slug'];
 
         // Prefix a default path to pre-packaged plugins.
-        $source = ( 'upload' == $type ) ? $options['default_path'] . $plugin['source'] : $plugin['source'];
+        $source = ('upload' === $type) ? $options['default_path'].$plugin['source'] : $plugin['source'];
 
         // Create a new instance of Plugin_Upgrader.
         $upgrader = new \Plugin_Upgrader(
-            $skin = new \Plugin_Installer_Skin( compact( 'type', 'title', 'url', 'nonce', 'plugin', 'api' ) )
+            $skin = new \Plugin_Installer_Skin(compact('type', 'title', 'url', 'nonce', 'plugin', 'api'))
         );
 
         // Perform the action and install the plugin from the $source urldecode().
-        $upgrader->install( $source );
+        $upgrader->install($source);
 
         // Flush plugins cache so we can make sure that the installed plugins list is always up to date.
         wp_cache_flush();
@@ -342,37 +348,37 @@ class Plugin implements PluginInterface
         // Only activate plugins if the config option is set to true.
         if ($options['is_automatic']) {
             $plugin_activate = $upgrader->plugin_info(); // Grab the plugin info from the Plugin_Upgrader method.
-            $activate = activate_plugin( $plugin_activate ); // Activate the plugin.
+            $activate = activate_plugin($plugin_activate); // Activate the plugin.
             $this->populate_file_path(
             ); // Re-populate the file path now that the plugin has been installed and activated.
 
-            if (is_wp_error( $activate )) {
-                echo '<div id="message" class="error"><p>' . $activate->get_error_message() . '</p></div>';
-                echo '<p><a href="' . add_query_arg(
+            if (is_wp_error($activate)) {
+                echo '<div id="message" class="error"><p>'.$activate->get_error_message().'</p></div>';
+                echo '<p><a href="'.add_query_arg(
                         'page',
                         $options['menu'],
-                        network_admin_url( 'themes.php' )
-                    ) . '" title="' . esc_attr(
+                        network_admin_url('themes.php')
+                    ).'" title="'.esc_attr(
                         $this->messages['return']
-                    ) . '" target="_parent">' . $this->messages['return'] . '</a></p>';
+                    ).'" target="_parent">'.$this->messages['return'].'</a></p>';
 
                 return true; // End it here if there is an error with automatic activation
             } else {
-                echo '<p>' . $this->messages['plugin_activated'] . '</p>';
+                echo '<p>'.$this->messages['plugin_activated'].'</p>';
             }
         }
 
         // Display message based on if all plugins are now active or not.
         $complete = array();
         foreach ($this->plugins as $plugin) {
-            if (!is_plugin_active( $plugin['file_path'] )) {
-                echo '<p><a href="' . add_query_arg(
+            if (!is_plugin_active($plugin['file_path'])) {
+                echo '<p><a href="'.add_query_arg(
                         'page',
                         $this->menu,
-                        network_admin_url( 'themes.php' )
-                    ) . '" title="' . esc_attr(
+                        network_admin_url('themes.php')
+                    ).'" title="'.esc_attr(
                         $this->messages['return']
-                    ) . '" target="_parent">' . $this->messages['return'] . '</a></p>';
+                    ).'" target="_parent">'.$this->messages['return'].'</a></p>';
                 $complete[] = $plugin;
                 break;
             } // Nothing to store.
@@ -382,17 +388,17 @@ class Plugin implements PluginInterface
         }
 
         // Filter out any empty entries.
-        $complete = array_filter( $complete );
+        $complete = array_filter($complete);
 
         // All plugins are active, so we display the complete string and hide the plugin menu.
-        if (empty( $complete )) {
-            echo '<p>' . sprintf(
+        if (empty($complete)) {
+            echo '<p>'.sprintf(
                     $this->messages['complete'],
-                    '<a href="' . network_admin_url() . '" title="' . __(
+                    '<a href="'.network_admin_url().'" title="'.__(
                         'Return to the Dashboard',
                         'tgmpa'
-                    ) . '">' . __( 'Return to the Dashboard', 'tgmpa' ) . '</a>'
-                ) . '</p>';
+                    ).'">'.__('Return to the Dashboard', 'tgmpa').'</a>'
+                ).'</p>';
             echo '<style type="text/css">#adminmenu .wp-submenu li.current { display: none !important; }</style>';
         }
 

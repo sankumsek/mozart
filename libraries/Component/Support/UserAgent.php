@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\UserAgent.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -14,7 +22,7 @@ namespace Mozart\Component\Support;
  */
 class UserAgent
 {
-  /**
+    /**
    * Identifies user agent language from the Accept-language HTTP header.
    *
    * The algorithm works as follows:
@@ -43,7 +51,7 @@ class UserAgent
    */
   public static function getBestMatchingLangcode($http_accept_language, $langcodes, $mappings = array())
   {
-    // The Accept-Language header contains information about the language
+      // The Accept-Language header contains information about the language
     // preferences configured in the user's user agent / operating system.
     // RFC 2616 (section 14.4) defines the Accept-Language header as follows:
     //   Accept-Language = "Accept-Language" ":"
@@ -51,22 +59,22 @@ class UserAgent
     //   language-range  = ( ( 1*8ALPHA *( "-" 1*8ALPHA ) ) | "*" )
     // Samples: "hu, en-us;q=0.66, en;q=0.33", "hu,en-us;q=0.5"
     $ua_langcodes = array();
-    if (preg_match_all('@(?<=[, ]|^)([a-zA-Z-]+|\*)(?:;q=([0-9.]+))?(?:$|\s*,\s*)@', trim($http_accept_language), $matches, PREG_SET_ORDER)) {
-      foreach ($matches as $match) {
-        if ($mappings) {
-          $langcode = strtolower($match[1]);
-          foreach ($mappings as $ua_langcode => $standard_langcode) {
-            if ($langcode == $ua_langcode) {
-              $match[1] = $standard_langcode;
-            }
-          }
-        }
+      if (preg_match_all('@(?<=[, ]|^)([a-zA-Z-]+|\*)(?:;q=([0-9.]+))?(?:$|\s*,\s*)@', trim($http_accept_language), $matches, PREG_SET_ORDER)) {
+          foreach ($matches as $match) {
+              if ($mappings) {
+                  $langcode = strtolower($match[1]);
+                  foreach ($mappings as $ua_langcode => $standard_langcode) {
+                      if ($langcode === $ua_langcode) {
+                          $match[1] = $standard_langcode;
+                      }
+                  }
+              }
         // We can safely use strtolower() here, tags are ASCII.
         // RFC2616 mandates that the decimal part is no more than three digits,
         // so we multiply the qvalue by 1000 to avoid floating point
         // comparisons.
         $langcode = strtolower($match[1]);
-        $qvalue = isset($match[2]) ? (float) $match[2] : 1;
+              $qvalue = isset($match[2]) ? (float) $match[2] : 1;
         // Take the highest qvalue for this langcode. Although the request
         // supposedly contains unique langcodes, our mapping possibly resolves
         // to the same langcode for different qvalues. Keep the highest.
@@ -74,8 +82,8 @@ class UserAgent
           (int) ($qvalue * 1000),
           (isset($ua_langcodes[$langcode]) ? $ua_langcodes[$langcode] : 0)
         );
+          }
       }
-    }
 
     // We should take pristine values from the HTTP headers, but Internet
     // Explorer from version 7 sends only specific language tags (eg. fr-CA)
@@ -86,32 +94,32 @@ class UserAgent
     // See http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4 and
     // http://blogs.msdn.com/b/ie/archive/2006/10/17/accept-language-header-for-internet-explorer-7.aspx
     asort($ua_langcodes);
-    foreach ($ua_langcodes as $langcode => $qvalue) {
-      // For Chinese languages the generic tag is either zh-hans or zh-hant, so
+      foreach ($ua_langcodes as $langcode => $qvalue) {
+          // For Chinese languages the generic tag is either zh-hans or zh-hant, so
       // we need to handle this separately, we can not split $langcode on the
       // first occurrence of '-' otherwise we get a non-existing language zh.
       // All other languages use a langcode without a '-', so we can safely
       // split on the first occurrence of it.
-      if (strlen($langcode) > 7 && (substr($langcode, 0, 7) == 'zh-hant' || substr($langcode, 0, 7) == 'zh-hans')) {
-        $generic_tag = substr($langcode, 0, 7);
+      if (strlen($langcode) > 7 && (substr($langcode, 0, 7) === 'zh-hant' || substr($langcode, 0, 7) === 'zh-hans')) {
+          $generic_tag = substr($langcode, 0, 7);
       } else {
-        $generic_tag = strtok($langcode, '-');
+          $generic_tag = strtok($langcode, '-');
       }
-      if (!empty($generic_tag) && !isset($ua_langcodes[$generic_tag])) {
-        // Add the generic langcode, but make sure it has a lower qvalue as the
+          if (!empty($generic_tag) && !isset($ua_langcodes[$generic_tag])) {
+              // Add the generic langcode, but make sure it has a lower qvalue as the
         // more specific one, so the more specific one gets selected if it's
         // defined by both the user agent and us.
         $ua_langcodes[$generic_tag] = $qvalue - 0.1;
+          }
       }
-    }
 
     // Find the added language with the greatest qvalue, following the rules
     // of RFC 2616 (section 14.4). If several languages have the same qvalue,
     // prefer the one with the greatest weight.
-    $best_match_langcode = FALSE;
-    $max_qvalue = 0;
-    foreach ($langcodes as $langcode_case_sensitive) {
-      // Language tags are case insensitive (RFC2616, sec 3.10).
+    $best_match_langcode = false;
+      $max_qvalue = 0;
+      foreach ($langcodes as $langcode_case_sensitive) {
+          // Language tags are case insensitive (RFC2616, sec 3.10).
       $langcode = strtolower($langcode_case_sensitive);
 
       // If nothing matches below, the default qvalue is the one of the wildcard
@@ -122,21 +130,20 @@ class UserAgent
       // ('the language-range') that matches this site language ('the language
       // tag').
       $prefix = $langcode;
-      do {
-        if (isset($ua_langcodes[$prefix])) {
-          $qvalue = $ua_langcodes[$prefix];
-          break;
-        }
-      } while ($prefix = substr($prefix, 0, strrpos($prefix, '-')));
+          do {
+              if (isset($ua_langcodes[$prefix])) {
+                  $qvalue = $ua_langcodes[$prefix];
+                  break;
+              }
+          } while ($prefix = substr($prefix, 0, strrpos($prefix, '-')));
 
       // Find the best match.
       if ($qvalue > $max_qvalue) {
-        $best_match_langcode = $langcode_case_sensitive;
-        $max_qvalue = $qvalue;
+          $best_match_langcode = $langcode_case_sensitive;
+          $max_qvalue = $qvalue;
       }
-    }
+      }
 
-    return $best_match_langcode;
+      return $best_match_langcode;
   }
-
 }

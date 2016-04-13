@@ -1,16 +1,23 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\UserBundle\Model;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\DependencyInjection\Container;
 use Mozart\Bundle\NucleusBundle\Model\AbstractManager;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
- * Class UserMetaManager
- *
- * @package Mozart\Bundle\UserBundle\Model
+ * Class UserMetaManager.
  */
 class UserMetaManager extends AbstractManager implements UserMetaManagerInterface
 {
@@ -31,10 +38,10 @@ class UserMetaManager extends AbstractManager implements UserMetaManagerInterfac
      */
     public function __construct(Container $container)
     {
-        parent::__construct( $container );
+        parent::__construct($container);
 
-        $this->em         = $this->getEntityManager();
-        $this->repository = $this->em->getRepository( 'MozartUserBundle:UserMeta' );
+        $this->em = $this->getEntityManager();
+        $this->repository = $this->em->getRepository('MozartUserBundle:UserMeta');
     }
 
     /**
@@ -43,7 +50,7 @@ class UserMetaManager extends AbstractManager implements UserMetaManagerInterfac
      */
     public function addMeta(User $user, UserMeta $meta)
     {
-        $user->addMeta( $meta );
+        $user->addMeta($meta);
     }
 
     /**
@@ -63,7 +70,7 @@ class UserMetaManager extends AbstractManager implements UserMetaManagerInterfac
      */
     public function findMetasBy(array $criteria)
     {
-        return $this->repository->findBy( $criteria );
+        return $this->repository->findBy($criteria);
     }
 
     /**
@@ -73,6 +80,6 @@ class UserMetaManager extends AbstractManager implements UserMetaManagerInterfac
      */
     public function findOneMetaBy(array $criteria)
     {
-        return $this->repository->findOneBy( $criteria );
+        return $this->repository->findOneBy($criteria);
     }
 }

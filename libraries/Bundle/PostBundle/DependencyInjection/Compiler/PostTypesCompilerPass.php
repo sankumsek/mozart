@@ -1,12 +1,21 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\PostBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 class PostTypesCompilerPass implements CompilerPassInterface
@@ -16,7 +25,7 @@ class PostTypesCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if ( false === $container->hasDefinition( 'mozart.post.post_type_manager' ) ) {
+        if (false === $container->hasDefinition('mozart.post.post_type_manager')) {
             return;
         }
 
@@ -24,21 +33,20 @@ class PostTypesCompilerPass implements CompilerPassInterface
             'mozart.post.post_type_manager'
         );
 
-        foreach ( $container->findTaggedServiceIds( 'wordpress.post_type' ) as $id => $attributes ) {
+        foreach ($container->findTaggedServiceIds('wordpress.post_type') as $id => $attributes) {
             $definition->addMethodCall(
                 'registerPostType',
-                array( new Reference( $id ) )
+                array(new Reference($id))
             );
         }
 
-        foreach ( $container->findTaggedServiceIds( 'wordpress.post_type.extension' ) as $id => $attributes ) {
+        foreach ($container->findTaggedServiceIds('wordpress.post_type.extension') as $id => $attributes) {
             $definition->addMethodCall(
                 'registerExtension',
                 array(
-                    new Reference( $id )
+                    new Reference($id),
                 )
             );
         }
     }
-
 }

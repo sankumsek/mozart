@@ -1,17 +1,24 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\NucleusBundle\Subscriber;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Mozart\Bundle\NucleusBundle\Annotation\WPTable;
 
 /**
- * Class TablePrefixSubscriber
- *
- * @package Mozart\Bundle\NucleusBundle\Subscriber
+ * Class TablePrefixSubscriber.
  */
 class TablePrefixSubscriber implements EventSubscriber
 {
@@ -33,7 +40,7 @@ class TablePrefixSubscriber implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return array( 'loadClassMetadata' );
+        return array('loadClassMetadata');
     }
 
     /**
@@ -44,8 +51,8 @@ class TablePrefixSubscriber implements EventSubscriber
         $classMetadata = $args->getClassMetadata();
 
         // Get class annotations
-        $reader           = new AnnotationReader();
-        $classAnnotations = $reader->getClassAnnotations( $classMetadata->getReflectionClass() );
+        $reader = new AnnotationReader();
+        $classAnnotations = $reader->getClassAnnotations($classMetadata->getReflectionClass());
 
         // Search for WPTable annotation
         $found = false;
@@ -62,25 +69,25 @@ class TablePrefixSubscriber implements EventSubscriber
         }
 
         // set table prefix
-        $prefix = $this->getPrefix( $classMetadata->name, $args->getEntityManager() );
+        $prefix = $this->getPrefix($classMetadata->name, $args->getEntityManager());
 
         $classMetadata->setPrimaryTable(
             array(
-                'name' => $prefix . $classMetadata->getTableName()
+                'name' => $prefix.$classMetadata->getTableName(),
             )
         );
 
         // set table prefix to associated entity
         // TODO: make sure prefix won't apply to user table
         foreach ($classMetadata->associationMappings as &$mapping) {
-            if (isset( $mapping['joinTable'] ) && !empty( $mapping['joinTable'] )) {
-                $mapping['joinTable']['name'] = $prefix . $mapping['joinTable']['name'];
+            if (isset($mapping['joinTable']) && !empty($mapping['joinTable'])) {
+                $mapping['joinTable']['name'] = $prefix.$mapping['joinTable']['name'];
             }
         }
     }
 
     /**
-     * Returns the table prefix for entity, with blog ID appened if needed
+     * Returns the table prefix for entity, with blog ID appened if needed.
      *
      * @param string        $entityName fully-qualified class name of the persistent class.
      * @param EntityManager $em
@@ -98,12 +105,12 @@ class TablePrefixSubscriber implements EventSubscriber
             return $this->prefix;
         }
 
-        if (method_exists( $em, 'getBlogId' )) {
+        if (method_exists($em, 'getBlogId')) {
             $blogId = $em->getBlogId();
 
             // append blog ID to prefix
             if ($blogId > 1) {
-                $prefix = $prefix . $blogId . '_';
+                $prefix = $prefix.$blogId.'_';
             }
         }
 

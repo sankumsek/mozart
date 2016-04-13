@@ -1,13 +1,22 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\NucleusBundle\Command;
 
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 /**
  * Command that places twitter bootstrap files into a given directory.
@@ -16,7 +25,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
  */
 class TwitterBootstrapInstallCommand extends ContainerAwareCommand
 {
-
     /**
      * {@inheritdoc}
      */
@@ -73,13 +81,12 @@ EOT
         $filesystem = $this->getContainer()->get('filesystem');
 
         // Create the bundles directory otherwise symlink will fail.
-        $targetDir = $targetArg . '/twbs/';
+        $targetDir = $targetArg.'/twbs/';
         $filesystem->mkdir($targetDir, 0777);
 
-        $output->writeln(sprintf("Installing Twitter Bootstrap files using the <comment>%s</comment> option", $input->getOption('symlink') ? 'symlink' : 'hard copy'));
+        $output->writeln(sprintf('Installing Twitter Bootstrap files using the <comment>%s</comment> option', $input->getOption('symlink') ? 'symlink' : 'hard copy'));
 
-        if (is_dir($originDir = $this->getContainer()->get('kernel')->getRootDir() . '/../vendor/twbs/')) {
-
+        if (is_dir($originDir = $this->getContainer()->get('kernel')->getRootDir().'/../vendor/twbs/')) {
             $output->writeln(sprintf('Installing Twitter Bootstrap into <comment>%s</comment>', $targetDir));
 
             $filesystem->remove($targetDir);
@@ -98,5 +105,4 @@ EOT
             }
         }
     }
-
 }

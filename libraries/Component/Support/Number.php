@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\Number.
@@ -13,7 +22,7 @@ namespace Mozart\Component\Support;
  */
 class Number
 {
-  /**
+    /**
    * Verifies that a number is a multiple of a given step.
    *
    * The implementation assumes it is dealing with IEEE 754 double precision
@@ -36,7 +45,7 @@ class Number
    */
   public static function validStep($value, $step, $offset = 0.0)
   {
-    $double_value = (double) abs($value - $offset);
+      $double_value = (double) abs($value - $offset);
 
     // The fractional part of a double has 53 bits. The greatest number that
     // could be represented with that is 2^53. If the given value is even bigger
@@ -45,7 +54,7 @@ class Number
     // precision float the following computation of the remainder makes no sense
     // and we can safely ignore it instead.
     if ($double_value / pow(2.0, 53) > $step) {
-      return TRUE;
+        return true;
     }
 
     // Now compute that remainder of a division by $step.
@@ -57,7 +66,7 @@ class Number
     // $step * 2^-24 are acceptable.
     $computed_acceptable_error = (double) ($step / pow(2.0, 24));
 
-    return $computed_acceptable_error >= $remainder || $remainder >= ($step - $computed_acceptable_error);
+      return $computed_acceptable_error >= $remainder || $remainder >= ($step - $computed_acceptable_error);
   }
 
   /**
@@ -83,10 +92,10 @@ class Number
    */
   public static function intToAlphadecimal($i = 0)
   {
-    $num = base_convert((int) $i, 10, 36);
-    $length = strlen($num);
+      $num = base_convert((int) $i, 10, 36);
+      $length = strlen($num);
 
-    return chr($length + ord('0') - 1) . $num;
+      return chr($length + ord('0') - 1).$num;
   }
 
   /**
@@ -102,7 +111,6 @@ class Number
    */
   public static function alphadecimalToInt($string = '00')
   {
-    return (int) base_convert(substr($string, 1), 36, 10);
+      return (int) base_convert(substr($string, 1), 36, 10);
   }
-
 }

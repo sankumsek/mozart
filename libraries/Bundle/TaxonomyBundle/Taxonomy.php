@@ -1,8 +1,17 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\TaxonomyBundle;
 
 use Mozart\Component\Support\Str;
@@ -10,9 +19,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\Exception\BadMethodCallException;
 
 /**
- * Class Taxonomy
- *
- * @package Mozart\Bundle\TaxonomyBundle
+ * Class Taxonomy.
  */
 abstract class Taxonomy implements TaxonomyInterface
 {
@@ -22,21 +29,21 @@ abstract class Taxonomy implements TaxonomyInterface
     public function getArguments()
     {
         return array(
-            'labels'                => $this->getLabels(),
-            'description'           => $this->getDescription(),
-            'public'                => $this->isPublic(),
-            'hierarchical'          => $this->isHierarchical(),
-            'query_var'             => $this->getQueryVariable(),
-            'rewrite'               => $this->getRewriteOptions(),
-            'meta_box_cb'           => $this->getMetaboxCallback(),
-            'capabilities'          => $this->getCapabilities(),
+            'labels' => $this->getLabels(),
+            'description' => $this->getDescription(),
+            'public' => $this->isPublic(),
+            'hierarchical' => $this->isHierarchical(),
+            'query_var' => $this->getQueryVariable(),
+            'rewrite' => $this->getRewriteOptions(),
+            'meta_box_cb' => $this->getMetaboxCallback(),
+            'capabilities' => $this->getCapabilities(),
             'update_count_callback' => $this->getUpdateCountCallback(),
             // UI stuff
-            'show_ui'               => $this->showUI(),
-            'show_admin_column'     => $this->showAdminColumn(),
-            'show_in_menu'          => $this->showInMenu(),
-            'show_in_nav_menus'     => $this->showInNavMenus(),
-            'show_tagcloud'         => $this->showTagCloud()
+            'show_ui' => $this->showUI(),
+            'show_admin_column' => $this->showAdminColumn(),
+            'show_in_menu' => $this->showInMenu(),
+            'show_in_nav_menus' => $this->showInNavMenus(),
+            'show_tagcloud' => $this->showTagCloud(),
         );
     }
 
@@ -49,7 +56,6 @@ abstract class Taxonomy implements TaxonomyInterface
     }
 
     /**
-     *
      * The name of the taxonomy.
      * Name should be in slug form
      * (must not contain capital letters or spaces)
@@ -59,15 +65,15 @@ abstract class Taxonomy implements TaxonomyInterface
      */
     public function getName()
     {
-        $className = get_class( $this );
-        if (substr( $className, -8 ) != 'Taxonomy') {
+        $className = get_class($this);
+        if (substr($className, -8) !== 'Taxonomy') {
             throw new BadMethodCallException(
                 'This taxonomy class does not follow the naming convention; you must overwrite the getName() method.'
             );
         }
-        $classBaseName = substr( strrchr( $className, '\\' ), 1, -8 );
+        $classBaseName = substr(strrchr($className, '\\'), 1, -8);
 
-        return Container::underscore( $classBaseName );
+        return Container::underscore($classBaseName);
     }
 
     /**
@@ -83,7 +89,7 @@ abstract class Taxonomy implements TaxonomyInterface
      */
     public function getLabel()
     {
-        return ucwords( str_replace( '_', ' ', $this->getName() ) );
+        return ucwords(str_replace('_', ' ', $this->getName()));
     }
 
     /**
@@ -91,7 +97,7 @@ abstract class Taxonomy implements TaxonomyInterface
      */
     public function getLabelPlural()
     {
-        return Str::plural( $this->getLabel() );
+        return Str::plural($this->getLabel());
     }
 
     /**
@@ -103,24 +109,24 @@ abstract class Taxonomy implements TaxonomyInterface
         $plural = $this->getLabelPlural();
 
         return array(
-            'name'              => _x( $plural, 'taxonomy general name' ),
-            'singular_name'     => _x( $singular, 'taxonomy singular name' ),
-            'search_items'      => __( "Search {$plural}" ),
-            'all_items'         => __( "All {$plural}" ),
-            'parent_item'       => __( "Parent {$singular}" ),
-            'parent_item_colon' => __( "Parent {$singular}:" ),
-            'edit_item'         => __( "Edit {$singular}" ),
-            'update_item'       => __( "Update {$singular}" ),
-            'add_new_item'      => __( "Add New {$singular}" ),
-            'new_item_name'     => __( "New {$singular} Name" ),
-            'menu_name'         => __( $plural ),
+            'name' => _x($plural, 'taxonomy general name'),
+            'singular_name' => _x($singular, 'taxonomy singular name'),
+            'search_items' => __("Search {$plural}"),
+            'all_items' => __("All {$plural}"),
+            'parent_item' => __("Parent {$singular}"),
+            'parent_item_colon' => __("Parent {$singular}:"),
+            'edit_item' => __("Edit {$singular}"),
+            'update_item' => __("Update {$singular}"),
+            'add_new_item' => __("Add New {$singular}"),
+            'new_item_name' => __("New {$singular} Name"),
+            'menu_name' => __($plural),
         );
     }
 
     /**
      * If the taxonomy should be publicly queryable.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPublic()
     {
@@ -132,7 +138,7 @@ abstract class Taxonomy implements TaxonomyInterface
      *
      * @default true
      *
-     * @return boolean
+     * @return bool
      */
     public function showUI()
     {
@@ -154,7 +160,7 @@ abstract class Taxonomy implements TaxonomyInterface
     /**
      * true makes this taxonomy available for selection in navigation menus.
      *
-     * @return boolean
+     * @return bool
      */
     public function showInNavMenus()
     {
@@ -177,7 +183,7 @@ abstract class Taxonomy implements TaxonomyInterface
      */
     public function getMetaboxCallback()
     {
-        return null;
+        return;
     }
 
     /**
@@ -252,9 +258,9 @@ abstract class Taxonomy implements TaxonomyInterface
     {
         return array(
             'manage_terms' => 'manage_categories',
-            'edit_terms'   => 'manage_categories',
+            'edit_terms' => 'manage_categories',
             'delete_terms' => 'manage_categories',
-            'assign_terms' => 'edit_posts'
+            'assign_terms' => 'edit_posts',
         );
     }
 
@@ -270,10 +276,10 @@ abstract class Taxonomy implements TaxonomyInterface
     public function getRewriteOptions()
     {
         return array(
-            'slug'         => $this->getName(),
-            'with_front'   => true,
+            'slug' => $this->getName(),
+            'with_front' => true,
             'hierarchical' => false,
-            'ep_mask'      => EP_NONE
+            'ep_mask' => EP_NONE,
         );
     }
 }

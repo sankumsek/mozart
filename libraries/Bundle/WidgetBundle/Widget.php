@@ -1,8 +1,17 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\WidgetBundle;
 
 use Mozart\Component\Support\Str;
@@ -10,9 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class Widget
- *
- * @package Mozart\Bundle\WidgetBundle
+ * Class Widget.
  */
 abstract class Widget extends \WP_Widget implements WidgetInterface, ContainerAwareInterface
 {
@@ -36,10 +43,10 @@ abstract class Widget extends \WP_Widget implements WidgetInterface, ContainerAw
      */
     public function getAlias()
     {
-        $className = get_class( $this );
-        $classBaseName = substr( strrchr( $className, '\\' ), 1 );
+        $className = get_class($this);
+        $classBaseName = substr(strrchr($className, '\\'), 1);
 
-        return Str::snake( $classBaseName ) . '_' . static::NAME_SPACE;
+        return Str::snake($classBaseName).'_'.static::NAME_SPACE;
     }
 
     /**
@@ -48,9 +55,9 @@ abstract class Widget extends \WP_Widget implements WidgetInterface, ContainerAw
     public function getName()
     {
         $alias = $this->getAlias();
-        $alias = str_replace( '_' . static::NAME_SPACE, ' | ' . static::NAME_SPACE, $alias );
+        $alias = str_replace('_'.static::NAME_SPACE, ' | '.static::NAME_SPACE, $alias);
 
-        return ucwords( str_replace( array( '-', '_' ), ' ', $alias ) );
+        return ucwords(str_replace(array('-', '_'), ' ', $alias));
     }
 
     /**
@@ -60,13 +67,14 @@ abstract class Widget extends \WP_Widget implements WidgetInterface, ContainerAw
     {
         return array(
             'classname' => $this->getAlias(),
-            'description' => str_replace( ' | ' . static::NAME_SPACE, '', $this->getName() )
+            'description' => str_replace(' | '.static::NAME_SPACE, '', $this->getName()),
         );
     }
 
-	public function getConfiguration( $widgetId ) {
-		return get_fields('widget_' . $widgetId );
-	}
+    public function getConfiguration($widgetId)
+    {
+        return get_fields('widget_'.$widgetId);
+    }
 
     /**
      * @param array $args
@@ -74,7 +82,7 @@ abstract class Widget extends \WP_Widget implements WidgetInterface, ContainerAw
      */
     public function widget($args, $instance)
     {
-        parent::widget( $args, $instance );
+        parent::widget($args, $instance);
     }
 
     /**

@@ -5,10 +5,10 @@
 			<div class="vc_modal-header">
 				<a href="#" class="vc_close" data-dismiss="modal" aria-hidden="true"><i class="vc_icon"></i></a>
 				<input id="vc_elements_name_filter" type="text" name="vc_content_filter" class="vc_elements-list-filter"
-					   placeholder="<?php esc_attr_e( 'Search by element name', "js_composer" ); ?>"/>
+					   placeholder="<?php esc_attr_e('Search by element name', 'js_composer'); ?>"/>
 
 				<h3 class="vc_modal-title"
-					id="vc_add-element-dialog-title"><?php _e( 'Add element', 'js_composer' ) ?></h3>
+					id="vc_add-element-dialog-title"><?php _e('Add element', 'js_composer') ?></h3>
 			</div>
 			<div class="vc_modal-body wpb-elements-list">
 				<ul class="wpb-content-layouts-container" style="position: relative;">

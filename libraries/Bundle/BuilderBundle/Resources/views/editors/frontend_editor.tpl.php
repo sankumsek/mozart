@@ -4,13 +4,13 @@ global $menu, $submenu, $parent_file, $post_ID, $post;
 $post_ID = $editor->post_id;
 $post = $editor->post;
 $post_type = $editor->post->post_type;
-$nonce_action = $nonce_action = 'update-post_' . $editor->post_id;
+$nonce_action = $nonce_action = 'update-post_'.$editor->post_id;
 $user_ID = isset($editor->current_user) && isset($editor->current_user->ID) ? (int) $editor->current_user->ID : 0;
 $form_action = 'editpost';
 $menu = array();
 add_thickbox();
-wp_enqueue_media( array( 'post' => $editor->post_id ) );
-require_once( $editor->adminFile('admin-header.php') );
+wp_enqueue_media(array('post' => $editor->post_id));
+require_once $editor->adminFile('admin-header.php');
 ?>
 <div id="vc_preloader"></div>
 <script type="text/javascript">
@@ -20,12 +20,12 @@ require_once( $editor->adminFile('admin-header.php') );
 <input type="hidden" name="vc_post_title" id="vc_title-saved" value="<?php echo esc_attr_e($editor->post->post_title)?>" />
 <input type="hidden" name="vc_post_id" id="vc_post-id" value="<?php echo $editor->post_id ?>" />
 <?php
-	require_once vc_path_dir('EDITORS_DIR', 'navbar/class-vc-navbar-frontend.php');
-	$nav_bar = new Vc_NavBar_Frontend($post);
-	$nav_bar->render();
+    require_once vc_path_dir('EDITORS_DIR', 'navbar/class-vc-navbar-frontend.php');
+    $nav_bar = new Vc_NavBar_Frontend($post);
+    $nav_bar->render();
 ?>
 <div id="vc_inline-frame-wrapper">
-	<iframe src="<?php esc_attr_e( $editor->url ) ?>" scrolling="auto" style="width: 100%;"
+	<iframe src="<?php esc_attr_e($editor->url) ?>" scrolling="auto" style="width: 100%;"
 			id="vc_inline-frame"></iframe>
 </div>
 <?php
@@ -69,23 +69,24 @@ vc_include_template('editors/partials/frontend_controls.tpl.php');
 </script>
 <div style="height: 1px; visibility: hidden; overflow: hidden;">
 <?php
-wp_editor( $post->post_content, 'content', array(
+wp_editor($post->post_content, 'content', array(
     'dfw' => true,
     'tabfocus_elements' => 'insert-media-button,save-post',
-    'editor_height' => 360
-) );
-	// wp_enqueue_script( 'post' );
+    'editor_height' => 360,
+));
+    // wp_enqueue_script( 'post' );
 wp_nonce_field($nonce_action); ?>
     <input type="hidden" id="user-id" name="user_ID" value="<?php echo (int) $user_ID ?>" />
-    <input type="hidden" id="hiddenaction" name="action" value="<?php echo esc_attr( $form_action ) ?>" />
-	<input type="hidden" id="originalaction" name="originalaction" value="<?php echo esc_attr( $form_action ) ?>"/>
+    <input type="hidden" id="hiddenaction" name="action" value="<?php echo esc_attr($form_action) ?>" />
+	<input type="hidden" id="originalaction" name="originalaction" value="<?php echo esc_attr($form_action) ?>"/>
 	<input type="hidden" id="post_author" name="post_author"
-		   value="<?php echo esc_attr( $editor->post->post_author ); ?>"/>
+		   value="<?php echo esc_attr($editor->post->post_author); ?>"/>
     <input type="hidden" id="referredby" name="referredby" value="<?php echo esc_url(wp_get_referer()); ?>" />
 <?php
-    if ( wp_is_mobile() )
-    wp_enqueue_script( 'jquery-touch-punch' );
-	do_action('vc_frontend_editor_render_template');
+    if (wp_is_mobile()) {
+        wp_enqueue_script('jquery-touch-punch');
+    }
+    do_action('vc_frontend_editor_render_template');
 ?>
 </div>
-<?php require_once( $editor->adminFile('admin-footer.php') ); ?>
+<?php require_once $editor->adminFile('admin-footer.php'); ?>

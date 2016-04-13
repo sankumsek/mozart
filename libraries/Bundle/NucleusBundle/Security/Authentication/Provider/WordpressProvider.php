@@ -1,8 +1,17 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace  Mozart\Bundle\NucleusBundle\Security\Authentication\Provider;
 
-use  Mozart\Bundle\NucleusBundle\Security\Authentication\Token\WordpressToken;
+use Mozart\Bundle\NucleusBundle\Security\Authentication\Token\WordpressToken;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -32,7 +41,7 @@ class WordpressProvider implements AuthenticationProviderInterface
     public function authenticate(TokenInterface $token)
     {
         if (!$this->supports($token)) {
-            return null;
+            return;
         }
 
         $user = $token->getUser();
@@ -48,7 +57,7 @@ class WordpressProvider implements AuthenticationProviderInterface
      *
      * @param TokenInterface $token A TokenInterface instance
      *
-     * @return Boolean true if the implementation supports the Token, false otherwise
+     * @return bool true if the implementation supports the Token, false otherwise
      */
     public function supports(TokenInterface $token)
     {

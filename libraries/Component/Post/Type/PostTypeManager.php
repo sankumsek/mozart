@@ -1,16 +1,23 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Component\Post\Type;
 
 use Mozart\Component\Post\Type\Extension\PostTypeExtensionInterface;
 
 /**
- * Class PostTypeManager
- *
- * @package Mozart\Bundle\PostBundle
+ * Class PostTypeManager.
  */
 class PostTypeManager
 {
@@ -44,7 +51,7 @@ class PostTypeManager
      */
     public function registerExtension(PostTypeExtensionInterface $extension)
     {
-        if ( false === isset( $this->post_types[$extension->getKey()] ) ) {
+        if (false === isset($this->post_types[$extension->getKey()])) {
             return;
         }
         $this->extensions[$extension->getKey()][] = $extension;
@@ -65,11 +72,10 @@ class PostTypeManager
      */
     public function getExtensions($key)
     {
-        if ( true === isset( $this->extensions[$key] ) ) {
+        if (true === isset($this->extensions[$key])) {
             return $this->extensions[$key];
         }
 
         return false;
     }
-
 }

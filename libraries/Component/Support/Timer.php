@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\Timer.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -14,7 +22,7 @@ namespace Mozart\Component\Support;
  */
 class Timer
 {
-  protected static $timers = array();
+    protected static $timers = array();
 
   /**
    * Starts the timer with the specified name.
@@ -27,8 +35,8 @@ class Timer
    */
   public static function start($name)
   {
-    static::$timers[$name]['start'] = microtime(TRUE);
-    static::$timers[$name]['count'] = isset(static::$timers[$name]['count']) ? ++static::$timers[$name]['count'] : 1;
+      static::$timers[$name]['start'] = microtime(true);
+      static::$timers[$name]['count'] = isset(static::$timers[$name]['count']) ? ++static::$timers[$name]['count'] : 1;
   }
 
   /**
@@ -42,18 +50,18 @@ class Timer
    */
   public static function read($name)
   {
-    if (isset(static::$timers[$name]['start'])) {
-      $stop = microtime(TRUE);
-      $diff = round(($stop - static::$timers[$name]['start']) * 1000, 2);
+      if (isset(static::$timers[$name]['start'])) {
+          $stop = microtime(true);
+          $diff = round(($stop - static::$timers[$name]['start']) * 1000, 2);
 
-      if (isset(static::$timers[$name]['time'])) {
-        $diff += static::$timers[$name]['time'];
+          if (isset(static::$timers[$name]['time'])) {
+              $diff += static::$timers[$name]['time'];
+          }
+
+          return $diff;
       }
 
-      return $diff;
-    }
-
-    return static::$timers[$name]['time'];
+      return static::$timers[$name]['time'];
   }
 
   /**
@@ -68,18 +76,17 @@ class Timer
    */
   public static function stop($name)
   {
-    if (isset(static::$timers[$name]['start'])) {
-      $stop = microtime(TRUE);
-      $diff = round(($stop - static::$timers[$name]['start']) * 1000, 2);
-      if (isset(static::$timers[$name]['time'])) {
-        static::$timers[$name]['time'] += $diff;
-      } else {
-        static::$timers[$name]['time'] = $diff;
+      if (isset(static::$timers[$name]['start'])) {
+          $stop = microtime(true);
+          $diff = round(($stop - static::$timers[$name]['start']) * 1000, 2);
+          if (isset(static::$timers[$name]['time'])) {
+              static::$timers[$name]['time'] += $diff;
+          } else {
+              static::$timers[$name]['time'] = $diff;
+          }
+          unset(static::$timers[$name]['start']);
       }
-      unset(static::$timers[$name]['start']);
-    }
 
-    return static::$timers[$name];
+      return static::$timers[$name];
   }
-
 }

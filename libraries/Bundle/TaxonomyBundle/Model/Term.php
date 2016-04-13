@@ -1,26 +1,35 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\TaxonomyBundle\Model;
 
 class Term
 {
     /**
-     * @var int $id
+     * @var int
      */
     protected $id;
 
     /**
-     * @var string $name
+     * @var string
      */
     protected $name;
 
     /**
-     * @var string $slug
+     * @var string
      */
     protected $slug;
 
     /**
-     * @var int $group
+     * @var int
      */
     protected $group = 0;
 
@@ -30,7 +39,7 @@ class Term
     protected $taxonomy;
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -40,7 +49,7 @@ class Term
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      */
@@ -50,7 +59,7 @@ class Term
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -60,7 +69,7 @@ class Term
     }
 
     /**
-     * Set slug
+     * Set slug.
      *
      * @param string $slug
      */
@@ -70,7 +79,7 @@ class Term
     }
 
     /**
-     * Get slug
+     * Get slug.
      *
      * @return string
      */
@@ -80,7 +89,7 @@ class Term
     }
 
     /**
-     * Set group
+     * Set group.
      *
      * @param int $group
      */
@@ -90,7 +99,7 @@ class Term
     }
 
     /**
-     * Get group
+     * Get group.
      *
      * @return int
      */
@@ -100,7 +109,7 @@ class Term
     }
 
     /**
-     * Set taxonomy
+     * Set taxonomy.
      *
      * @param Taxonomy $taxonomy
      */
@@ -110,7 +119,7 @@ class Term
     }
 
     /**
-     * Get taxonomy
+     * Get taxonomy.
      *
      * @return Taxonomy
      */

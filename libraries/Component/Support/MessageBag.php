@@ -1,9 +1,20 @@
-<?php namespace Mozart\Component\Support;
+<?php
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Mozart\Component\Support;
 
 use Countable;
 use JsonSerializable;
-use Mozart\Component\Support\Contracts\JsonableInterface;
 use Mozart\Component\Support\Contracts\ArrayableInterface;
+use Mozart\Component\Support\Contracts\JsonableInterface;
 use Mozart\Component\Support\Contracts\MessageProviderInterface;
 
 class MessageBag implements ArrayableInterface, Countable, JsonableInterface, MessageProviderInterface, JsonSerializable
@@ -25,8 +36,7 @@ class MessageBag implements ArrayableInterface, Countable, JsonableInterface, Me
     /**
      * Create a new message bag instance.
      *
-     * @param  array $messages
-     * @return void
+     * @param array $messages
      */
     public function __construct(array $messages = array())
     {
@@ -38,8 +48,9 @@ class MessageBag implements ArrayableInterface, Countable, JsonableInterface, Me
     /**
      * Add a message to the bag.
      *
-     * @param  string                               $key
-     * @param  string                               $message
+     * @param string $key
+     * @param string $message
+     *
      * @return \Mozart\Component\Support\MessageBag
      */
     public function add($key, $message)
@@ -54,7 +65,8 @@ class MessageBag implements ArrayableInterface, Countable, JsonableInterface, Me
     /**
      * Merge a new array of messages into the bag.
      *
-     * @param  \Mozart\Component\Support\Contracts\MessageProviderInterface|array $messages
+     * @param \Mozart\Component\Support\Contracts\MessageProviderInterface|array $messages
+     *
      * @return \Mozart\Component\Support\MessageBag
      */
     public function merge($messages)
@@ -71,21 +83,23 @@ class MessageBag implements ArrayableInterface, Countable, JsonableInterface, Me
     /**
      * Determine if a key and message combination already exists.
      *
-     * @param  string $key
-     * @param  string $message
+     * @param string $key
+     * @param string $message
+     *
      * @return bool
      */
     protected function isUnique($key, $message)
     {
         $messages = (array) $this->messages;
 
-        return ! isset($messages[$key]) || ! in_array($message, $messages[$key]);
+        return !isset($messages[$key]) || !in_array($message, $messages[$key], true);
     }
 
     /**
      * Determine if messages exist for a given key.
      *
-     * @param  string $key
+     * @param string $key
+     *
      * @return bool
      */
     public function has($key = null)
@@ -96,8 +110,9 @@ class MessageBag implements ArrayableInterface, Countable, JsonableInterface, Me
     /**
      * Get the first message from the bag for a given key.
      *
-     * @param  string $key
-     * @param  string $format
+     * @param string $key
+     * @param string $format
+     *
      * @return string
      */
     public function first($key = null, $format = null)
@@ -110,8 +125,9 @@ class MessageBag implements ArrayableInterface, Countable, JsonableInterface, Me
     /**
      * Get all of the messages from the bag for a given key.
      *
-     * @param  string $key
-     * @param  string $format
+     * @param string $key
+     * @param string $format
+     *
      * @return array
      */
     public function get($key, $format = null)
@@ -131,7 +147,8 @@ class MessageBag implements ArrayableInterface, Countable, JsonableInterface, Me
     /**
      * Get all of the messages for every key in the bag.
      *
-     * @param  string $format
+     * @param string $format
+     *
      * @return array
      */
     public function all($format = null)
@@ -150,9 +167,10 @@ class MessageBag implements ArrayableInterface, Countable, JsonableInterface, Me
     /**
      * Format an array of messages.
      *
-     * @param  array  $messages
-     * @param  string $format
-     * @param  string $messageKey
+     * @param array  $messages
+     * @param string $format
+     * @param string $messageKey
+     *
      * @return array
      */
     protected function transform($messages, $format, $messageKey)
@@ -174,7 +192,8 @@ class MessageBag implements ArrayableInterface, Countable, JsonableInterface, Me
     /**
      * Get the appropriate format based on the given format.
      *
-     * @param  string $format
+     * @param string $format
+     *
      * @return string
      */
     protected function checkFormat($format)
@@ -215,7 +234,8 @@ class MessageBag implements ArrayableInterface, Countable, JsonableInterface, Me
     /**
      * Set the default message format.
      *
-     * @param  string                               $format
+     * @param string $format
+     *
      * @return \Mozart\Component\Support\MessageBag
      */
     public function setFormat($format = ':message')
@@ -232,7 +252,7 @@ class MessageBag implements ArrayableInterface, Countable, JsonableInterface, Me
      */
     public function isEmpty()
     {
-        return ! $this->any();
+        return !$this->any();
     }
 
     /**
@@ -278,7 +298,8 @@ class MessageBag implements ArrayableInterface, Countable, JsonableInterface, Me
     /**
      * Convert the object to its JSON representation.
      *
-     * @param  int    $options
+     * @param int $options
+     *
      * @return string
      */
     public function toJson($options = 0)
@@ -295,5 +316,4 @@ class MessageBag implements ArrayableInterface, Countable, JsonableInterface, Me
     {
         return $this->toJson();
     }
-
 }

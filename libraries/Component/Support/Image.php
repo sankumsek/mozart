@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\Image.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -14,7 +22,7 @@ namespace Mozart\Component\Support;
  */
 class Image
 {
-  /**
+    /**
    * Scales image dimensions while maintaining aspect ratio.
    *
    * The resulting dimensions can be smaller for one or both target dimensions.
@@ -38,9 +46,9 @@ class Image
    *
    * @see image_scale()
    */
-  public static function scaleDimensions(array &$dimensions, $width = NULL, $height = NULL, $upscale = FALSE)
+  public static function scaleDimensions(array &$dimensions, $width = null, $height = null, $upscale = false)
   {
-    $aspect = $dimensions['height'] / $dimensions['width'];
+      $aspect = $dimensions['height'] / $dimensions['width'];
 
     // Calculate one of the dimensions from the other target dimension,
     // ensuring the same aspect ratio as the source dimensions. If one of the
@@ -48,20 +56,19 @@ class Image
     // are specified then the dimension calculated is the one that would not be
     // calculated to be bigger than its target.
     if (($width && !$height) || ($width && $height && $aspect < $height / $width)) {
-      $height = (int) round($width * $aspect);
+        $height = (int) round($width * $aspect);
     } else {
-      $width = (int) round($height / $aspect);
+        $width = (int) round($height / $aspect);
     }
 
     // Don't upscale if the option isn't enabled.
     if (!$upscale && ($width >= $dimensions['width'] || $height >= $dimensions['height'])) {
-      return FALSE;
+        return false;
     }
 
-    $dimensions['width'] = $width;
-    $dimensions['height'] = $height;
+      $dimensions['width'] = $width;
+      $dimensions['height'] = $height;
 
-    return TRUE;
+      return true;
   }
-
 }

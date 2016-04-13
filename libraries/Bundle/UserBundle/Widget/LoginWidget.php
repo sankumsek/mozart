@@ -1,14 +1,21 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\UserBundle\Widget;
 
 use Mozart\Bundle\WidgetBundle\Widget;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
- * Class LoginWidget
- *
- * @package Mozart\Bundle\UserBundle\Widget
+ * Class LoginWidget.
  */
 class LoginWidget extends Widget
 {
@@ -32,42 +39,42 @@ class LoginWidget extends Widget
     public function getFieldGroup()
     {
         return array(
-            'key'                   => 'group_53c2f0d129f16',
-            'title'                 => 'Login Widget Title',
-            'fields'                => array(
+            'key' => 'group_53c2f0d129f16',
+            'title' => 'Login Widget Title',
+            'fields' => array(
                 array(
-                    'key'               => 'field_53c2f0d57a7d2',
-                    'label'             => 'Title',
-                    'name'              => 'mozart.user_login_title',
-                    'prefix'            => '',
-                    'type'              => 'text',
-                    'instructions'      => '',
-                    'required'          => 0,
+                    'key' => 'field_53c2f0d57a7d2',
+                    'label' => 'Title',
+                    'name' => 'mozart.user_login_title',
+                    'prefix' => '',
+                    'type' => 'text',
+                    'instructions' => '',
+                    'required' => 0,
                     'conditional_logic' => 0,
-                    'default_value'     => 'Login',
-                    'placeholder'       => 'Login',
-                    'prepend'           => '',
-                    'append'            => '',
-                    'maxlength'         => '',
-                    'readonly'          => 0,
-                    'disabled'          => 0,
+                    'default_value' => 'Login',
+                    'placeholder' => 'Login',
+                    'prepend' => '',
+                    'append' => '',
+                    'maxlength' => '',
+                    'readonly' => 0,
+                    'disabled' => 0,
                 ),
             ),
-            'location'              => array(
+            'location' => array(
                 array(
                     array(
-                        'param'    => 'widget',
+                        'param' => 'widget',
                         'operator' => '==',
-                        'value'    => 'login_widget_mozart',
+                        'value' => 'login_widget_mozart',
                     ),
                 ),
             ),
-            'menu_order'            => 0,
-            'position'              => 'normal',
-            'style'                 => 'default',
-            'label_placement'       => 'top',
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
             'instruction_placement' => 'label',
-            'hide_on_screen'        => '',
+            'hide_on_screen' => '',
         );
     }
 
@@ -80,13 +87,12 @@ class LoginWidget extends Widget
         echo $this->templating->render(
             'MozartUserBundle:Account:widgets/login.html.twig',
             array(
-                'title'         => apply_filters( 'widget_title', $instance['mozart.user_login_title'] ),
+                'title' => apply_filters('widget_title', $instance['mozart.user_login_title']),
                 'before_widget' => $args['before_widget'],
-                'after_widget'  => $args['after_widget'],
-                'before_title'  => $args['before_title'],
-                'after_title'   => $args['after_title']
+                'after_widget' => $args['after_widget'],
+                'before_title' => $args['before_title'],
+                'after_title' => $args['after_title'],
             )
         );
     }
-
 }

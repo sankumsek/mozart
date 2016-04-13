@@ -1,13 +1,21 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Component\Cache\Transient;
 
 class Transient implements TransientInterface
 {
-
     /**
      * Delete a transient.
      *
@@ -20,7 +28,7 @@ class Transient implements TransientInterface
     public function delete($transient)
     {
 
-        /**
+        /*
          * Fires immediately before a specific transient is deleted.
          *
          * The dynamic portion of the hook name, $transient, refers to the transient name.
@@ -29,29 +37,29 @@ class Transient implements TransientInterface
          *
          * @param string $transient Transient name.
          */
-        do_action( 'delete_transient_' . $transient, $transient );
+        do_action('delete_transient_'.$transient, $transient);
 
         if (wp_using_ext_object_cache()) {
-            $result = wp_cache_delete( $transient, 'transient' );
+            $result = wp_cache_delete($transient, 'transient');
         } else {
-            $option_timeout = '_transient_timeout_' . $transient;
-            $option = '_transient_' . $transient;
-            $result = delete_option( $option );
+            $option_timeout = '_transient_timeout_'.$transient;
+            $option = '_transient_'.$transient;
+            $result = delete_option($option);
             if ($result) {
-                delete_option( $option_timeout );
+                delete_option($option_timeout);
             }
         }
 
         if ($result) {
 
-            /**
+            /*
              * Fires after a transient is deleted.
              *
              * @since 3.0.0
              *
              * @param string $transient Deleted transient name.
              */
-            do_action( 'deleted_transient', $transient );
+            do_action('deleted_transient', $transient);
         }
 
         return $result;
@@ -86,34 +94,34 @@ class Transient implements TransientInterface
          *                             Any value other than false will short-circuit the retrieval
          *                             of the transient, and return the returned value.
          */
-        $pre = apply_filters( 'pre_transient_' . $transient, false );
+        $pre = apply_filters('pre_transient_'.$transient, false);
         if (false !== $pre) {
             return $pre;
         }
 
         if (wp_using_ext_object_cache()) {
-            $value = wp_cache_get( $transient, 'transient' );
+            $value = wp_cache_get($transient, 'transient');
         } else {
-            $transient_option = '_transient_' . $transient;
-            if (!defined( 'WP_INSTALLING' )) {
+            $transient_option = '_transient_'.$transient;
+            if (!defined('WP_INSTALLING')) {
                 // If option is not in alloptions, it is not autoloaded and thus has a timeout
                 $alloptions = wp_load_alloptions();
-                if (!isset( $alloptions[$transient_option] )) {
-                    $transient_timeout = '_transient_timeout_' . $transient;
-                    if (get_option( $transient_timeout ) < time()) {
-                        delete_option( $transient_option );
-                        delete_option( $transient_timeout );
+                if (!isset($alloptions[$transient_option])) {
+                    $transient_timeout = '_transient_timeout_'.$transient;
+                    if (get_option($transient_timeout) < time()) {
+                        delete_option($transient_option);
+                        delete_option($transient_timeout);
                         $value = false;
                     }
                 }
             }
 
-            if (!isset( $value )) {
-                $value = get_option( $transient_option );
+            if (!isset($value)) {
+                $value = get_option($transient_option);
             }
         }
 
-        /**
+        /*
          * Filter an existing transient's value.
          *
          * The dynamic portion of the hook name, $transient, refers to the transient name.
@@ -123,7 +131,7 @@ class Transient implements TransientInterface
          * @param mixed $value Value of transient.
          */
 
-        return apply_filters( 'transient_' . $transient, $value );
+        return apply_filters('transient_'.$transient, $value);
     }
 
     /**
@@ -152,45 +160,45 @@ class Transient implements TransientInterface
          *
          * @param mixed $value New value of transient.
          */
-        $value = apply_filters( 'pre_set_transient_' . $transient, $value );
+        $value = apply_filters('pre_set_transient_'.$transient, $value);
 
         $expiration = (int) $expiration;
 
         if (wp_using_ext_object_cache()) {
-            $result = wp_cache_set( $transient, $value, 'transient', $expiration );
+            $result = wp_cache_set($transient, $value, 'transient', $expiration);
         } else {
-            $transient_timeout = '_transient_timeout_' . $transient;
-            $transient = '_transient_' . $transient;
-            if (false === get_option( $transient )) {
+            $transient_timeout = '_transient_timeout_'.$transient;
+            $transient = '_transient_'.$transient;
+            if (false === get_option($transient)) {
                 $autoload = 'yes';
                 if ($expiration) {
                     $autoload = 'no';
-                    add_option( $transient_timeout, time() + $expiration, '', 'no' );
+                    add_option($transient_timeout, time() + $expiration, '', 'no');
                 }
-                $result = add_option( $transient, $value, '', $autoload );
+                $result = add_option($transient, $value, '', $autoload);
             } else {
                 // If expiration is requested, but the transient has no timeout option,
                 // delete, then re-create transient rather than update.
                 $update = true;
                 if ($expiration) {
-                    if (false === get_option( $transient_timeout )) {
-                        delete_option( $transient );
-                        add_option( $transient_timeout, time() + $expiration, '', 'no' );
-                        $result = add_option( $transient, $value, '', 'no' );
+                    if (false === get_option($transient_timeout)) {
+                        delete_option($transient);
+                        add_option($transient_timeout, time() + $expiration, '', 'no');
+                        $result = add_option($transient, $value, '', 'no');
                         $update = false;
                     } else {
-                        update_option( $transient_timeout, time() + $expiration );
+                        update_option($transient_timeout, time() + $expiration);
                     }
                 }
                 if ($update) {
-                    $result = update_option( $transient, $value );
+                    $result = update_option($transient, $value);
                 }
             }
         }
 
         if ($result) {
 
-            /**
+            /*
              * Fires after the value for a specific transient has been set.
              *
              * The dynamic portion of the hook name, $transient, refers to the transient name.
@@ -200,9 +208,9 @@ class Transient implements TransientInterface
              * @param mixed $value Transient value.
              * @param int $expiration Time until expiration in seconds. Default 0.
              */
-            do_action( 'set_transient_' . $transient, $value, $expiration );
+            do_action('set_transient_'.$transient, $value, $expiration);
 
-            /**
+            /*
              * Fires after the value for a transient has been set.
              *
              * @since 3.0.0
@@ -211,10 +219,9 @@ class Transient implements TransientInterface
              * @param mixed $value Transient value.
              * @param int $expiration Time until expiration in seconds. Default 0.
              */
-            do_action( 'setted_transient', $transient, $value, $expiration );
+            do_action('setted_transient', $transient, $value, $expiration);
         }
 
         return $result;
     }
-
 }

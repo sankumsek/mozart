@@ -1,9 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace  Mozart\Bundle\NucleusBundle\Security\Firewall;
 
-use  Mozart\Bundle\UserBundle\Model\UserInterface as WordpressUserInterface;
-use  Mozart\Bundle\NucleusBundle\Security\Http\WordpressCookieService;
+use Mozart\Bundle\NucleusBundle\Security\Http\WordpressCookieService;
+use Mozart\Bundle\UserBundle\Model\UserInterface as WordpressUserInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +38,7 @@ class WordpressListener implements ListenerInterface
     private $dispatcher;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param SecurityContextInterface       $securityContext
      * @param WordpressCookieService         $cookieService
@@ -78,7 +87,7 @@ class WordpressListener implements ListenerInterface
     protected function attemptAuthentication(Request $request)
     {
         if (null === $token = $this->cookieService->autoLogin($request)) {
-            return null;
+            return;
         }
 
         return $this->authenticationManager->authenticate($token);

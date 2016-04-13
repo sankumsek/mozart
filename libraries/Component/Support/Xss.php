@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\Xss.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -14,17 +22,17 @@ namespace Mozart\Component\Support;
  */
 class Xss
 {
-  /**
+    /**
    * Indicates that XSS filtering must be applied in whitelist mode: only
    * specified HTML tags are allowed.
    */
-  const FILTER_MODE_WHITELIST = TRUE;
+  const FILTER_MODE_WHITELIST = true;
 
   /**
    * Indicates that XSS filtering must be applied in blacklist mode: only
    * specified HTML tags are disallowed.
    */
-  const FILTER_MODE_BLACKLIST = FALSE;
+  const FILTER_MODE_BLACKLIST = false;
 
   /**
    * The list of html tags allowed by filterAdmin().
@@ -66,12 +74,12 @@ class Xss
    *
    * @ingroup sanitization
    */
-  public static function filter($string, $html_tags = array('a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd'), $mode = Xss::FILTER_MODE_WHITELIST)
+  public static function filter($string, $html_tags = array('a', 'em', 'strong', 'cite', 'blockquote', 'code', 'ul', 'ol', 'li', 'dl', 'dt', 'dd'), $mode = self::FILTER_MODE_WHITELIST)
   {
-    // Only operate on valid UTF-8 strings. This is necessary to prevent cross
+      // Only operate on valid UTF-8 strings. This is necessary to prevent cross
     // site scripting issues on Internet Explorer 6.
     if (!Unicode::validateUtf8($string)) {
-      return '';
+        return '';
     }
     // Remove NULL characters (ignored by some browsers).
     $string = str_replace(chr(0), '', $string);
@@ -87,12 +95,12 @@ class Xss
     $string = preg_replace('/&amp;#[Xx]0*((?:[0-9A-Fa-f]{2})+;)/', '&#x\1', $string);
     // Named entities.
     $string = preg_replace('/&amp;([A-Za-z][A-Za-z0-9]*;)/', '&\1', $string);
-    $html_tags = array_flip($html_tags);
-    $splitter = function ($matches) use ($html_tags, $mode) {
+      $html_tags = array_flip($html_tags);
+      $splitter = function ($matches) use ($html_tags, $mode) {
       return static::split($matches[1], $html_tags, $mode);
     };
 
-    return preg_replace_callback('%
+      return preg_replace_callback('%
       (
       <(?=[^a-zA-Z!/])  # a lone <
       |                 # or
@@ -123,7 +131,7 @@ class Xss
    */
   public static function filterAdmin($string)
   {
-    return static::filter($string, static::$adminTags);
+      return static::filter($string, static::$adminTags);
   }
 
   /**
@@ -144,55 +152,55 @@ class Xss
    */
   protected static function split($string, $html_tags, $split_mode)
   {
-    if (substr($string, 0, 1) != '<') {
-      // We matched a lone ">" character.
+      if (substr($string, 0, 1) !== '<') {
+          // We matched a lone ">" character.
       return '&gt;';
-    } elseif (strlen($string) == 1) {
-      // We matched a lone "<" character.
+      } elseif (strlen($string) === 1) {
+          // We matched a lone "<" character.
       return '&lt;';
-    }
+      }
 
-    if (!preg_match('%^<\s*(/\s*)?([a-zA-Z0-9]+)([^>]*)>?|(<!--.*?-->)$%', $string, $matches)) {
-      // Seriously malformed.
+      if (!preg_match('%^<\s*(/\s*)?([a-zA-Z0-9]+)([^>]*)>?|(<!--.*?-->)$%', $string, $matches)) {
+          // Seriously malformed.
       return '';
-    }
+      }
 
-    $slash = trim($matches[1]);
-    $elem = &$matches[2];
-    $attrlist = &$matches[3];
-    $comment = &$matches[4];
+      $slash = trim($matches[1]);
+      $elem = &$matches[2];
+      $attrlist = &$matches[3];
+      $comment = &$matches[4];
 
-    if ($comment) {
-      $elem = '!--';
-    }
+      if ($comment) {
+          $elem = '!--';
+      }
 
     // When in whitelist mode, an element is disallowed when not listed.
     if ($split_mode === static::FILTER_MODE_WHITELIST && !isset($html_tags[strtolower($elem)])) {
-      return '';
+        return '';
     }
     // When in blacklist mode, an element is disallowed when listed.
     elseif ($split_mode === static::FILTER_MODE_BLACKLIST && isset($html_tags[strtolower($elem)])) {
-      return '';
+        return '';
     }
 
-    if ($comment) {
-      return $comment;
-    }
+      if ($comment) {
+          return $comment;
+      }
 
-    if ($slash != '') {
-      return "</$elem>";
-    }
+      if ($slash !== '') {
+          return "</$elem>";
+      }
 
     // Is there a closing XHTML slash at the end of the attributes?
     $attrlist = preg_replace('%(\s?)/\s*$%', '\1', $attrlist, -1, $count);
-    $xhtml_slash = $count ? ' /' : '';
+      $xhtml_slash = $count ? ' /' : '';
 
     // Clean up attributes.
     $attr2 = implode(' ', static::attributes($attrlist));
-    $attr2 = preg_replace('/[<>]/', '', $attr2);
-    $attr2 = strlen($attr2) ? ' ' . $attr2 : '';
+      $attr2 = preg_replace('/[<>]/', '', $attr2);
+      $attr2 = strlen($attr2) ? ' '.$attr2 : '';
 
-    return "<$elem$attr2$xhtml_slash>";
+      return "<$elem$attr2$xhtml_slash>";
   }
 
   /**
@@ -206,82 +214,86 @@ class Xss
    */
   protected static function attributes($attributes)
   {
-    $attributes_array = array();
-    $mode = 0;
-    $attribute_name = '';
-    $skip = FALSE;
+      $attributes_array = array();
+      $mode = 0;
+      $attribute_name = '';
+      $skip = false;
 
-    while (strlen($attributes) != 0) {
-      // Was the last operation successful?
+      while (strlen($attributes) !== 0) {
+          // Was the last operation successful?
       $working = 0;
 
-      switch ($mode) {
+          switch ($mode) {
         case 0:
           // Attribute name, href for instance.
           if (preg_match('/^([-a-zA-Z]+)/', $attributes, $match)) {
-            $attribute_name = strtolower($match[1]);
-            $skip = ($attribute_name == 'style' || substr($attribute_name, 0, 2) == 'on');
-            $working = $mode = 1;
-            $attributes = preg_replace('/^[-a-zA-Z]+/', '', $attributes);
+              $attribute_name = strtolower($match[1]);
+              $skip = ($attribute_name === 'style' || substr($attribute_name, 0, 2) === 'on');
+              $working = $mode = 1;
+              $attributes = preg_replace('/^[-a-zA-Z]+/', '', $attributes);
           }
           break;
 
         case 1:
           // Equals sign or valueless ("selected").
           if (preg_match('/^\s*=\s*/', $attributes)) {
-            $working = 1; $mode = 2;
-            $attributes = preg_replace('/^\s*=\s*/', '', $attributes);
-            break;
+              $working = 1;
+              $mode = 2;
+              $attributes = preg_replace('/^\s*=\s*/', '', $attributes);
+              break;
           }
 
           if (preg_match('/^\s+/', $attributes)) {
-            $working = 1; $mode = 0;
-            if (!$skip) {
-              $attributes_array[] = $attribute_name;
-            }
-            $attributes = preg_replace('/^\s+/', '', $attributes);
+              $working = 1;
+              $mode = 0;
+              if (!$skip) {
+                  $attributes_array[] = $attribute_name;
+              }
+              $attributes = preg_replace('/^\s+/', '', $attributes);
           }
           break;
 
         case 2:
           // Attribute value, a URL after href= for instance.
           if (preg_match('/^"([^"]*)"(\s+|$)/', $attributes, $match)) {
-            $thisval = UrlHelper::filterBadProtocol($match[1]);
+              $thisval = UrlHelper::filterBadProtocol($match[1]);
 
-            if (!$skip) {
-              $attributes_array[] = "$attribute_name=\"$thisval\"";
-            }
-            $working = 1;
-            $mode = 0;
-            $attributes = preg_replace('/^"[^"]*"(\s+|$)/', '', $attributes);
-            break;
+              if (!$skip) {
+                  $attributes_array[] = "$attribute_name=\"$thisval\"";
+              }
+              $working = 1;
+              $mode = 0;
+              $attributes = preg_replace('/^"[^"]*"(\s+|$)/', '', $attributes);
+              break;
           }
 
           if (preg_match("/^'([^']*)'(\s+|$)/", $attributes, $match)) {
-            $thisval = UrlHelper::filterBadProtocol($match[1]);
+              $thisval = UrlHelper::filterBadProtocol($match[1]);
 
-            if (!$skip) {
-              $attributes_array[] = "$attribute_name='$thisval'";
-            }
-            $working = 1; $mode = 0;
-            $attributes = preg_replace("/^'[^']*'(\s+|$)/", '', $attributes);
-            break;
+              if (!$skip) {
+                  $attributes_array[] = "$attribute_name='$thisval'";
+              }
+              $working = 1;
+              $mode = 0;
+              $attributes = preg_replace("/^'[^']*'(\s+|$)/", '', $attributes);
+              break;
           }
 
           if (preg_match("%^([^\s\"']+)(\s+|$)%", $attributes, $match)) {
-            $thisval = UrlHelper::filterBadProtocol($match[1]);
+              $thisval = UrlHelper::filterBadProtocol($match[1]);
 
-            if (!$skip) {
-              $attributes_array[] = "$attribute_name=\"$thisval\"";
-            }
-            $working = 1; $mode = 0;
-            $attributes = preg_replace("%^[^\s\"']+(\s+|$)%", '', $attributes);
+              if (!$skip) {
+                  $attributes_array[] = "$attribute_name=\"$thisval\"";
+              }
+              $working = 1;
+              $mode = 0;
+              $attributes = preg_replace("%^[^\s\"']+(\s+|$)%", '', $attributes);
           }
           break;
       }
 
-      if ($working == 0) {
-        // Not well formed; remove and try again.
+          if ($working === 0) {
+              // Not well formed; remove and try again.
         $attributes = preg_replace('/
           ^
           (
@@ -293,16 +305,15 @@ class Xss
           )*              # any number of the above three
           \s*             # any number of whitespaces
           /x', '', $attributes);
-        $mode = 0;
+              $mode = 0;
+          }
       }
-    }
 
     // The attribute list ends with a valueless attribute like "selected".
-    if ($mode == 1 && !$skip) {
-      $attributes_array[] = $attribute_name;
+    if ($mode === 1 && !$skip) {
+        $attributes_array[] = $attribute_name;
     }
 
-    return $attributes_array;
+      return $attributes_array;
   }
-
 }

@@ -1,56 +1,65 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace  Mozart\Bundle\UserBundle\Model;
 
 class User implements UserInterface, \Serializable
 {
     /**
-     * @var int $id
+     * @var int
      */
     protected $id;
 
     /**
-     * @var string $username
+     * @var string
      */
     protected $username;
 
     /**
-     * @var string $password
+     * @var string
      */
     protected $password;
 
     /**
-     * @var string $nicename
+     * @var string
      */
     protected $nicename;
 
     /**
-     * @var string $email
+     * @var string
      */
     protected $email;
 
     /**
-     * @var string $url
+     * @var string
      */
     protected $url = '';
 
     /**
-     * @var \DateTime $registeredDate
+     * @var \DateTime
      */
     protected $registeredDate;
 
     /**
-     * @var string $activationKey
+     * @var string
      */
     protected $activationKey = '';
 
     /**
-     * @var integer $status
+     * @var int
      */
     protected $status = 0;
 
     /**
-     * @var string $displayName
+     * @var string
      */
     protected $displayName;
 
@@ -70,7 +79,7 @@ class User implements UserInterface, \Serializable
     private $comments;
 
     /**
-     * Get ID
+     * Get ID.
      *
      * @return int
      */
@@ -80,7 +89,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set username
+     * Set username.
      *
      * @param $username
      */
@@ -90,7 +99,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get username
+     * Get username.
      *
      * @return string
      */
@@ -100,7 +109,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set password
+     * Set password.
      *
      * @param string $password
      */
@@ -110,7 +119,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get password
+     * Get password.
      *
      * @return string
      */
@@ -120,7 +129,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set nicename
+     * Set nicename.
      *
      * @param string $nicename
      */
@@ -130,7 +139,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get nicename
+     * Get nicename.
      *
      * @return string
      */
@@ -140,7 +149,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set email
+     * Set email.
      *
      * @param $email
      */
@@ -150,7 +159,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get email
+     * Get email.
      *
      * @return string
      */
@@ -160,7 +169,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set url
+     * Set url.
      *
      * @param string $url
      */
@@ -170,7 +179,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get url
+     * Get url.
      *
      * @return string
      */
@@ -180,7 +189,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set registeredDate
+     * Set registeredDate.
      *
      * @param $registeredDate
      */
@@ -190,7 +199,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get registeredDate
+     * Get registeredDate.
      *
      * @return \DateTime
      */
@@ -200,7 +209,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set activationKey
+     * Set activationKey.
      *
      * @param string $activationKey
      */
@@ -210,7 +219,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get activationKey
+     * Get activationKey.
      *
      * @return string
      */
@@ -220,9 +229,9 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set status
+     * Set status.
      *
-     * @param integer $status
+     * @param int $status
      */
     public function setStatus($status)
     {
@@ -230,9 +239,9 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get status
+     * Get status.
      *
-     * @return integer
+     * @return int
      */
     public function getStatus()
     {
@@ -240,7 +249,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set displayName
+     * Set displayName.
      *
      * @param string $displayName
      */
@@ -250,7 +259,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get displayName
+     * Get displayName.
      *
      * @return string
      */
@@ -260,7 +269,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Add meta
+     * Add meta.
      *
      * @param UserMeta $meta
      */
@@ -272,7 +281,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get metas
+     * Get metas.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -282,7 +291,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get posts
+     * Get posts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -292,7 +301,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Get comments
+     * Get comments.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -350,7 +359,6 @@ class User implements UserInterface, \Serializable
      */
     public function getSalt()
     {
-
     }
 
     /**
@@ -358,12 +366,9 @@ class User implements UserInterface, \Serializable
      *
      * This is important if, at any given point, sensitive information like
      * the plain-text password is stored on this object.
-     *
-     * @return void
      */
     public function eraseCredentials()
     {
-
     }
 
     /**
@@ -377,7 +382,7 @@ class User implements UserInterface, \Serializable
      *
      * @param UserInterface $user
      *
-     * @return Boolean
+     * @return bool
      */
     public function equals(UserInterface $user)
     {
@@ -413,7 +418,6 @@ class User implements UserInterface, \Serializable
 
         list(
             $this->id,
-            $this->username,
-            ) = $data;
+            $this->username) = $data;
     }
 }

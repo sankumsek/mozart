@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\OpCodeCache.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -14,7 +22,7 @@ namespace Mozart\Component\Support;
  */
 class OpCodeCache
 {
-  /**
+    /**
    * Invalidates a PHP file from a possibly active opcode cache.
    *
    * In case the opcode cache does not support to invalidate an individual file,
@@ -25,21 +33,20 @@ class OpCodeCache
    */
   public static function invalidate($pathname)
   {
-    clearstatcache(TRUE, $pathname);
+      clearstatcache(true, $pathname);
 
-    if (extension_loaded('Zend OPcache')) {
-      opcache_invalidate($pathname, TRUE);
-    }
+      if (extension_loaded('Zend OPcache')) {
+          opcache_invalidate($pathname, true);
+      }
     // If apcu extenstion is enabled in PHP 5.5 or greater it emulates apc.
     // This is to provide an easy upgrade path if you are using apc's user
     // caching however the emulation does not extend to opcode caching.
     // Therefore we need to check if the function exists as well.
     if (extension_loaded('apc') && function_exists('apc_delete_file')) {
-      // apc_delete_file() throws a PHP warning in case the specified file was
+        // apc_delete_file() throws a PHP warning in case the specified file was
       // not compiled yet.
       // @see http://php.net/manual/en/function.apc-delete-file.php
       @apc_delete_file($pathname);
     }
   }
-
 }

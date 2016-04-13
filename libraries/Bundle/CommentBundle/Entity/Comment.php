@@ -1,11 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\CommentBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use  Mozart\Bundle\NucleusBundle\Annotation as Mozart;
-use  Mozart\Bundle\CommentBundle\Model\Comment as ModelComment;
+use Mozart\Bundle\CommentBundle\Model\Comment as ModelComment;
+use Mozart\Bundle\NucleusBundle\Annotation as Mozart;
 use Symfony\Component\Validator\Constraints as Constraints;
 
 /**
@@ -152,12 +161,12 @@ class Comment extends ModelComment
      */
     public function onPrePersist()
     {
-        $this->date = new \DateTime( 'now' );
-        $this->dateGmt = new \DateTime( 'now', new \DateTimeZone( 'GMT' ) );
+        $this->date = new \DateTime('now');
+        $this->dateGmt = new \DateTime('now', new \DateTimeZone('GMT'));
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @return \Mozart\Bundle\UserBundle\Model\UserInterface|null
      */
@@ -167,7 +176,7 @@ class Comment extends ModelComment
             try {
                 // prevent lazy loading the user entity because it might not exist
                 $this->user->__load();
-            } catch ( \Doctrine\ORM\EntityNotFoundException $e ) {
+            } catch (\Doctrine\ORM\EntityNotFoundException $e) {
                 // return null if user does not exist
                 $this->user = null;
             }

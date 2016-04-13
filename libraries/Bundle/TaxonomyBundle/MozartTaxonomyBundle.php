@@ -1,18 +1,25 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\TaxonomyBundle;
 
 use Mozart\Bundle\TaxonomyBundle\DependencyInjection\Compiler\TaxonomiesCompilerPass;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class MozartTaxonomyBundle
- *
- * @package Mozart\Bundle\TaxonomyBundle
+ * Class MozartTaxonomyBundle.
  */
 class MozartTaxonomyBundle extends Bundle
 {
@@ -21,8 +28,8 @@ class MozartTaxonomyBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        parent::build( $container );
-        $container->addCompilerPass( new TaxonomiesCompilerPass );
+        parent::build($container);
+        $container->addCompilerPass(new TaxonomiesCompilerPass());
     }
 
     /**

@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\Unicode.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -14,7 +22,7 @@ namespace Mozart\Component\Support;
  */
 class Unicode
 {
-  /**
+    /**
    * Matches Unicode characters that are word boundaries.
    *
    * Characters with the following General_category (gc) property values are used
@@ -113,7 +121,7 @@ EOD;
    */
   public static function getStatus()
   {
-    return static::$status;
+      return static::$status;
   }
 
   /**
@@ -132,10 +140,10 @@ EOD;
    */
   public static function setStatus($status)
   {
-    if (!in_array($status, array(static::STATUS_SINGLEBYTE, static::STATUS_MULTIBYTE, static::STATUS_ERROR))) {
-      throw new \InvalidArgumentException('Invalid status value for unicode support.');
-    }
-    static::$status = $status;
+      if (!in_array($status, array(static::STATUS_SINGLEBYTE, static::STATUS_MULTIBYTE, static::STATUS_ERROR), true)) {
+          throw new \InvalidArgumentException('Invalid status value for unicode support.');
+      }
+      static::$status = $status;
   }
 
   /**
@@ -151,41 +159,41 @@ EOD;
    */
   public static function check()
   {
-    // Check for mbstring extension.
+      // Check for mbstring extension.
     if (!function_exists('mb_strlen')) {
-      static::$status = static::STATUS_SINGLEBYTE;
+        static::$status = static::STATUS_SINGLEBYTE;
 
-      return 'mb_strlen';
+        return 'mb_strlen';
     }
 
     // Check mbstring configuration.
-    if (ini_get('mbstring.func_overload') != 0) {
-      static::$status = static::STATUS_ERROR;
+    if (ini_get('mbstring.func_overload') !== 0) {
+        static::$status = static::STATUS_ERROR;
 
-      return 'mbstring.func_overload';
+        return 'mbstring.func_overload';
     }
-    if (ini_get('mbstring.encoding_translation') != 0) {
-      static::$status = static::STATUS_ERROR;
+      if (ini_get('mbstring.encoding_translation') !== 0) {
+          static::$status = static::STATUS_ERROR;
 
-      return 'mbstring.encoding_translation';
-    }
-    if (ini_get('mbstring.http_input') != 'pass') {
-      static::$status = static::STATUS_ERROR;
+          return 'mbstring.encoding_translation';
+      }
+      if (ini_get('mbstring.http_input') !== 'pass') {
+          static::$status = static::STATUS_ERROR;
 
-      return 'mbstring.http_input';
-    }
-    if (ini_get('mbstring.http_output') != 'pass') {
-      static::$status = static::STATUS_ERROR;
+          return 'mbstring.http_input';
+      }
+      if (ini_get('mbstring.http_output') !== 'pass') {
+          static::$status = static::STATUS_ERROR;
 
-      return 'mbstring.http_output';
-    }
+          return 'mbstring.http_output';
+      }
 
     // Set appropriate configuration.
     mb_internal_encoding('utf-8');
-    mb_language('uni');
-    static::$status = static::STATUS_MULTIBYTE;
+      mb_language('uni');
+      static::$status = static::STATUS_MULTIBYTE;
 
-    return '';
+      return '';
   }
 
   /**
@@ -203,15 +211,15 @@ EOD;
    */
   public static function convertToUtf8($data, $encoding)
   {
-    if (function_exists('iconv')) {
-      return @iconv($encoding, 'utf-8', $data);
-    } elseif (function_exists('mb_convert_encoding')) {
-      return @mb_convert_encoding($data, 'utf-8', $encoding);
-    } elseif (function_exists('recode_string')) {
-      return @recode_string($encoding . '..utf-8', $data);
-    }
+      if (function_exists('iconv')) {
+          return @iconv($encoding, 'utf-8', $data);
+      } elseif (function_exists('mb_convert_encoding')) {
+          return @mb_convert_encoding($data, 'utf-8', $encoding);
+      } elseif (function_exists('recode_string')) {
+          return @recode_string($encoding.'..utf-8', $data);
+      }
     // Cannot convert.
-    return FALSE;
+    return false;
   }
 
   /**
@@ -235,16 +243,16 @@ EOD;
    */
   public static function truncateBytes($string, $len)
   {
-    if (strlen($string) <= $len) {
-      return $string;
-    }
-    if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
-      return substr($string, 0, $len);
-    }
+      if (strlen($string) <= $len) {
+          return $string;
+      }
+      if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
+          return substr($string, 0, $len);
+      }
     // Scan backwards to beginning of the byte sequence.
     while (--$len >= 0 && ord($string[$len]) >= 0x80 && ord($string[$len]) < 0xC0);
 
-    return substr($string, 0, $len);
+      return substr($string, 0, $len);
   }
 
   /**
@@ -260,12 +268,12 @@ EOD;
    */
   public static function strlen($text)
   {
-    if (static::getStatus() == static::STATUS_MULTIBYTE) {
-      return mb_strlen($text);
-    } else {
-      // Do not count UTF-8 continuation bytes.
+      if (static::getStatus() === static::STATUS_MULTIBYTE) {
+          return mb_strlen($text);
+      } else {
+          // Do not count UTF-8 continuation bytes.
       return strlen(preg_replace("/[\x80-\xBF]/", '', $text));
-    }
+      }
   }
 
   /**
@@ -279,16 +287,16 @@ EOD;
    */
   public static function strtoupper($text)
   {
-    if (static::getStatus() == static::STATUS_MULTIBYTE) {
-      return mb_strtoupper($text);
-    } else {
-      // Use C-locale for ASCII-only uppercase.
+      if (static::getStatus() === static::STATUS_MULTIBYTE) {
+          return mb_strtoupper($text);
+      } else {
+          // Use C-locale for ASCII-only uppercase.
       $text = strtoupper($text);
       // Case flip Latin-1 accented letters.
       $text = preg_replace_callback('/\xC3[\xA0-\xB6\xB8-\xBE]/', '\Mozart\Component\Support\Unicode::caseFlip', $text);
 
-      return $text;
-    }
+          return $text;
+      }
   }
 
   /**
@@ -302,16 +310,16 @@ EOD;
    */
   public static function strtolower($text)
   {
-    if (static::getStatus() == static::STATUS_MULTIBYTE) {
-      return mb_strtolower($text);
-    } else {
-      // Use C-locale for ASCII-only lowercase.
+      if (static::getStatus() === static::STATUS_MULTIBYTE) {
+          return mb_strtolower($text);
+      } else {
+          // Use C-locale for ASCII-only lowercase.
       $text = strtolower($text);
       // Case flip Latin-1 accented letters.
       $text = preg_replace_callback('/\xC3[\x80-\x96\x98-\x9E]/', '\Mozart\Component\Support\Unicode::caseFlip', $text);
 
-      return $text;
-    }
+          return $text;
+      }
   }
 
   /**
@@ -325,7 +333,7 @@ EOD;
    */
   public static function ucfirst($text)
   {
-    return static::strtoupper(static::substr($text, 0, 1)) . static::substr($text, 1);
+      return static::strtoupper(static::substr($text, 0, 1)).static::substr($text, 1);
   }
 
   /**
@@ -341,8 +349,8 @@ EOD;
    */
   public static function lcfirst($text)
   {
-    // Note: no mbstring equivalent!
-    return static::strtolower(static::substr($text, 0, 1)) . static::substr($text, 1);
+      // Note: no mbstring equivalent!
+    return static::strtolower(static::substr($text, 0, 1)).static::substr($text, 1);
   }
 
   /**
@@ -358,10 +366,10 @@ EOD;
    */
   public static function ucwords($text)
   {
-    $regex = '/(^|[' . static::PREG_CLASS_WORD_BOUNDARY . '])([^' . static::PREG_CLASS_WORD_BOUNDARY . '])/u';
+      $regex = '/(^|['.static::PREG_CLASS_WORD_BOUNDARY.'])([^'.static::PREG_CLASS_WORD_BOUNDARY.'])/u';
 
-    return preg_replace_callback($regex, function (array $matches) {
-      return $matches[1] . Unicode::strtoupper($matches[2]);
+      return preg_replace_callback($regex, function (array $matches) {
+      return $matches[1].Unicode::strtoupper($matches[2]);
     }, $text);
   }
 
@@ -382,87 +390,90 @@ EOD;
    * @return string
    *   The shortened string.
    */
-  public static function substr($text, $start, $length = NULL)
+  public static function substr($text, $start, $length = null)
   {
-    if (static::getStatus() == static::STATUS_MULTIBYTE) {
-      return $length === NULL ? mb_substr($text, $start) : mb_substr($text, $start, $length);
-    } else {
-      $strlen = strlen($text);
+      if (static::getStatus() === static::STATUS_MULTIBYTE) {
+          return $length === null ? mb_substr($text, $start) : mb_substr($text, $start, $length);
+      } else {
+          $strlen = strlen($text);
       // Find the starting byte offset.
       $bytes = 0;
-      if ($start > 0) {
-        // Count all the continuation bytes from the start until we have found
+          if ($start > 0) {
+              // Count all the continuation bytes from the start until we have found
         // $start characters or the end of the string.
-        $bytes = -1; $chars = -1;
-        while ($bytes < $strlen - 1 && $chars < $start) {
-          $bytes++;
-          $c = ord($text[$bytes]);
-          if ($c < 0x80 || $c >= 0xC0) {
-            $chars++;
-          }
-        }
-      } elseif ($start < 0) {
-        // Count all the continuation bytes from the end until we have found
+        $bytes = -1;
+              $chars = -1;
+              while ($bytes < $strlen - 1 && $chars < $start) {
+                  ++$bytes;
+                  $c = ord($text[$bytes]);
+                  if ($c < 0x80 || $c >= 0xC0) {
+                      ++$chars;
+                  }
+              }
+          } elseif ($start < 0) {
+              // Count all the continuation bytes from the end until we have found
         // abs($start) characters.
         $start = abs($start);
-        $bytes = $strlen; $chars = 0;
-        while ($bytes > 0 && $chars < $start) {
-          $bytes--;
-          $c = ord($text[$bytes]);
-          if ($c < 0x80 || $c >= 0xC0) {
-            $chars++;
+              $bytes = $strlen;
+              $chars = 0;
+              while ($bytes > 0 && $chars < $start) {
+                  --$bytes;
+                  $c = ord($text[$bytes]);
+                  if ($c < 0x80 || $c >= 0xC0) {
+                      ++$chars;
+                  }
+              }
           }
-        }
-      }
-      $istart = $bytes;
+          $istart = $bytes;
 
       // Find the ending byte offset.
-      if ($length === NULL) {
-        $iend = $strlen;
+      if ($length === null) {
+          $iend = $strlen;
       } elseif ($length > 0) {
-        // Count all the continuation bytes from the starting index until we have
+          // Count all the continuation bytes from the starting index until we have
         // found $length characters or reached the end of the string, then
         // backtrace one byte.
         $iend = $istart - 1;
-        $chars = -1;
-        $last_real = FALSE;
-        while ($iend < $strlen - 1 && $chars < $length) {
-          $iend++;
-          $c = ord($text[$iend]);
-          $last_real = FALSE;
-          if ($c < 0x80 || $c >= 0xC0) {
-            $chars++;
-            $last_real = TRUE;
+          $chars = -1;
+          $last_real = false;
+          while ($iend < $strlen - 1 && $chars < $length) {
+              ++$iend;
+              $c = ord($text[$iend]);
+              $last_real = false;
+              if ($c < 0x80 || $c >= 0xC0) {
+                  ++$chars;
+                  $last_real = true;
+              }
           }
-        }
         // Backtrace one byte if the last character we found was a real character
         // and we don't need it.
         if ($last_real && $chars >= $length) {
-          $iend--;
+            --$iend;
         }
       } elseif ($length < 0) {
-        // Count all the continuation bytes from the end until we have found
+          // Count all the continuation bytes from the end until we have found
         // abs($start) characters, then backtrace one byte.
         $length = abs($length);
-        $iend = $strlen; $chars = 0;
-        while ($iend > 0 && $chars < $length) {
-          $iend--;
-          $c = ord($text[$iend]);
-          if ($c < 0x80 || $c >= 0xC0) {
-            $chars++;
+          $iend = $strlen;
+          $chars = 0;
+          while ($iend > 0 && $chars < $length) {
+              --$iend;
+              $c = ord($text[$iend]);
+              if ($c < 0x80 || $c >= 0xC0) {
+                  ++$chars;
+              }
           }
-        }
         // Backtrace one byte if we are not at the beginning of the string.
         if ($iend > 0) {
-          $iend--;
+            --$iend;
         }
       } else {
-        // $length == 0, return an empty string.
+          // $length == 0, return an empty string.
         return '';
       }
 
-      return substr($text, $istart, max(0, $iend - $istart + 1));
-    }
+          return substr($text, $istart, max(0, $iend - $istart + 1));
+      }
   }
 
   /**
@@ -499,52 +510,52 @@ EOD;
    * @return string
    *   The truncated string.
    */
-  public static function truncate($string, $max_length, $wordsafe = FALSE, $add_ellipsis = FALSE, $min_wordsafe_length = 1)
+  public static function truncate($string, $max_length, $wordsafe = false, $add_ellipsis = false, $min_wordsafe_length = 1)
   {
-    $ellipsis = '';
-    $max_length = max($max_length, 0);
-    $min_wordsafe_length = max($min_wordsafe_length, 0);
-
-    if (static::strlen($string) <= $max_length) {
-      // No truncation needed, so don't add ellipsis, just return.
-      return $string;
-    }
-
-    if ($add_ellipsis) {
-      // Truncate ellipsis in case $max_length is small.
-      $ellipsis = static::substr('…', 0, $max_length);
-      $max_length -= static::strlen($ellipsis);
+      $ellipsis = '';
       $max_length = max($max_length, 0);
-    }
+      $min_wordsafe_length = max($min_wordsafe_length, 0);
 
-    if ($max_length <= $min_wordsafe_length) {
-      // Do not attempt word-safe if lengths are bad.
-      $wordsafe = FALSE;
-    }
+      if (static::strlen($string) <= $max_length) {
+          // No truncation needed, so don't add ellipsis, just return.
+      return $string;
+      }
 
-    if ($wordsafe) {
-      $matches = array();
+      if ($add_ellipsis) {
+          // Truncate ellipsis in case $max_length is small.
+      $ellipsis = static::substr('…', 0, $max_length);
+          $max_length -= static::strlen($ellipsis);
+          $max_length = max($max_length, 0);
+      }
+
+      if ($max_length <= $min_wordsafe_length) {
+          // Do not attempt word-safe if lengths are bad.
+      $wordsafe = false;
+      }
+
+      if ($wordsafe) {
+          $matches = array();
       // Find the last word boundary, if there is one within $min_wordsafe_length
       // to $max_length characters. preg_match() is always greedy, so it will
       // find the longest string possible.
-      $found = preg_match('/^(.{' . $min_wordsafe_length . ',' . $max_length . '})[' . Unicode::PREG_CLASS_WORD_BOUNDARY . ']/u', $string, $matches);
-      if ($found) {
-        $string = $matches[1];
+      $found = preg_match('/^(.{'.$min_wordsafe_length.','.$max_length.'})['.self::PREG_CLASS_WORD_BOUNDARY.']/u', $string, $matches);
+          if ($found) {
+              $string = $matches[1];
+          } else {
+              $string = static::substr($string, 0, $max_length);
+          }
       } else {
-        $string = static::substr($string, 0, $max_length);
+          $string = static::substr($string, 0, $max_length);
       }
-    } else {
-      $string = static::substr($string, 0, $max_length);
-    }
 
-    if ($add_ellipsis) {
-      // If we're adding an ellipsis, remove any trailing periods.
+      if ($add_ellipsis) {
+          // If we're adding an ellipsis, remove any trailing periods.
       $string = rtrim($string, '.');
 
-      $string .= $ellipsis;
-    }
+          $string .= $ellipsis;
+      }
 
-    return $string;
+      return $string;
   }
 
   /**
@@ -570,22 +581,22 @@ EOD;
    */
   public static function mimeHeaderEncode($string)
   {
-    if (preg_match('/[^\x20-\x7E]/', $string)) {
-      $chunk_size = 47; // floor((75 - strlen("=?UTF-8?B??=")) * 0.75);
+      if (preg_match('/[^\x20-\x7E]/', $string)) {
+          $chunk_size = 47; // floor((75 - strlen("=?UTF-8?B??=")) * 0.75);
       $len = strlen($string);
-      $output = '';
-      while ($len > 0) {
-        $chunk = static::truncateBytes($string, $chunk_size);
-        $output .= ' =?UTF-8?B?' . base64_encode($chunk) . "?=\n";
-        $c = strlen($chunk);
-        $string = substr($string, $c);
-        $len -= $c;
+          $output = '';
+          while ($len > 0) {
+              $chunk = static::truncateBytes($string, $chunk_size);
+              $output .= ' =?UTF-8?B?'.base64_encode($chunk)."?=\n";
+              $c = strlen($chunk);
+              $string = substr($string, $c);
+              $len -= $c;
+          }
+
+          return trim($output);
       }
 
-      return trim($output);
-    }
-
-    return $string;
+      return $string;
   }
 
   /**
@@ -599,10 +610,10 @@ EOD;
    */
   public static function mimeHeaderDecode($header)
   {
-    $callback = function ($matches) {
-      $data = ($matches[2] == 'B') ? base64_decode($matches[3]) : str_replace('_', ' ', quoted_printable_decode($matches[3]));
-      if (strtolower($matches[1]) != 'utf-8') {
-        $data = static::convertToUtf8($data, $matches[1]);
+      $callback = function ($matches) {
+      $data = ($matches[2] === 'B') ? base64_decode($matches[3], true) : str_replace('_', ' ', quoted_printable_decode($matches[3]));
+      if (strtolower($matches[1]) !== 'utf-8') {
+          $data = static::convertToUtf8($data, $matches[1]);
       }
 
       return $data;
@@ -624,7 +635,7 @@ EOD;
    */
   public static function caseFlip($matches)
   {
-    return $matches[0][0] . chr(ord($matches[0][1]) ^ 32);
+      return $matches[0][0].chr(ord($matches[0][1]) ^ 32);
   }
 
   /**
@@ -653,13 +664,12 @@ EOD;
    */
   public static function validateUtf8($text)
   {
-    if (strlen($text) == 0) {
-      return TRUE;
-    }
+      if (strlen($text) === 0) {
+          return true;
+      }
     // With the PCRE_UTF8 modifier 'u', preg_match() fails silently on strings
     // containing invalid UTF-8 byte sequences. It does not reject character
     // codes above U+10FFFF (represented by 4 or more octets), though.
-    return (preg_match('/^./us', $text) == 1);
+    return preg_match('/^./us', $text) === 1;
   }
-
 }

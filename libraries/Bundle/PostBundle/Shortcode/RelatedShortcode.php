@@ -1,8 +1,17 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\PostBundle\Shortcode;
 
 use Mozart\Bundle\ShortcodeBundle\ShortcodeInterface;
@@ -10,7 +19,6 @@ use Mozart\Component\Post\Connection\ItemList\ItemListRenderer;
 
 class RelatedShortcode implements ShortcodeInterface
 {
-
     public function getName()
     {
         return 'related';
@@ -30,11 +38,11 @@ class RelatedShortcode implements ShortcodeInterface
 
         return ItemListRenderer::query_and_render(
             array(
-                'ctype'   => $attr['type'],
-                'method'  => 'get_connected',
-                'item'    => $post,
-                'mode'    => $attr['mode'],
-                'context' => 'shortcode'
+                'ctype' => $attr['type'],
+                'method' => 'get_connected',
+                'item' => $post,
+                'mode' => $attr['mode'],
+                'context' => 'shortcode',
             )
         );
     }

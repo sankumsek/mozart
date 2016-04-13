@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\Html.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -14,7 +22,7 @@ namespace Mozart\Component\Support;
  */
 class Html
 {
-  /**
+    /**
    * Normalizes an HTML snippet.
    *
    * This function is essentially \DOMDocument::normalizeDocument(), but
@@ -28,9 +36,9 @@ class Html
    */
   public static function normalize($html)
   {
-    $document = static::load($html);
+      $document = static::load($html);
 
-    return static::serialize($document);
+      return static::serialize($document);
   }
 
   /**
@@ -51,7 +59,7 @@ class Html
    */
   public static function load($html)
   {
-    $document = <<<EOD
+      $document = <<<EOD
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
@@ -63,11 +71,11 @@ EOD;
     // newlines before injecting the actual HTML body to process.
     $document = strtr($document, array("\n" => '', '!html' => $html));
 
-    $dom = new \DOMDocument();
+      $dom = new \DOMDocument();
     // Ignore warnings during HTML soup loading.
     @$dom->loadHTML($document);
 
-    return $dom;
+      return $dom;
   }
 
   /**
@@ -86,20 +94,20 @@ EOD;
    */
   public static function serialize(\DOMDocument $document)
   {
-    $body_node = $document->getElementsByTagName('body')->item(0);
-    $html = '';
+      $body_node = $document->getElementsByTagName('body')->item(0);
+      $html = '';
 
-    foreach ($body_node->getElementsByTagName('script') as $node) {
-      static::escapeCdataElement($node);
-    }
-    foreach ($body_node->getElementsByTagName('style') as $node) {
-      static::escapeCdataElement($node, '/*', '*/');
-    }
-    foreach ($body_node->childNodes as $node) {
-      $html .= $document->saveXML($node);
-    }
+      foreach ($body_node->getElementsByTagName('script') as $node) {
+          static::escapeCdataElement($node);
+      }
+      foreach ($body_node->getElementsByTagName('style') as $node) {
+          static::escapeCdataElement($node, '/*', '*/');
+      }
+      foreach ($body_node->childNodes as $node) {
+          $html .= $document->saveXML($node);
+      }
 
-    return $html;
+      return $html;
   }
 
   /**
@@ -123,10 +131,10 @@ EOD;
    */
   public static function escapeCdataElement(\DOMNode $node, $comment_start = '//', $comment_end = '')
   {
-    foreach ($node->childNodes as $child_node) {
-      if ($child_node instanceof \DOMCdataSection) {
-        $embed_prefix = "\n<!--{$comment_start}--><![CDATA[{$comment_start} ><!--{$comment_end}\n";
-        $embed_suffix = "\n{$comment_start}--><!]]>{$comment_end}\n";
+      foreach ($node->childNodes as $child_node) {
+          if ($child_node instanceof \DOMCdataSection) {
+              $embed_prefix = "\n<!--{$comment_start}--><![CDATA[{$comment_start} ><!--{$comment_end}\n";
+              $embed_suffix = "\n{$comment_start}--><!]]>{$comment_end}\n";
 
         // Prevent invalid cdata escaping as this would throw a DOM error.
         // This is the same behavior as found in libxml2.
@@ -134,12 +142,11 @@ EOD;
         // Fix explanation: http://en.wikipedia.org/wiki/CDATA#Nesting
         $data = str_replace(']]>', ']]]]><![CDATA[>', $child_node->data);
 
-        $fragment = $node->ownerDocument->createDocumentFragment();
-        $fragment->appendXML($embed_prefix . $data . $embed_suffix);
-        $node->appendChild($fragment);
-        $node->removeChild($child_node);
+              $fragment = $node->ownerDocument->createDocumentFragment();
+              $fragment->appendXML($embed_prefix.$data.$embed_suffix);
+              $node->appendChild($fragment);
+              $node->removeChild($child_node);
+          }
       }
-    }
   }
-
 }

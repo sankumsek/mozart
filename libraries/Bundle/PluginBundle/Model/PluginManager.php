@@ -1,16 +1,24 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\PluginBundle\Model;
 
 use Mozart\Component\Plugin\PluginInterface;
 use Mozart\Component\Plugin\PluginManagerInterface;
 
 /**
- * Class PluginManager
- * @package Mozart\Bundle\PluginBundle
+ * Class PluginManager.
  */
 class PluginManager implements PluginManagerInterface
 {
@@ -37,6 +45,7 @@ class PluginManager implements PluginManagerInterface
 
     /**
      * @param $slug
+     *
      * @return PluginInterface
      */
     public function getPlugin($slug)
@@ -54,14 +63,12 @@ class PluginManager implements PluginManagerInterface
      */
     public function registerPlugin(PluginInterface $plugin)
     {
-
         if ($plugin->getSlug() === '' || $plugin->getName() === '') {
             return;
         }
 
         $this->plugins[$plugin->getSlug()] = $plugin;
         $this->sortByName();
-
     }
 
     /**
@@ -75,7 +82,7 @@ class PluginManager implements PluginManagerInterface
             $sorted[] = $plugin->getName();
         }
 
-        array_multisort( $sorted, SORT_ASC, $this->plugins );
+        array_multisort($sorted, SORT_ASC, $this->plugins);
     }
 
     /**
@@ -93,5 +100,4 @@ class PluginManager implements PluginManagerInterface
 
         return $inactivePlugins;
     }
-
 }

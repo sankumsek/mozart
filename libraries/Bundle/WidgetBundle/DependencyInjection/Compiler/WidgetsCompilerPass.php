@@ -1,12 +1,21 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\WidgetBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 class WidgetsCompilerPass implements CompilerPassInterface
@@ -16,7 +25,7 @@ class WidgetsCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        if (false === $container->hasDefinition( 'mozart.widget.widget_manager' )) {
+        if (false === $container->hasDefinition('mozart.widget.widget_manager')) {
             return;
         }
 
@@ -24,12 +33,11 @@ class WidgetsCompilerPass implements CompilerPassInterface
             'mozart.widget.widget_manager'
         );
 
-        foreach ($container->findTaggedServiceIds( 'wordpress.widget' ) as $id => $attributes) {
+        foreach ($container->findTaggedServiceIds('wordpress.widget') as $id => $attributes) {
             $definition->addMethodCall(
                 'registerWidget',
-                array( new Reference( $id ) )
+                array(new Reference($id))
             );
         }
     }
-
 }

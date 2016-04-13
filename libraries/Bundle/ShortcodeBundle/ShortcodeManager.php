@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\ShortcodeBundle;
 
 class ShortcodeManager
@@ -17,7 +26,7 @@ class ShortcodeManager
 
     public function mce_external_plugins($plugin_array)
     {
-        $plugin_array['mozart'] = \Mozart::parameter('wp.content.uri') . '/mozart' . '/public/bundles/mozartnucleus/shortcodes/js/shortcodes.js';
+        $plugin_array['mozart'] = \Mozart::parameter('wp.content.uri').'/mozart'.'/public/bundles/mozartnucleus/shortcodes/js/shortcodes.js';
 
         return $plugin_array;
     }

@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains Mozart.
  */
-
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -13,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Mozart
 {
     /**
-     * Mozart domain
+     * Mozart domain.
      */
     const DOMAIN = 'mozart';
     /**
@@ -27,7 +35,6 @@ class Mozart
      * Sets a new global container.
      *
      * @param ContainerInterface $container A new container instance to replace the current.
-     *
      */
     public static function setContainer(ContainerInterface $container = null)
     {
@@ -51,14 +58,14 @@ class Mozart
      * accessor method below. If it is listed below, those methods are preferred
      * as they can return useful type hints.
      *
-     * @param string $id The ID of the service to retrieve.
+     * @param string $id              The ID of the service to retrieve.
      * @param int    $invalidBehavior The behavior when the service does not exist
      *
      * @return mixed The specified service.
      */
     public static function service($id, $invalidBehavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE)
     {
-        return static::$container->get( $id, $invalidBehavior );
+        return static::$container->get($id, $invalidBehavior);
     }
 
     /**
@@ -70,7 +77,7 @@ class Mozart
      */
     public static function hasService($id)
     {
-        return static::$container && static::$container->has( $id );
+        return static::$container && static::$container->has($id);
     }
 
     /**
@@ -96,7 +103,7 @@ class Mozart
      */
     public static function request()
     {
-        return static::$container->get( 'request' );
+        return static::$container->get('request');
     }
 
     /**
@@ -106,15 +113,16 @@ class Mozart
      */
     public static function hasRequest()
     {
-        return static::$container && static::$container->has( 'request' ) && static::$container->initialized(
+        return static::$container && static::$container->has('request') && static::$container->initialized(
             'request'
-        ) && static::$container->isScopeActive( 'request' );
+        ) && static::$container->isScopeActive('request');
     }
 
     /**
      * Retrieves a configuration object.
      *
      * This is the main entry point to the configuration API. Calling
+     *
      * @code \Mozart::config('book.admin') @endcode will return a configuration
      * object in which the book module can store its administrative settings.
      *
@@ -126,7 +134,7 @@ class Mozart
      */
     public static function config($name)
     {
-        return static::$container->get( 'config.factory' )->get( $name );
+        return static::$container->get('config.factory')->get($name);
     }
 
     /**
@@ -140,7 +148,7 @@ class Mozart
      */
     public static function configFactory()
     {
-        return static::$container->get( 'config.factory' );
+        return static::$container->get('config.factory');
     }
 
     /**
@@ -150,16 +158,16 @@ class Mozart
      *                        to use the name of the subsystem calling this.
      *
      * @return \Mozart\Component\Logger\LoggerChannelInterface
-     *                                                    The logger for this channel.
+     *                                                         The logger for this channel.
      */
     public static function logger($channel)
     {
-        return static::$container->get( 'logger.factory' )->get( $channel );
+        return static::$container->get('logger.factory')->get($channel);
     }
 
     public static function dispatch($eventName, $event = null)
     {
-        return static::$container->get( 'event_dispatcher' )->dispatch( $eventName, $event );
+        return static::$container->get('event_dispatcher')->dispatch($eventName, $event);
     }
 
     /**
@@ -170,20 +178,20 @@ class Mozart
      * @return mixed The parameter value
      *
      * @throws InvalidArgumentException if the parameter is not defined
-     *
      */
     public static function parameter($name)
     {
-        return self::$container->getParameter( $name );
+        return self::$container->getParameter($name);
     }
 
     /**
-     * @param  array $bundles
+     * @param array $bundles
+     *
      * @return array|mixed|void
      */
     public static function registerAdditionalBundles(array $bundles)
     {
-        $bundles = apply_filters( 'register_mozart_bundle', $bundles );
+        $bundles = apply_filters('register_mozart_bundle', $bundles);
 
         return $bundles;
     }
@@ -196,10 +204,10 @@ class Mozart
      */
     public static function render($view, array $context = array())
     {
-        $view = apply_filters( 'mozart_view', $view, $context );
-        $context = apply_filters( 'mozart_context', $context );
+        $view = apply_filters('mozart_view', $view, $context);
+        $context = apply_filters('mozart_context', $context);
 
-        return static::service( 'templating' )->render( $view, $context );
+        return static::service('templating')->render($view, $context);
     }
 
     /**
@@ -208,6 +216,6 @@ class Mozart
      */
     public static function renderView($view, array $context = array())
     {
-        echo static::render( $view, $context );
+        echo static::render($view, $context);
     }
 }

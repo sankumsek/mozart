@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace  Mozart\Bundle\ConfigBundle\Model;
 
 use Doctrine\Common\Cache\ArrayCache;
@@ -9,8 +18,7 @@ use Mozart\Bundle\NucleusBundle\Model\AbstractManager;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
- * Class OptionManager
- * @package Mozart\Bundle\ConfigBundle\Model
+ * Class OptionManager.
  */
 class OptionManager extends AbstractManager implements OptionManagerInterface
 {
@@ -38,13 +46,14 @@ class OptionManager extends AbstractManager implements OptionManagerInterface
     {
         parent::__construct($container);
 
-        $this->em         = $this->getEntityManager();
+        $this->em = $this->getEntityManager();
         $this->repository = $this->em->getRepository('MozartConfigBundle:Option');
-        $this->cache      = new ArrayCache();
+        $this->cache = new ArrayCache();
     }
 
     /**
      * @param $name
+     *
      * @return bool|mixed|Option|string
      */
     public function findOneOptionByName($name)
@@ -52,7 +61,7 @@ class OptionManager extends AbstractManager implements OptionManagerInterface
         if (false === $option = $this->cache->fetch($name)) {
             /** @var $option Option */
             $option = $this->repository->findOneBy(array(
-                'name' => $name
+                'name' => $name,
             ));
 
             if ($option !== null) {

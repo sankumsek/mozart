@@ -1,8 +1,17 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\ConfigBundle\Twig\Extension;
 
 use Mozart\Bundle\ConfigBundle\Model\OptionManagerInterface;
@@ -16,7 +25,7 @@ class OptionTemplateExtension extends \Twig_Extension
     private $configFactory;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -29,7 +38,7 @@ class OptionTemplateExtension extends \Twig_Extension
     protected $sectionOrder;
 
     /**
-     * @var OptionManagerInterface $optionManager
+     * @var OptionManagerInterface
      */
     protected $optionManager;
 
@@ -49,26 +58,26 @@ class OptionTemplateExtension extends \Twig_Extension
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter( 'section_sort', array( $this, 'sortSections' ) ),
+            new \Twig_SimpleFilter('section_sort', array($this, 'sortSections')),
         );
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getFunctions()
     {
         return array(
 //            new \Twig_SimpleFunction( 'setting', array( $this, 'findOneOptionByName' ) ),
 //            new \Twig_SimpleFunction( 'sett', array( $this, 'findOneOptionByName' ) ),
-            new \Twig_SimpleFunction( 'option', array( $this, 'getConfig' ) ),
-            new \Twig_SimpleFunction( 'opt', array( $this, 'getConfig' ) ),
-            new \Twig_SimpleFunction( 'config', array( $this, 'getConfig' ) )
+            new \Twig_SimpleFunction('option', array($this, 'getConfig')),
+            new \Twig_SimpleFunction('opt', array($this, 'getConfig')),
+            new \Twig_SimpleFunction('config', array($this, 'getConfig')),
         );
     }
 
@@ -82,19 +91,19 @@ class OptionTemplateExtension extends \Twig_Extension
         $finalSectionOrder = array();
 
         // add null section first (if it exists)
-        $nullIndex = array_search( null, $sections );
+        $nullIndex = array_search(null, $sections, true);
         if ($nullIndex !== false) {
             $finalSectionOrder[] = $sections[$nullIndex];
-            unset( $sections[$nullIndex] );
+            unset($sections[$nullIndex]);
         }
 
         // add sections in given order
-        foreach (array_intersect( $this->sectionOrder, $sections ) as $section) {
+        foreach (array_intersect($this->sectionOrder, $sections) as $section) {
             $finalSectionOrder[] = $section;
         }
 
         // add remaining sections
-        foreach (array_diff( $sections, $this->sectionOrder ) as $section) {
+        foreach (array_diff($sections, $this->sectionOrder) as $section) {
             $finalSectionOrder[] = $section;
         }
 
@@ -113,6 +122,6 @@ class OptionTemplateExtension extends \Twig_Extension
      */
     public function findOneOptionByName($name)
     {
-        return $this->optionManager->findOneOptionByName( $name )->getValue();
+        return $this->optionManager->findOneOptionByName($name)->getValue();
     }
 }

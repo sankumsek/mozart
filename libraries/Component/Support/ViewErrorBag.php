@@ -1,4 +1,15 @@
-<?php namespace Mozart\Component\Support;
+<?php
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Mozart\Component\Support;
 
 use Countable;
 
@@ -14,19 +25,21 @@ class ViewErrorBag implements Countable
     /**
      * Get a MessageBag instance from the bags.
      *
-     * @param  string                               $key
+     * @param string $key
+     *
      * @return \Mozart\Component\Support\MessageBag
      */
     public function getBag($key)
     {
-        return array_get($this->bags, $key, new MessageBag);
+        return array_get($this->bags, $key, new MessageBag());
     }
 
     /**
      * Add a new MessageBag instance to the bags.
      *
-     * @param  string                                 $key
-     * @param  \Mozart\Component\Support\MessageBag   $bag
+     * @param string                               $key
+     * @param \Mozart\Component\Support\MessageBag $bag
+     *
      * @return \Mozart\Component\Support\ViewErrorBag
      */
     public function put($key, MessageBag $bag)
@@ -49,8 +62,9 @@ class ViewErrorBag implements Countable
     /**
      * Dynamically call methods on the default bag.
      *
-     * @param  string $method
-     * @param  array  $parameters
+     * @param string $method
+     * @param array  $parameters
+     *
      * @return mixed
      */
     public function __call($method, $parameters)
@@ -65,19 +79,17 @@ class ViewErrorBag implements Countable
      */
     public function __get($key)
     {
-        return array_get($this->bags, $key, new MessageBag);
+        return array_get($this->bags, $key, new MessageBag());
     }
 
     /**
      * Dynamically set a view error bag.
      *
-     * @param  string                               $key
-     * @param  \Mozart\Component\Support\MessageBag $value
-     * @return void
+     * @param string                               $key
+     * @param \Mozart\Component\Support\MessageBag $value
      */
     public function __set($key, $value)
     {
         array_set($this->bags, $key, $value);
     }
-
 }

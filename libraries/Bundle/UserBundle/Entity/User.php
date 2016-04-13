@@ -1,16 +1,25 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace  Mozart\Bundle\UserBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use  Mozart\Bundle\NucleusBundle\Annotation as Mozart;
-use Symfony\Component\Validator\Constraints as Constraints;
-use  Mozart\Bundle\UserBundle\Model\User as ModelUser;
+use Mozart\Bundle\NucleusBundle\Annotation as Mozart;
+use Mozart\Bundle\UserBundle\Model\User as ModelUser;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Constraints;
 
 /**
- *  Mozart\Bundle\UserBundle\Entity\User
+ *  Mozart\Bundle\UserBundle\Entity\User.
  *
  * @ORM\Table(name="users")
  * @ORM\Entity

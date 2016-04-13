@@ -1,13 +1,21 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Component\Cache\Transient;
 
 class SiteTransient implements TransientInterface
 {
-
     /**
      * Set/update the value of a site transient.
      *
@@ -15,7 +23,6 @@ class SiteTransient implements TransientInterface
      * it will be serialized before it is set.
      *
      * @since 2.9.0
-     *
      * @see   set_transient()
      *
      * @param string $transient  Transient name. Expected to not be SQL-escaped.
@@ -36,30 +43,30 @@ class SiteTransient implements TransientInterface
          *
          * @param mixed $value Value of site transient.
          */
-        $value = apply_filters( 'pre_set_site_transient_' . $transient, $value );
+        $value = apply_filters('pre_set_site_transient_'.$transient, $value);
 
         $expiration = (int) $expiration;
 
         if (wp_using_ext_object_cache()) {
-            $result = wp_cache_set( $transient, $value, 'site-transient', $expiration );
+            $result = wp_cache_set($transient, $value, 'site-transient', $expiration);
         } else {
-            $transient_timeout = '_site_transient_timeout_' . $transient;
-            $option = '_site_transient_' . $transient;
-            if (false === get_site_option( $option )) {
+            $transient_timeout = '_site_transient_timeout_'.$transient;
+            $option = '_site_transient_'.$transient;
+            if (false === get_site_option($option)) {
                 if ($expiration) {
-                    add_site_option( $transient_timeout, time() + $expiration );
+                    add_site_option($transient_timeout, time() + $expiration);
                 }
-                $result = add_site_option( $option, $value );
+                $result = add_site_option($option, $value);
             } else {
                 if ($expiration) {
-                    update_site_option( $transient_timeout, time() + $expiration );
+                    update_site_option($transient_timeout, time() + $expiration);
                 }
-                $result = update_site_option( $option, $value );
+                $result = update_site_option($option, $value);
             }
         }
         if ($result) {
 
-            /**
+            /*
              * Fires after the value for a specific site transient has been set.
              *
              * The dynamic portion of the hook name, $transient, refers to the transient name.
@@ -69,9 +76,9 @@ class SiteTransient implements TransientInterface
              * @param mixed $value Site transient value.
              * @param int $expiration Time until expiration in seconds. Default 0.
              */
-            do_action( 'set_site_transient_' . $transient, $value, $expiration );
+            do_action('set_site_transient_'.$transient, $value, $expiration);
 
-            /**
+            /*
              * Fires after the value for a site transient has been set.
              *
              * @since 3.0.0
@@ -80,7 +87,7 @@ class SiteTransient implements TransientInterface
              * @param mixed $value Site transient value.
              * @param int $expiration Time until expiration in seconds. Default 0.
              */
-            do_action( 'setted_site_transient', $transient, $value, $expiration );
+            do_action('setted_site_transient', $transient, $value, $expiration);
         }
 
         return $result;
@@ -93,7 +100,6 @@ class SiteTransient implements TransientInterface
      * will be false.
      *
      * @since 2.9.0
-     *
      * @see   get_transient()
      *
      * @param string $transient Transient name. Expected to not be SQL-escaped.
@@ -117,34 +123,34 @@ class SiteTransient implements TransientInterface
          *                                  Any value other than false will short-circuit the retrieval
          *                                  of the transient, and return the returned value.
          */
-        $pre = apply_filters( 'pre_site_transient_' . $transient, false );
+        $pre = apply_filters('pre_site_transient_'.$transient, false);
 
         if (false !== $pre) {
             return $pre;
         }
 
         if (wp_using_ext_object_cache()) {
-            $value = wp_cache_get( $transient, 'site-transient' );
+            $value = wp_cache_get($transient, 'site-transient');
         } else {
             // Core transients that do not have a timeout. Listed here so querying timeouts can be avoided.
-            $no_timeout = array( 'update_core', 'update_plugins', 'update_themes' );
-            $transient_option = '_site_transient_' . $transient;
-            if (!in_array( $transient, $no_timeout )) {
-                $transient_timeout = '_site_transient_timeout_' . $transient;
-                $timeout = get_site_option( $transient_timeout );
+            $no_timeout = array('update_core', 'update_plugins', 'update_themes');
+            $transient_option = '_site_transient_'.$transient;
+            if (!in_array($transient, $no_timeout, true)) {
+                $transient_timeout = '_site_transient_timeout_'.$transient;
+                $timeout = get_site_option($transient_timeout);
                 if (false !== $timeout && $timeout < time()) {
-                    delete_site_option( $transient_option );
-                    delete_site_option( $transient_timeout );
+                    delete_site_option($transient_option);
+                    delete_site_option($transient_timeout);
                     $value = false;
                 }
             }
 
-            if (!isset( $value )) {
-                $value = get_site_option( $transient_option );
+            if (!isset($value)) {
+                $value = get_site_option($transient_option);
             }
         }
 
-        /**
+        /*
          * Filter the value of an existing site transient.
          *
          * The dynamic portion of the hook name, $transient, refers to the transient name.
@@ -154,7 +160,7 @@ class SiteTransient implements TransientInterface
          * @param mixed $value Value of site transient.
          */
 
-        return apply_filters( 'site_transient_' . $transient, $value );
+        return apply_filters('site_transient_'.$transient, $value);
     }
 
     /**
@@ -169,7 +175,7 @@ class SiteTransient implements TransientInterface
     public function delete($transient)
     {
 
-        /**
+        /*
          * Fires immediately before a specific site transient is deleted.
          *
          * The dynamic portion of the hook name, $transient, refers to the transient name.
@@ -178,28 +184,28 @@ class SiteTransient implements TransientInterface
          *
          * @param string $transient Transient name.
          */
-        do_action( 'delete_site_transient_' . $transient, $transient );
+        do_action('delete_site_transient_'.$transient, $transient);
 
         if (wp_using_ext_object_cache()) {
-            $result = wp_cache_delete( $transient, 'site-transient' );
+            $result = wp_cache_delete($transient, 'site-transient');
         } else {
-            $option_timeout = '_site_transient_timeout_' . $transient;
-            $option = '_site_transient_' . $transient;
-            $result = delete_site_option( $option );
+            $option_timeout = '_site_transient_timeout_'.$transient;
+            $option = '_site_transient_'.$transient;
+            $result = delete_site_option($option);
             if ($result) {
-                delete_site_option( $option_timeout );
+                delete_site_option($option_timeout);
             }
         }
         if ($result) {
 
-            /**
+            /*
              * Fires after a transient is deleted.
              *
              * @since 3.0.0
              *
              * @param string $transient Deleted transient name.
              */
-            do_action( 'deleted_site_transient', $transient );
+            do_action('deleted_site_transient', $transient);
         }
 
         return $result;

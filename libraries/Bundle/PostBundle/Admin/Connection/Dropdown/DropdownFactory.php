@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\PostBundle\Admin\Connection\Dropdown;
 
 use Mozart\Bundle\PostBundle\Admin\Connection\Factory;
@@ -12,13 +21,13 @@ class DropdownFactory extends Factory
     {
         parent::__construct();
 
-        add_action( 'load-edit.php', array( $this, 'add_items' ) );
-        add_action( 'load-users.php', array( $this, 'add_items' ) );
+        add_action('load-edit.php', array($this, 'add_items'));
+        add_action('load-users.php', array($this, 'add_items'));
     }
 
     public function add_item($directed, $object_type, $post_type, $title)
     {
-        $class = 'P2P_Dropdown_' . ucfirst( $object_type );
-        $item = new $class( $directed, $title );
+        $class = 'P2P_Dropdown_'.ucfirst($object_type);
+        $item = new $class($directed, $title);
     }
 }

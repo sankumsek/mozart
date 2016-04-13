@@ -1,8 +1,17 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\ActionBundle;
 
 use Symfony\Component\EventDispatcher\Event;
@@ -34,16 +43,16 @@ class ActionDispatcher implements EventDispatcherInterface
         if (null === $event) {
             $event = new Event();
         }
-        $event->setDispatcher( $this );
-        $event->setName( $eventName );
+        $event->setDispatcher($this);
+        $event->setName($eventName);
 
-        if (!isset( $this->listeners[$eventName] )) {
+        if (!isset($this->listeners[$eventName])) {
             return $event;
         }
 
-        $this->doDispatch( $this->getListeners( $eventName ), $eventName, $event );
+        $this->doDispatch($this->getListeners($eventName), $eventName, $event);
 
-        array_pop( $wp_current_filter );
+        array_pop($wp_current_filter);
 
         return $event;
     }
@@ -61,7 +70,7 @@ class ActionDispatcher implements EventDispatcherInterface
     protected function doDispatch($listeners, $eventName, Event $event)
     {
         foreach ($listeners as $listener) {
-            call_user_func( $listener, $event, $eventName, $this );
+            call_user_func($listener, $event, $eventName, $this);
             if ($event->isPropagationStopped()) {
                 break;
             }
@@ -80,7 +89,7 @@ class ActionDispatcher implements EventDispatcherInterface
      */
     public function addListener($eventName, $listener, $priority = 0)
     {
-        add_action( $eventName, $listener, $priority );
+        add_action($eventName, $listener, $priority);
     }
 
     /**
@@ -129,34 +138,34 @@ class ActionDispatcher implements EventDispatcherInterface
     {
         global $wp_filter, $wp_actions, $merged_filters, $wp_current_filter;
 
-        if (!isset( $wp_actions[$eventName] )) {
+        if (!isset($wp_actions[$eventName])) {
             $wp_actions[$eventName] = 1;
         } else {
             ++$wp_actions[$eventName];
         }
 
         // Do 'all' actions first
-        if (isset( $wp_filter['all'] )) {
+        if (isset($wp_filter['all'])) {
             $wp_current_filter[] = $eventName;
             $all_args = func_get_args();
-            _wp_call_all_hook( $all_args );
+            _wp_call_all_hook($all_args);
         }
 
-        if (!isset( $wp_filter[$eventName] )) {
-            if (isset( $wp_filter['all'] )) {
-                array_pop( $wp_current_filter );
+        if (!isset($wp_filter[$eventName])) {
+            if (isset($wp_filter['all'])) {
+                array_pop($wp_current_filter);
             }
 
-            return [ ];
+            return [];
         }
 
-        if (!isset( $wp_filter['all'] )) {
+        if (!isset($wp_filter['all'])) {
             $wp_current_filter[] = $eventName;
         }
 
         // Sort
-        if (!isset( $merged_filters[$eventName] )) {
-            ksort( $wp_filter[$eventName] );
+        if (!isset($merged_filters[$eventName])) {
+            ksort($wp_filter[$eventName]);
             $merged_filters[$eventName] = true;
         }
 

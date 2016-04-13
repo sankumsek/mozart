@@ -1,14 +1,25 @@
-<?php namespace Mozart\Component\Support;
+<?php
 
-use Closure;
-use Countable;
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
+namespace Mozart\Component\Support;
+
 use ArrayAccess;
 use ArrayIterator;
 use CachingIterator;
-use JsonSerializable;
+use Closure;
+use Countable;
 use IteratorAggregate;
-use Mozart\Component\Support\Contracts\JsonableInterface;
+use JsonSerializable;
 use Mozart\Component\Support\Contracts\ArrayableInterface;
+use Mozart\Component\Support\Contracts\JsonableInterface;
 
 class Collection implements ArrayAccess, ArrayableInterface, Countable, IteratorAggregate, JsonableInterface, JsonSerializable
 {
@@ -22,8 +33,7 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Create a new collection.
      *
-     * @param  array $items
-     * @return void
+     * @param array $items
      */
     public function __construct(array $items = array())
     {
@@ -33,14 +43,20 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Create a new collection instance if the value isn't one already.
      *
-     * @param  mixed                                $items
+     * @param mixed $items
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public static function make($items)
     {
-        if (is_null($items)) return new static;
+        if (is_null($items)) {
+            return new static();
+        }
 
-        if ($items instanceof Collection) return $items;
+        if ($items instanceof self) {
+            return $items;
+        }
+
         return new static(is_array($items) ? $items : array($items));
     }
 
@@ -73,22 +89,24 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Determine if an item exists in the collection.
      *
-     * @param  mixed $value
+     * @param mixed $value
+     *
      * @return bool
      */
     public function contains($value)
     {
         if ($value instanceof Closure) {
-            return ! is_null($this->first($value));
+            return !is_null($this->first($value));
         }
 
-        return in_array($value, $this->items);
+        return in_array($value, $this->items, true);
     }
 
     /**
      * Diff the collection with the given items.
      *
-     * @param  \Mozart\Component\Support\Collection|\Mozart\Component\Support\Contracts\ArrayableInterface|array $items
+     * @param \Mozart\Component\Support\Collection|\Mozart\Component\Support\Contracts\ArrayableInterface|array $items
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function diff($items)
@@ -99,7 +117,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Execute a callback over each item.
      *
-     * @param  Closure                              $callback
+     * @param Closure $callback
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function each(Closure $callback)
@@ -112,7 +131,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Fetch a nested element of the collection.
      *
-     * @param  string                               $key
+     * @param string $key
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function fetch($key)
@@ -123,7 +143,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Run a filter over each of the items.
      *
-     * @param  Closure                              $callback
+     * @param Closure $callback
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function filter(Closure $callback)
@@ -134,8 +155,9 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Get the first item from the collection.
      *
-     * @param  \Closure   $callback
-     * @param  mixed      $default
+     * @param \Closure $callback
+     * @param mixed    $default
+     *
      * @return mixed|null
      */
     public function first(Closure $callback = null, $default = null)
@@ -170,8 +192,7 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Remove an item from the collection by key.
      *
-     * @param  mixed $key
-     * @return void
+     * @param mixed $key
      */
     public function forget($key)
     {
@@ -181,8 +202,9 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Get an item from the collection by key.
      *
-     * @param  mixed $key
-     * @param  mixed $default
+     * @param mixed $key
+     * @param mixed $default
+     *
      * @return mixed
      */
     public function get($key, $default = null)
@@ -197,7 +219,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Group an associative array by a field or Closure value.
      *
-     * @param  callable|string                      $groupBy
+     * @param callable|string $groupBy
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function groupBy($groupBy)
@@ -216,7 +239,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Key an associative array by a field.
      *
-     * @param  string                               $keyBy
+     * @param string $keyBy
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function keyBy($keyBy)
@@ -235,7 +259,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Determine if an item exists in the collection by key.
      *
-     * @param  mixed $key
+     * @param mixed $key
+     *
      * @return bool
      */
     public function has($key)
@@ -246,20 +271,25 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Concatenate values of a given key as a string.
      *
-     * @param  string $value
-     * @param  string $glue
+     * @param string $value
+     * @param string $glue
+     *
      * @return string
      */
     public function implode($value, $glue = null)
     {
-        if (is_null($glue)) return implode($this->lists($value));
+        if (is_null($glue)) {
+            return implode($this->lists($value));
+        }
+
         return implode($glue, $this->lists($value));
     }
 
     /**
      * Intersect the collection with the given items.
      *
-     * @param  \Mozart\Component\Support\Collection|\Mozart\Component\Support\Contracts\ArrayableInterface|array $items
+     * @param \Mozart\Component\Support\Collection|\Mozart\Component\Support\Contracts\ArrayableInterface|array $items
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function intersect($items)
@@ -288,10 +318,10 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     }
 
     /**
-    * Get the last item from the collection.
-    *
-    * @return mixed|null
-    */
+     * Get the last item from the collection.
+     *
+     * @return mixed|null
+     */
     public function last()
     {
         return count($this->items) > 0 ? end($this->items) : null;
@@ -300,8 +330,9 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Get an array with the values of a given key.
      *
-     * @param  string $value
-     * @param  string $key
+     * @param string $value
+     * @param string $key
+     *
      * @return array
      */
     public function lists($value, $key = null)
@@ -312,7 +343,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Run a map over each of the items.
      *
-     * @param  Closure                              $callback
+     * @param Closure $callback
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function map(Closure $callback)
@@ -323,7 +355,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Merge the collection with the given items.
      *
-     * @param  \Mozart\Component\Support\Collection|\Mozart\Component\Support\Contracts\ArrayableInterface|array $items
+     * @param \Mozart\Component\Support\Collection|\Mozart\Component\Support\Contracts\ArrayableInterface|array $items
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function merge($items)
@@ -344,8 +377,7 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Push an item onto the beginning of the collection.
      *
-     * @param  mixed $value
-     * @return void
+     * @param mixed $value
      */
     public function prepend($value)
     {
@@ -355,8 +387,7 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Push an item onto the end of the collection.
      *
-     * @param  mixed $value
-     * @return void
+     * @param mixed $value
      */
     public function push($value)
     {
@@ -366,8 +397,9 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Pulls an item from the collection.
      *
-     * @param  mixed $key
-     * @param  mixed $default
+     * @param mixed $key
+     * @param mixed $default
+     *
      * @return mixed
      */
     public function pull($key, $default = null)
@@ -378,9 +410,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Put an item in the collection by key.
      *
-     * @param  mixed $key
-     * @param  mixed $value
-     * @return void
+     * @param mixed $key
+     * @param mixed $value
      */
     public function put($key, $value)
     {
@@ -390,7 +421,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Get one or more items randomly from the collection.
      *
-     * @param  int   $amount
+     * @param int $amount
+     *
      * @return mixed
      */
     public function random($amount = 1)
@@ -403,8 +435,9 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Reduce the collection to a single value.
      *
-     * @param  callable $callback
-     * @param  mixed    $initial
+     * @param callable $callback
+     * @param mixed    $initial
+     *
      * @return mixed
      */
     public function reduce($callback, $initial = null)
@@ -415,7 +448,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Create a collection of all elements that do not pass a given truth test.
      *
-     * @param  \Closure|mixed                       $callback
+     * @param \Closure|mixed $callback
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function reject($callback)
@@ -424,10 +458,10 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
 
         foreach ($this->items as $key => $value) {
             if ($callback instanceof Closure) {
-                if ( ! $callback($value)) {
+                if (!$callback($value)) {
                     $results[$key] = $value;
                 }
-            } elseif ($callback != $value) {
+            } elseif ($callback !== $value) {
                 $results[$key] = $value;
             }
         }
@@ -448,8 +482,9 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Search the collection for a given value and return the corresponding key if successful.
      *
-     * @param  mixed $value
-     * @param  bool  $strict
+     * @param mixed $value
+     * @param bool  $strict
+     *
      * @return mixed
      */
     public function search($value, $strict = false)
@@ -470,9 +505,10 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Slice the underlying collection array.
      *
-     * @param  int                                  $offset
-     * @param  int                                  $length
-     * @param  bool                                 $preserveKeys
+     * @param int  $offset
+     * @param int  $length
+     * @param bool $preserveKeys
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function slice($offset, $length = null, $preserveKeys = false)
@@ -483,13 +519,14 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Chunk the underlying collection array.
      *
-     * @param  int                                  $size
-     * @param  bool                                 $preserveKeys
+     * @param int  $size
+     * @param bool $preserveKeys
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function chunk($size, $preserveKeys = false)
     {
-        $chunks = new static;
+        $chunks = new static();
 
         foreach (array_chunk($this->items, $size, $preserveKeys) as $chunk) {
             $chunks->push(new static($chunk));
@@ -501,7 +538,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Sort through each item with a callback.
      *
-     * @param  Closure                              $callback
+     * @param Closure $callback
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function sort(Closure $callback)
@@ -514,17 +552,20 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Sort the collection using the given Closure.
      *
-     * @param  \Closure|string                      $callback
-     * @param  int                                  $options
-     * @param  bool                                 $descending
+     * @param \Closure|string $callback
+     * @param int             $options
+     * @param bool            $descending
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function sortBy($callback, $options = SORT_REGULAR, $descending = false)
     {
         $results = array();
 
-        if (is_string($callback)) $callback =
+        if (is_string($callback)) {
+            $callback =
                           $this->valueRetriever($callback);
+        }
 
         // First we will loop through the items and get the comparator from a callback
         // function which we were given. Then, we will sort the returned values and
@@ -551,8 +592,9 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Sort the collection in descending order using the given Closure.
      *
-     * @param  \Closure|string                      $callback
-     * @param  int                                  $options
+     * @param \Closure|string $callback
+     * @param int             $options
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function sortByDesc($callback, $options = SORT_REGULAR)
@@ -563,9 +605,10 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Splice portion of the underlying collection array.
      *
-     * @param  int                                  $offset
-     * @param  int                                  $length
-     * @param  mixed                                $replacement
+     * @param int   $offset
+     * @param int   $length
+     * @param mixed $replacement
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function splice($offset, $length = 0, $replacement = array())
@@ -576,8 +619,9 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Get the sum of the given values.
      *
-     * @param  \Closure $callback
-     * @param  string   $callback
+     * @param \Closure $callback
+     * @param string   $callback
+     *
      * @return mixed
      */
     public function sum($callback)
@@ -595,19 +639,24 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Take the first or last {$limit} items.
      *
-     * @param  int                                  $limit
+     * @param int $limit
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function take($limit = null)
     {
-        if ($limit < 0) return $this->slice($limit, abs($limit));
+        if ($limit < 0) {
+            return $this->slice($limit, abs($limit));
+        }
+
         return $this->slice(0, $limit);
     }
 
     /**
      * Transform each item in the collection using a callback.
      *
-     * @param  Closure                              $callback
+     * @param Closure $callback
+     *
      * @return \Mozart\Component\Support\Collection
      */
     public function transform(Closure $callback)
@@ -642,7 +691,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Get a value retrieving callback.
      *
-     * @param  string   $value
+     * @param string $value
+     *
      * @return \Closure
      */
     protected function valueRetriever($value)
@@ -678,7 +728,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Get the collection of items as JSON.
      *
-     * @param  int    $options
+     * @param int $options
+     *
      * @return string
      */
     public function toJson($options = 0)
@@ -699,7 +750,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Get a CachingIterator instance.
      *
-     * @param  int              $flags
+     * @param int $flags
+     *
      * @return \CachingIterator
      */
     public function getCachingIterator($flags = CachingIterator::CALL_TOSTRING)
@@ -720,7 +772,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Determine if an item exists at an offset.
      *
-     * @param  mixed $key
+     * @param mixed $key
+     *
      * @return bool
      */
     public function offsetExists($key)
@@ -731,7 +784,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Get an item at a given offset.
      *
-     * @param  mixed $key
+     * @param mixed $key
+     *
      * @return mixed
      */
     public function offsetGet($key)
@@ -742,9 +796,8 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Set the item at a given offset.
      *
-     * @param  mixed $key
-     * @param  mixed $value
-     * @return void
+     * @param mixed $key
+     * @param mixed $value
      */
     public function offsetSet($key, $value)
     {
@@ -758,8 +811,7 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Unset the item at a given offset.
      *
-     * @param  string $key
-     * @return void
+     * @param string $key
      */
     public function offsetUnset($key)
     {
@@ -779,12 +831,13 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
     /**
      * Results array of items from Collection or ArrayableInterface.
      *
-     * @param  \Mozart\Component\Support\Collection|\Mozart\Component\Support\Contracts\ArrayableInterface|array $items
+     * @param \Mozart\Component\Support\Collection|\Mozart\Component\Support\Contracts\ArrayableInterface|array $items
+     *
      * @return array
      */
     protected function getArrayableItems($items)
     {
-        if ($items instanceof Collection) {
+        if ($items instanceof self) {
             $items = $items->all();
         } elseif ($items instanceof ArrayableInterface) {
             $items = $items->toArray();
@@ -792,5 +845,4 @@ class Collection implements ArrayAccess, ArrayableInterface, Countable, Iterator
 
         return $items;
     }
-
 }

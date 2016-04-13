@@ -1,8 +1,17 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\WidgetBundle\Cache;
 
 use Mozart\Component\Cache\FragmentCache;
@@ -12,24 +21,21 @@ use Mozart\Component\Cache\FragmentCache;
  */
 class WidgetCache extends FragmentCache
 {
-
     public function enable()
     {
-
         if (is_admin()) {
-            add_filter( 'widget_update_callback', array( $this, 'widget_update_callback' ) );
+            add_filter('widget_update_callback', array($this, 'widget_update_callback'));
         } else {
-            add_filter( 'widget_display_callback', array( $this, 'widget_display_callback' ), 10, 3 );
+            add_filter('widget_display_callback', array($this, 'widget_display_callback'), 10, 3);
         }
     }
 
     public function disable()
     {
-
         if (is_admin()) {
-            remove_filter( 'widget_update_callback', array( $this, 'widget_update_callback' ) );
+            remove_filter('widget_update_callback', array($this, 'widget_update_callback'));
         } else {
-            remove_filter( 'widget_display_callback', array( $this, 'widget_display_callback' ), 10, 3 );
+            remove_filter('widget_display_callback', array($this, 'widget_display_callback'), 10, 3);
         }
     }
 
@@ -42,8 +48,7 @@ class WidgetCache extends FragmentCache
      */
     public function widget_update_callback($instance)
     {
-
-        if (is_array( $instance )) {
+        if (is_array($instance)) {
             $instance['fc_widget_edited'] = time();
         }
 
@@ -51,7 +56,7 @@ class WidgetCache extends FragmentCache
     }
 
     /**
-     * Set up and echo widget cache
+     * Set up and echo widget cache.
      *
      * @param array  $instance
      * @param object $widget
@@ -61,14 +66,13 @@ class WidgetCache extends FragmentCache
      */
     public function widget_display_callback($instance, $widget, $args)
     {
-
-        $edited = isset( $instance['fc_widget_edited'] ) ? $instance['fc_widget_edited'] : '';
+        $edited = isset($instance['fc_widget_edited']) ? $instance['fc_widget_edited'] : '';
 
         echo $this->fetch(
             $widget->id,
             array(
-                'callback' => array( $widget, 'widget' ),
-                'args'     => array( $args, $instance )
+                'callback' => array($widget, 'widget'),
+                'args' => array($args, $instance),
             ),
             $edited
         );
@@ -86,10 +90,9 @@ class WidgetCache extends FragmentCache
      */
     protected function callback($name, $args)
     {
-
         ob_start();
-        call_user_func_array( $args['callback'], $args['args'] );
+        call_user_func_array($args['callback'], $args['args']);
 
-        return ob_get_clean() . $this->get_comment( $name );
+        return ob_get_clean().$this->get_comment($name);
     }
 }

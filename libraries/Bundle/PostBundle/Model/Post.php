@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\PostBundle\Model;
 
 use Mozart\Bundle\CommentBundle\Model\Comment;
@@ -9,32 +18,32 @@ use Mozart\Bundle\UserBundle\Model\UserInterface;
 class Post implements PostInterface
 {
     /**
-     * @var int $id
+     * @var int
      */
     protected $id;
 
     /**
-     * @var \DateTime $date
+     * @var \DateTime
      */
     protected $date;
 
     /**
-     * @var \DateTime $dateGmt
+     * @var \DateTime
      */
     protected $dateGmt;
 
     /**
-     * @var string $content
+     * @var string
      */
     protected $content;
 
     /**
-     * @var string $title
+     * @var string
      */
     protected $title;
 
     /**
-     * @var string $excerpt
+     * @var string
      */
     protected $excerpt;
 
@@ -44,87 +53,87 @@ class Post implements PostInterface
     protected $excerptLength = 100;
 
     /**
-     * @var string $status
+     * @var string
      */
-    protected $status = "publish";
+    protected $status = 'publish';
 
     /**
-     * @var string $commentStatus
+     * @var string
      */
-    protected $commentStatus = "open";
+    protected $commentStatus = 'open';
 
     /**
-     * @var string $pingStatus
+     * @var string
      */
-    protected $pingStatus = "open";
+    protected $pingStatus = 'open';
 
     /**
-     * @var string $password
+     * @var string
      */
-    protected $password = "";
+    protected $password = '';
 
     /**
-     * @var string $slug
+     * @var string
      */
     protected $slug;
 
     /**
-     * @var string $toPing
+     * @var string
      */
-    protected $toPing = "";
+    protected $toPing = '';
 
     /**
-     * @var string $pinged
+     * @var string
      */
-    protected $pinged = "";
+    protected $pinged = '';
 
     /**
-     * @var \DateTime $modifiedDate
+     * @var \DateTime
      */
     protected $modifiedDate;
 
     /**
-     * @var \DateTime $modifiedDateGmt
+     * @var \DateTime
      */
     protected $modifiedDateGmt;
 
     /**
-     * @var string $contentFiltered
+     * @var string
      */
-    protected $contentFiltered = "";
+    protected $contentFiltered = '';
 
     /**
-     * @var Post $parent
+     * @var Post
      */
     protected $parent;
 
     /**
-     * @var Post $children
+     * @var Post
      */
     protected $children = array();
 
     /**
-     * @var string $guid
+     * @var string
      */
-    protected $guid = "";
+    protected $guid = '';
 
     /**
-     * @var integer $menuOrder
+     * @var int
      */
     protected $menuOrder = 0;
 
     /**
-     * @var string $type
+     * @var string
      */
-    protected $type = "post";
+    protected $type = 'post';
 
     /**
-     * @var string $mimeType
+     * @var string
      */
-    protected $mimeType = "";
+    protected $mimeType = '';
 
     /**
-     * @var int $commentCount
+     * @var int
      */
     protected $commentCount = 0;
 
@@ -149,7 +158,7 @@ class Post implements PostInterface
     protected $taxonomies;
 
     /**
-     * Get ID
+     * Get ID.
      *
      * @return int
      */
@@ -159,7 +168,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set date
+     * Set date.
      *
      * @param \DateTime $date
      */
@@ -169,7 +178,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get date
+     * Get date.
      *
      * @return \DateTime
      */
@@ -179,7 +188,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set dateGmt
+     * Set dateGmt.
      *
      * @param \DateTime $dateGmt
      */
@@ -189,7 +198,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get dateGmt
+     * Get dateGmt.
      *
      * @return \DateTime
      */
@@ -199,14 +208,14 @@ class Post implements PostInterface
     }
 
     /**
-     * Set content
+     * Set content.
      *
      * @param string $content
      */
     public function setContent($content)
     {
         $this->content = $content;
-        $this->excerpt = $this->trimContent( $content );
+        $this->excerpt = $this->trimContent($content);
     }
 
     /**
@@ -218,26 +227,26 @@ class Post implements PostInterface
      **/
     public function trimContent($content)
     {
-        $content = strip_tags( $content );
-        $length  = $this->getExcerptLength();
+        $content = strip_tags($content);
+        $length = $this->getExcerptLength();
 
-        if ( strlen( $content ) <= $length ) {
+        if (strlen($content) <= $length) {
             // return origin content if not needed
             return $content;
         }
 
-        $content = substr( $content, 0, $length );
-        $pos     = strrpos( $content, " " );
+        $content = substr($content, 0, $length);
+        $pos = strrpos($content, ' ');
 
         if ($pos > 0) {
-            $content = substr( $content, 0, $pos );
+            $content = substr($content, 0, $pos);
         }
 
         return $content;
     }
 
     /**
-     * Get content
+     * Get content.
      *
      * @return string
      */
@@ -247,7 +256,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      */
@@ -257,7 +266,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -267,7 +276,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set excerpt
+     * Set excerpt.
      *
      * @param string $excerpt
      */
@@ -277,7 +286,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get excerpt
+     * Get excerpt.
      *
      * @return string
      */
@@ -287,7 +296,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set excerpt length
+     * Set excerpt length.
      *
      * @param int $excerptLength
      */
@@ -297,7 +306,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get excerpt length
+     * Get excerpt length.
      *
      * @return int
      */
@@ -307,7 +316,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set status
+     * Set status.
      *
      * @param string $status
      */
@@ -317,7 +326,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return string
      */
@@ -327,7 +336,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set commentStatus
+     * Set commentStatus.
      *
      * @param string $commentStatus
      */
@@ -337,7 +346,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get commentStatus
+     * Get commentStatus.
      *
      * @return string
      */
@@ -347,7 +356,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set pingStatus
+     * Set pingStatus.
      *
      * @param string $pingStatus
      */
@@ -357,7 +366,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get pingStatus
+     * Get pingStatus.
      *
      * @return string
      */
@@ -367,7 +376,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set password
+     * Set password.
      *
      * @param string $password
      */
@@ -377,7 +386,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get password
+     * Get password.
      *
      * @return string
      */
@@ -387,7 +396,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set post slug
+     * Set post slug.
      *
      * @param string $slug
      */
@@ -397,7 +406,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get post slug
+     * Get post slug.
      *
      * @return string
      */
@@ -407,7 +416,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set toPing
+     * Set toPing.
      *
      * @param string $toPing
      */
@@ -417,7 +426,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get toPing
+     * Get toPing.
      *
      * @return string
      */
@@ -427,7 +436,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set pinged
+     * Set pinged.
      *
      * @param string $pinged
      */
@@ -437,7 +446,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get pinged
+     * Get pinged.
      *
      * @return string
      */
@@ -447,7 +456,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set modifiedDate
+     * Set modifiedDate.
      *
      * @param \DateTime $modifiedDate
      */
@@ -457,7 +466,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get modifiedDate
+     * Get modifiedDate.
      *
      * @return \DateTime
      */
@@ -467,7 +476,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set modifiedDateGmt
+     * Set modifiedDateGmt.
      *
      * @param \DateTime $modifiedDateGmt
      */
@@ -477,7 +486,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get modifiedDateGmt
+     * Get modifiedDateGmt.
      *
      * @return \DateTime
      */
@@ -487,7 +496,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set contentFiltered
+     * Set contentFiltered.
      *
      * @param string $contentFiltered
      */
@@ -497,7 +506,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get contentFiltered
+     * Get contentFiltered.
      *
      * @return string
      */
@@ -507,7 +516,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set parent
+     * Set parent.
      *
      * @param \Mozart\Bundle\PostBundle\Entity\Post $parent
      */
@@ -517,7 +526,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get parent
+     * Get parent.
      *
      * @return \Mozart\Bundle\PostBundle\Entity\Post
      */
@@ -527,7 +536,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get parent
+     * Get parent.
      *
      * @return \Mozart\Bundle\PostBundle\Entity\Post
      */
@@ -537,18 +546,18 @@ class Post implements PostInterface
     }
 
     /**
-     * Set parent
+     * Set parent.
      *
      * @param PostInterface $child
      */
     public function addChild(PostInterface $child)
     {
-        $child->setParent( $this );
+        $child->setParent($this);
         $this->children[] = $child;
     }
 
     /**
-     * Set guid
+     * Set guid.
      *
      * @param string $guid
      */
@@ -558,7 +567,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get guid
+     * Get guid.
      *
      * @return string
      */
@@ -568,9 +577,9 @@ class Post implements PostInterface
     }
 
     /**
-     * Set menuOrder
+     * Set menuOrder.
      *
-     * @param integer $menuOrder
+     * @param int $menuOrder
      */
     public function setMenuOrder($menuOrder)
     {
@@ -578,9 +587,9 @@ class Post implements PostInterface
     }
 
     /**
-     * Get menuOrder
+     * Get menuOrder.
      *
-     * @return integer
+     * @return int
      */
     public function getMenuOrder()
     {
@@ -588,7 +597,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      */
@@ -598,7 +607,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -608,7 +617,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set mimeType
+     * Set mimeType.
      *
      * @param string $mimeType
      */
@@ -618,7 +627,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get mimeType
+     * Get mimeType.
      *
      * @return string
      */
@@ -628,7 +637,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set commentCount
+     * Set commentCount.
      *
      * @param int $commentCount
      */
@@ -638,7 +647,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get commentCount
+     * Get commentCount.
      *
      * @return int
      */
@@ -648,18 +657,18 @@ class Post implements PostInterface
     }
 
     /**
-     * Add metas
+     * Add metas.
      *
      * @param PostMeta $meta
      */
     public function addMeta(PostMeta $meta)
     {
-        $meta->setPost( $this );
+        $meta->setPost($this);
         $this->metas[] = $meta;
     }
 
     /**
-     * Get metas
+     * Get metas.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -669,19 +678,19 @@ class Post implements PostInterface
     }
 
     /**
-     * Add comment
+     * Add comment.
      *
      * @param Comment $comment
      */
     public function addComment(Comment $comment)
     {
-        $comment->setPost( $this );
-        $this->comments[]   = $comment;
+        $comment->setPost($this);
+        $this->comments[] = $comment;
         $this->commentCount = $this->getComments()->count();
     }
 
     /**
-     * Get comments
+     * Get comments.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
@@ -691,7 +700,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Set user
+     * Set user.
      *
      * @param UserInterface $user
      */
@@ -701,7 +710,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @return UserInterface|null
      */
@@ -711,7 +720,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Add taxonomies
+     * Add taxonomies.
      *
      * @param Taxonomy $taxonomy
      */
@@ -721,7 +730,7 @@ class Post implements PostInterface
     }
 
     /**
-     * Get taxonomies
+     * Get taxonomies.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

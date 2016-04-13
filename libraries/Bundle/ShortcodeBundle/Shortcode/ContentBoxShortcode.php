@@ -1,12 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\ShortcodeBundle\Shortcode;
+
 use Mozart\Bundle\ShortcodeBundle\ShortcodeInterface;
 
 /**
- * Class ContentBoxShortcode
- *
- * @package Mozart\Bundle\ShortcodeBundle\Shortcode
+ * Class ContentBoxShortcode.
  */
 class ContentBoxShortcode implements ShortcodeInterface
 {
@@ -16,13 +24,13 @@ class ContentBoxShortcode implements ShortcodeInterface
      *
      * @return string
      */
-    public function process($params, $content = NULL)
+    public function process($params, $content = null)
     {
         $result = twiggy('ShortocodeBundle:Shortcodes:content_box.html.twig', array(
                     'content' => $content,
-                    'icon' => !empty($params['icon']) ? $params['icon'] : FALSE,
-                    'icon_pictopro_class' => !empty($params['icon_pictopro_class']) ? $params['icon_pictopro_class'] : FALSE,
-                    'title' => !empty($params['title']) ? $params['title'] : FALSE,
+                    'icon' => !empty($params['icon']) ? $params['icon'] : false,
+                    'icon_pictopro_class' => !empty($params['icon_pictopro_class']) ? $params['icon_pictopro_class'] : false,
+                    'title' => !empty($params['title']) ? $params['title'] : false,
                     'columns_for_content' => !empty($params['columns_for_content']) ? $params['columns_for_content'] : 3,
                 ), false);
 

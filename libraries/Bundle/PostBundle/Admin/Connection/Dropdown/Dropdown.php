@@ -1,9 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\PostBundle\Admin\Connection\Dropdown;
 
 /**
- * A dropdown above a list table in wp-admin
+ * A dropdown above a list table in wp-admin.
  */
 abstract class Dropdown
 {
@@ -25,38 +34,41 @@ abstract class Dropdown
     {
         $direction = $this->ctype->flip_direction()->get_direction();
 
-        $labels = $this->ctype->get( 'current', 'labels' );
+        $labels = $this->ctype->get('current', 'labels');
 
-        if ( isset( $labels->dropdown_title ) )
+        if (isset($labels->dropdown_title)) {
             $title = $labels->dropdown_title;
-        elseif ( isset( $labels->column_title ) )
+        } elseif (isset($labels->column_title)) {
             $title = $labels->column_title;
-        else
+        } else {
             $title = $this->title;
+        }
 
-        return scbForms::input( array(
+        return scbForms::input(array(
             'type' => 'select',
-            'name' => array( 'p2p', $this->ctype->name, $direction ),
-            'choices' => self::get_choices( $this->ctype ),
+            'name' => array('p2p', $this->ctype->name, $direction),
+            'choices' => self::get_choices($this->ctype),
             'text' => $title,
-        ), $_GET );
+        ), $_GET);
     }
 
     protected static function get_qv()
     {
-        if ( !isset( $_GET['p2p'] ) )
+        if (!isset($_GET['p2p'])) {
             return array();
+        }
 
         $args = array();
 
-        $tmp = reset( $_GET['p2p'] );
+        $tmp = reset($_GET['p2p']);
 
-        $args['connected_type'] = key( $_GET['p2p'] );
+        $args['connected_type'] = key($_GET['p2p']);
 
-        list( $args['connected_direction'], $args['connected_items'] ) = each( $tmp );
+        list($args['connected_direction'], $args['connected_items']) = each($tmp);
 
-        if ( !$args['connected_items'] )
+        if (!$args['connected_items']) {
             return array();
+        }
 
         return $args;
     }
@@ -65,14 +77,15 @@ abstract class Dropdown
     {
         $extra_qv = array(
             'p2p:per_page' => -1,
-            'p2p:context' => 'admin_dropdown'
+            'p2p:context' => 'admin_dropdown',
         );
 
-        $connected = $directed->get_connected( 'any', $extra_qv, 'abstract' );
+        $connected = $directed->get_connected('any', $extra_qv, 'abstract');
 
         $options = array();
-        foreach ( $connected->items as $item )
+        foreach ($connected->items as $item) {
             $options[ $item->get_id() ] = $item->get_title();
+        }
 
         return $options;
     }

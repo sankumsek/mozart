@@ -1,15 +1,24 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\BlogBundle\Event;
 
-use  Mozart\Bundle\PostBundle\Model\AttachmentManager;
-use  Mozart\Bundle\CommentBundle\Model\CommentManager;
-use  Mozart\Bundle\ConfigBundle\Model\OptionManager;
-use  Mozart\Bundle\PostBundle\Model\PostManager;
-use  Mozart\Bundle\PostBundle\Model\PostMetaManager;
-use  Mozart\Bundle\TaxonomyBundle\Model\TermManager;
-use  Mozart\Bundle\NucleusBundle\Twig\Extension\WordpressExtension;
-use  Symfony\Component\DependencyInjection\ContainerInterface;
+use Mozart\Bundle\CommentBundle\Model\CommentManager;
+use Mozart\Bundle\ConfigBundle\Model\OptionManager;
+use Mozart\Bundle\NucleusBundle\Twig\Extension\WordpressExtension;
+use Mozart\Bundle\PostBundle\Model\AttachmentManager;
+use Mozart\Bundle\PostBundle\Model\PostManager;
+use Mozart\Bundle\PostBundle\Model\PostMetaManager;
+use Mozart\Bundle\TaxonomyBundle\Model\TermManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SwitchBlogEventListener
 {
@@ -31,8 +40,8 @@ class SwitchBlogEventListener
      */
     public function onSwitchBlog(BlogEvent $event)
     {
-        $this->updateModelManagerServices( $event );
-        $this->updateWordpressTwigExtension( $event );
+        $this->updateModelManagerServices($event);
+        $this->updateWordpressTwigExtension($event);
     }
 
     /**
@@ -42,12 +51,12 @@ class SwitchBlogEventListener
     {
         $em = $event->getBlog()->getEntityManager();
 
-        $this->container->set( 'config.manager', new OptionManager( $em ) );
-        $this->container->set( 'mozart.post.manager', new PostManager( $em ) );
-        $this->container->set( 'mozart.post.meta.manager', new PostMetaManager( $em ) );
-        $this->container->set( 'mozart.post.attachment_manager', new AttachmentManager( $em ) );
-        $this->container->set( 'mozart.taxonomy.term.manager', new TermManager( $em ) );
-        $this->container->set( 'mozart.comment.manager', new CommentManager( $em ) );
+        $this->container->set('config.manager', new OptionManager($em));
+        $this->container->set('mozart.post.manager', new PostManager($em));
+        $this->container->set('mozart.post.meta.manager', new PostMetaManager($em));
+        $this->container->set('mozart.post.attachment_manager', new AttachmentManager($em));
+        $this->container->set('mozart.taxonomy.term.manager', new TermManager($em));
+        $this->container->set('mozart.comment.manager', new CommentManager($em));
     }
 
     /**
@@ -56,7 +65,7 @@ class SwitchBlogEventListener
     private function updateWordpressTwigExtension(BlogEvent $event)
     {
         /** @var $extension WordpressExtension */
-        $extension = $this->container->get( 'mozart.twig.wordpress' );
+        $extension = $this->container->get('mozart.twig.wordpress');
         $extension->reloadManagers();
     }
 }

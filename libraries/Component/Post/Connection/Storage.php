@@ -1,27 +1,37 @@
 <?php
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Component\Post\Connection;
 
 use Mozart\Component\Post\Connection\ConnectionType\ConnectionTypeFactory;
 
 /**
- * Handles various db-related tasks
+ * Handles various db-related tasks.
  */
 class Storage
 {
-    static $version = 4;
+    public static $version = 4;
 
     public static function init()
     {
-        scb_register_table( 'p2p' );
-        scb_register_table( 'p2pmeta' );
+        scb_register_table('p2p');
+        scb_register_table('p2pmeta');
 
-        add_action( 'deleted_post', array( __CLASS__, 'deleted_object' ) );
-        add_action( 'deleted_user', array( __CLASS__, 'deleted_object' ) );
+        add_action('deleted_post', array(__CLASS__, 'deleted_object'));
+        add_action('deleted_user', array(__CLASS__, 'deleted_object'));
     }
 
     public static function install()
     {
-        scb_install_table( 'p2p', "
+        scb_install_table('p2p', "
             p2p_id bigint(20) unsigned NOT NULL auto_increment,
             p2p_from bigint(20) unsigned NOT NULL,
             p2p_to bigint(20) unsigned NOT NULL,
@@ -30,9 +40,9 @@ class Storage
             KEY p2p_from (p2p_from),
             KEY p2p_to (p2p_to),
             KEY p2p_type (p2p_type)
-        " );
+        ");
 
-        scb_install_table( 'p2pmeta', "
+        scb_install_table('p2pmeta', "
             meta_id bigint(20) unsigned NOT NULL auto_increment,
             p2p_id bigint(20) unsigned NOT NULL default '0',
             meta_key varchar(255) default NULL,
@@ -40,27 +50,27 @@ class Storage
             PRIMARY KEY  (meta_id),
             KEY p2p_id (p2p_id),
             KEY meta_key (meta_key)
-        " );
+        ");
     }
 
     public static function uninstall()
     {
-        scb_uninstall_table( 'p2p' );
-        scb_uninstall_table( 'p2pmeta' );
+        scb_uninstall_table('p2p');
+        scb_uninstall_table('p2pmeta');
 
-        delete_option( 'p2p_storage' );
+        delete_option('p2p_storage');
     }
 
     public static function deleted_object($object_id)
     {
-        $object_type = str_replace( 'deleted_', '', current_filter() );
+        $object_type = str_replace('deleted_', '', current_filter());
 
-        foreach ( ConnectionTypeFactory::get_all_instances() as $p2p_type => $ctype ) {
-            foreach ( array( 'from', 'to' ) as $direction ) {
-                if ( $object_type == $ctype->side[ $direction ]->get_object_type() ) {
-                    p2p_delete_connections( $p2p_type, array(
+        foreach (ConnectionTypeFactory::get_all_instances() as $p2p_type => $ctype) {
+            foreach (array('from', 'to') as $direction) {
+                if ($object_type === $ctype->side[ $direction ]->get_object_type()) {
+                    p2p_delete_connections($p2p_type, array(
                         $direction => $object_id,
-                    ) );
+                    ));
                 }
             }
         }

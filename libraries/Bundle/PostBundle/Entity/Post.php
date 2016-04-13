@@ -1,17 +1,26 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\PostBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Proxy\Proxy;
-use  Mozart\Bundle\NucleusBundle\Annotation as Mozart;
-use  Mozart\Bundle\PostBundle\Model\Post as ModelPost;
+use Mozart\Bundle\NucleusBundle\Annotation as Mozart;
+use Mozart\Bundle\PostBundle\Model\Post as ModelPost;
 use Symfony\Component\Validator\Constraints as Constraints;
 
 /**
- * Post
+ * Post.
  *
  * @ORM\Table(name="posts")
  * @ORM\Entity
@@ -77,28 +86,28 @@ class Post extends ModelPost
      *
      * @ORM\Column(name="post_status", type="string", length=20, nullable=false)
      */
-    protected $status = "publish";
+    protected $status = 'publish';
 
     /**
      * {@inheritdoc}
      *
      * @ORM\Column(name="comment_status", type="string", length=20, nullable=false)
      */
-    protected $commentStatus = "open";
+    protected $commentStatus = 'open';
 
     /**
      * {@inheritdoc}
      *
      * @ORM\Column(name="ping_status", type="string", length=20, nullable=false)
      */
-    protected $pingStatus = "open";
+    protected $pingStatus = 'open';
 
     /**
      * {@inheritdoc}
      *
      * @ORM\Column(name="post_password", type="string", length=20, nullable=false)
      */
-    protected $password = "";
+    protected $password = '';
 
     /**
      * {@inheritdoc}
@@ -112,14 +121,14 @@ class Post extends ModelPost
      *
      * @ORM\Column(name="to_ping", type="text", nullable=false)
      */
-    protected $toPing = "";
+    protected $toPing = '';
 
     /**
      * {@inheritdoc}
      *
      * @ORM\Column(name="pinged", type="text", nullable=false)
      */
-    protected $pinged = "";
+    protected $pinged = '';
 
     /**
      * {@inheritdoc}
@@ -140,7 +149,7 @@ class Post extends ModelPost
      *
      * @ORM\Column(name="post_content_filtered", type="text", nullable=false)
      */
-    protected $contentFiltered = "";
+    protected $contentFiltered = '';
 
     /**
      * {@inheritdoc}
@@ -162,7 +171,7 @@ class Post extends ModelPost
      *
      * @ORM\Column(name="guid", type="string", length=255, nullable=false)
      */
-    protected $guid = "";
+    protected $guid = '';
 
     /**
      * {@inheritdoc}
@@ -176,14 +185,14 @@ class Post extends ModelPost
      *
      * @ORM\Column(name="post_type", type="string", nullable=false)
      */
-    protected $type = "post";
+    protected $type = 'post';
 
     /**
      * {@inheritdoc}
      *
      * @ORM\Column(name="post_mime_type", type="string", length=100, nullable=false)
      */
-    protected $mimeType = "";
+    protected $mimeType = '';
 
     /**
      * {@inheritdoc}
@@ -233,10 +242,10 @@ class Post extends ModelPost
 
     public function __construct()
     {
-        $this->metas      = new ArrayCollection();
-        $this->comments   = new ArrayCollection();
+        $this->metas = new ArrayCollection();
+        $this->comments = new ArrayCollection();
         $this->taxonomies = new ArrayCollection();
-        $this->children   = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     /**
@@ -244,10 +253,10 @@ class Post extends ModelPost
      */
     public function onPrePersist()
     {
-        $this->date            = new \DateTime( 'now' );
-        $this->dateGmt         = new \DateTime( 'now', new \DateTimeZone( 'GMT' ) );
-        $this->modifiedDate    = new \DateTime( 'now' );
-        $this->modifiedDateGmt = new \DateTime( 'now', new \DateTimeZone( 'GMT' ) );
+        $this->date = new \DateTime('now');
+        $this->dateGmt = new \DateTime('now', new \DateTimeZone('GMT'));
+        $this->modifiedDate = new \DateTime('now');
+        $this->modifiedDateGmt = new \DateTime('now', new \DateTimeZone('GMT'));
     }
 
     /**
@@ -255,8 +264,8 @@ class Post extends ModelPost
      */
     public function onPreUpdate()
     {
-        $this->modifiedDate    = new \DateTime( 'now' );
-        $this->modifiedDateGmt = new \DateTime( 'now', new \DateTimeZone( 'GMT' ) );
+        $this->modifiedDate = new \DateTime('now');
+        $this->modifiedDateGmt = new \DateTime('now', new \DateTimeZone('GMT'));
     }
 
     /**
@@ -270,7 +279,7 @@ class Post extends ModelPost
             try {
                 // prevent lazy loading the user entity because it might not exist
                 $this->user->__load();
-            } catch ( EntityNotFoundException $e ) {
+            } catch (EntityNotFoundException $e) {
                 // return null if user does not exist
                 $this->user = null;
             }

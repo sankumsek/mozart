@@ -1,22 +1,29 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\PostBundle\Admin;
 
 use Mozart\Component\Post\Type\Extension\PostTypeExtensionInterface;
 use Mozart\Component\Post\Type\PostTypeInterface;
 
 /**
- * Class PostTypeExtension
- *
- * @package Mozart\Bundle\PostBundle\Admin
+ * Class PostTypeExtension.
  */
 abstract class PostTypeExtension implements PostTypeExtensionInterface
 {
     /**
-     * @var PostTypeInterface $postType
+     * @var PostTypeInterface
      */
     protected $postType;
 
@@ -29,36 +36,36 @@ abstract class PostTypeExtension implements PostTypeExtensionInterface
     {
         $this->postType = $postType;
 
-        add_filter( 'post_updated_messages', array( $this, 'getPostUpdatedMessages' ) );
+        add_filter('post_updated_messages', array($this, 'getPostUpdatedMessages'));
 
-        if ( true === $this->disableAutoSave() ) {
-            add_action( 'admin_print_scripts', array( $this, 'dequeueAutoSaveScript' ) );
+        if (true === $this->disableAutoSave()) {
+            add_action('admin_print_scripts', array($this, 'dequeueAutoSaveScript'));
         }
 
         // TODO: see WC_Admin_Meta_Boxes and WC_Admin_Post_Types for more actions
-        add_action( 'admin_init', array( $this, 'registerAdminInitActions' ) );
+        add_action('admin_init', array($this, 'registerAdminInitActions'));
 
         // Status transitions
-        add_action( 'delete_post', array( $this, 'onDeletePost' ) );
-        add_action( 'wp_trash_post', array( $this, 'onTrashPost' ) );
-        add_action( 'untrash_post', array( $this, 'onUntrashPost' ) );
+        add_action('delete_post', array($this, 'onDeletePost'));
+        add_action('wp_trash_post', array($this, 'onTrashPost'));
+        add_action('untrash_post', array($this, 'onUntrashPost'));
     }
 
     public function registerAdminInitActions()
     {
-        add_filter( "manage_edit-{$this->getKey()}_columns", array( $this, 'getScreenColumnHeaders' ) );
+        add_filter("manage_edit-{$this->getKey()}_columns", array($this, 'getScreenColumnHeaders'));
         add_action(
             "manage_{$this->getKey()}_posts_custom_column",
-            array( $this, 'manageScreenColumnCells' ),
+            array($this, 'manageScreenColumnCells'),
             10,
             2
         );
 
         // Insert into X media browser
-        add_filter( 'media_view_strings', array( $this, 'changeMediaViewStrings' ) );
+        add_filter('media_view_strings', array($this, 'changeMediaViewStrings'));
 
         // Post title fields
-        add_filter( 'enter_title_here', array( $this, 'changeEnterTitleHereString' ), 1, 2 );
+        add_filter('enter_title_here', array($this, 'changeEnterTitleHereString'), 1, 2);
     }
 
     /**
@@ -71,8 +78,8 @@ abstract class PostTypeExtension implements PostTypeExtensionInterface
      */
     public function changeEnterTitleHereString($text, $post)
     {
-        if ( $post->post_type == $this->getKey() ) {
-            return __( $this->postType->getName() . ' name', 'mozart' );
+        if ($post->post_type === $this->getKey()) {
+            return __($this->postType->getName().' name', 'mozart');
         }
 
         return $text;
@@ -80,12 +87,10 @@ abstract class PostTypeExtension implements PostTypeExtensionInterface
 
     /**
      * @param mixed $id ID of post being deleted
-     *
-     * @return void
      */
     public function onDeletePost($id)
     {
-        if ( !current_user_can( 'delete_posts' ) ) {
+        if (!current_user_can('delete_posts')) {
             return;
         }
 
@@ -119,14 +124,13 @@ abstract class PostTypeExtension implements PostTypeExtensionInterface
     {
         global $post_type;
 
-        if ( $post_type == $this->getKey() ) {
-
-            $strings['insertIntoPost']     = sprintf(
-                __( 'Insert into %s', 'mozart' ),
+        if ($post_type === $this->getKey()) {
+            $strings['insertIntoPost'] = sprintf(
+                __('Insert into %s', 'mozart'),
                 $this->postType->getName()
             );
             $strings['uploadedToThisPost'] = sprintf(
-                __( 'Uploaded to this %s', 'mozart' ),
+                __('Uploaded to this %s', 'mozart'),
                 $this->postType->getName()
             );
         }
@@ -141,16 +145,13 @@ abstract class PostTypeExtension implements PostTypeExtensionInterface
 
     /**
      * Disable the auto-save functionality.
-     *
-     * @access public
-     * @return void
      */
     public function dequeueAutoSaveScript()
     {
         global $post;
 
-        if ( $post && get_post_type( $post->ID ) === $this->getKey() ) {
-            wp_dequeue_script( 'autosave' );
+        if ($post && get_post_type($post->ID) === $this->getKey()) {
+            wp_dequeue_script('autosave');
         }
     }
 
@@ -166,59 +167,58 @@ abstract class PostTypeExtension implements PostTypeExtensionInterface
         global $post, $post_ID;
 
         $messages[$this->postType->getKey()] = array(
-            0  => '', // Unused. Messages start at index 1.
-            1  => sprintf(
+            0 => '', // Unused. Messages start at index 1.
+            1 => sprintf(
                 __(
                     "{$this->postType->getName()} updated. <a href='%s'>View {$this->postType->getName()}</a>",
                     'mozart'
                 ),
-                esc_url( get_permalink( $post_ID ) )
+                esc_url(get_permalink($post_ID))
             ),
-            2  => __( 'Custom field updated.', 'mozart' ),
-            3  => __( 'Custom field deleted.', 'mozart' ),
-            4  => __( $this->postType->getName() . ' updated.', 'mozart' ),
-            5  => isset( $_GET['revision'] ) ? sprintf(
-                    __( $this->postType->getName() . ' restored to revision from %s', 'mozart' ),
-                    wp_post_revision_title( (int) $_GET['revision'], false )
+            2 => __('Custom field updated.', 'mozart'),
+            3 => __('Custom field deleted.', 'mozart'),
+            4 => __($this->postType->getName().' updated.', 'mozart'),
+            5 => isset($_GET['revision']) ? sprintf(
+                    __($this->postType->getName().' restored to revision from %s', 'mozart'),
+                    wp_post_revision_title((int) $_GET['revision'], false)
                 ) : false,
-            6  => sprintf(
+            6 => sprintf(
                 __(
                     "{$this->postType->getName()} published. <a href='%s'>View {$this->postType->getName()}</a>",
                     'mozart'
                 ),
-                esc_url( get_permalink( $post_ID ) )
+                esc_url(get_permalink($post_ID))
             ),
-            7  => __( $this->postType->getName() . ' saved.', 'mozart' ),
-            8  => sprintf(
+            7 => __($this->postType->getName().' saved.', 'mozart'),
+            8 => sprintf(
                 __(
                     $this->postType->getName(
-                    ) . ' submitted. <a target="_blank" href="%s">Preview ' . $this->postType->getName() . '</a>',
+                    ).' submitted. <a target="_blank" href="%s">Preview '.$this->postType->getName().'</a>',
                     'mozart'
                 ),
-                esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) )
+                esc_url(add_query_arg('preview', 'true', get_permalink($post_ID)))
             ),
-            9  => sprintf(
+            9 => sprintf(
                 __(
                     $this->postType->getName(
-                    ) . ' scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview ' . $this->postType->getName(
-                    ) . '</a>',
+                    ).' scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview '.$this->postType->getName(
+                    ).'</a>',
                     'mozart'
                 ),
-                date_i18n( __( 'M j, Y @ G:i', 'mozart' ), strtotime( $post->post_date ) ),
-                esc_url( get_permalink( $post_ID ) )
+                date_i18n(__('M j, Y @ G:i', 'mozart'), strtotime($post->post_date)),
+                esc_url(get_permalink($post_ID))
             ),
             10 => sprintf(
                 __(
                     $this->postType->getName(
-                    ) . ' draft updated. <a target="_blank" href="%s">Preview ' . $this->postType->getName() . '</a>',
+                    ).' draft updated. <a target="_blank" href="%s">Preview '.$this->postType->getName().'</a>',
                     'mozart'
                 ),
-                esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) )
+                esc_url(add_query_arg('preview', 'true', get_permalink($post_ID)))
             ),
         );
 
         return $messages;
-
     }
 
     public function getScreenColumnHeaders()
@@ -228,6 +228,5 @@ abstract class PostTypeExtension implements PostTypeExtensionInterface
 
     public function manageScreenColumnCells($column, $post_id)
     {
-
     }
 }

@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains Mozart\Component\Support\NestedArray.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -23,6 +31,7 @@ class NestedArray
      *
      * Without this helper function the only way to get a nested array value with
      * variable depth in one line would be using eval(), which should be avoided:
+     *
      * @code
      * // Do not do this! Avoid eval().
      * // May also throw a PHP notice, if the variable array keys do not exist.
@@ -73,10 +82,10 @@ class NestedArray
      */
     public static function &getValue(array &$array, array $parents, &$key_exists = null)
     {
-        $ref = & $array;
+        $ref = &$array;
         foreach ($parents as $parent) {
-            if (is_array( $ref ) && array_key_exists( $parent, $ref )) {
-                $ref = & $ref[$parent];
+            if (is_array($ref) && array_key_exists($parent, $ref)) {
+                $ref = &$ref[$parent];
             } else {
                 $key_exists = false;
                 $null = null;
@@ -97,6 +106,7 @@ class NestedArray
      * is primarily used for form structures and renderable arrays.
      *
      * Example:
+     *
      * @code
      * // Assume you have a 'signature' element somewhere in a form. It might be:
      * $form['signature_settings']['signature'] = array(
@@ -153,14 +163,14 @@ class NestedArray
      */
     public static function setValue(array &$array, array $parents, $value, $force = false)
     {
-        $ref = & $array;
+        $ref = &$array;
         foreach ($parents as $parent) {
             // PHP auto-creates container arrays and NULL entries without error if $ref
             // is NULL, but throws an error if $ref is set, but not an array.
-            if ($force && isset( $ref ) && !is_array( $ref )) {
+            if ($force && isset($ref) && !is_array($ref)) {
                 $ref = array();
             }
-            $ref = & $ref[$parent];
+            $ref = &$ref[$parent];
         }
         $ref = $value;
     }
@@ -173,6 +183,7 @@ class NestedArray
      * is primarily used for form structures and renderable arrays.
      *
      * Example:
+     *
      * @code
      * // Assume you have a 'signature' element somewhere in a form. It might be:
      * $form['signature_settings']['signature'] = array(
@@ -226,11 +237,11 @@ class NestedArray
      */
     public static function unsetValue(array &$array, array $parents, &$key_existed = null)
     {
-        $unset_key = array_pop( $parents );
-        $ref = & self::getValue( $array, $parents, $key_existed );
-        if ($key_existed && is_array( $ref ) && array_key_exists( $unset_key, $ref )) {
+        $unset_key = array_pop($parents);
+        $ref = &self::getValue($array, $parents, $key_existed);
+        if ($key_existed && is_array($ref) && array_key_exists($unset_key, $ref)) {
             $key_existed = true;
-            unset( $ref[$unset_key] );
+            unset($ref[$unset_key]);
         } else {
             $key_existed = false;
         }
@@ -249,6 +260,7 @@ class NestedArray
      *
      * If the number of array parent keys is static, this helper function is
      * unnecessary and the following code can be used instead:
+     *
      * @code
      * $value_exists = isset($form['signature_settings']['signature']);
      * $key_exists = array_key_exists('signature', $form['signature_settings']);
@@ -269,7 +281,7 @@ class NestedArray
         // Although this function is similar to PHP's array_key_exists(), its
         // arguments should be consistent with getValue().
         $key_exists = null;
-        self::getValue( $array, $parents, $key_exists );
+        self::getValue($array, $parents, $key_exists);
 
         return $key_exists;
     }
@@ -282,6 +294,7 @@ class NestedArray
      * arrays, the latter value replaces the former rather than merging with it.
      *
      * Example:
+     *
      * @code
      * $link_options_1 = array('fragment' => 'x', 'attributes' => array('title' => t('X'), 'class' => array('a', 'b')));
      * $link_options_2 = array('fragment' => 'y', 'attributes' => array('title' => t('Y'), 'class' => array('c', 'd')));
@@ -295,7 +308,6 @@ class NestedArray
      *
      * @param      array ...
      *   Arrays to merge.
-     *
      * @param bool $preserve_integer_keys
      *                                    (optional) If given, integer keys will be preserved and merged instead of
      *                                    appended.
@@ -307,7 +319,7 @@ class NestedArray
      */
     public static function mergeDeep()
     {
-        return self::mergeDeepArray( func_get_args() );
+        return self::mergeDeepArray(func_get_args());
     }
 
     /**
@@ -335,11 +347,11 @@ class NestedArray
                 // Renumber integer keys as array_merge_recursive() does unless
                 // $preserve_integer_keys is set to TRUE. Note that PHP automatically
                 // converts array keys that are integer strings (e.g., '1') to integers.
-                if (is_integer( $key ) && !$preserve_integer_keys) {
+                if (is_integer($key) && !$preserve_integer_keys) {
                     $result[] = $value;
                 } // Recurse when both values are arrays.
-                elseif (isset( $result[$key] ) && is_array( $result[$key] ) && is_array( $value )) {
-                    $result[$key] = self::mergeDeepArray( array( $result[$key], $value ), $preserve_integer_keys );
+                elseif (isset($result[$key]) && is_array($result[$key]) && is_array($value)) {
+                    $result[$key] = self::mergeDeepArray(array($result[$key], $value), $preserve_integer_keys);
                 } // Otherwise, use the latter value, overriding any previous value.
                 else {
                     $result[$key] = $value;
@@ -349,5 +361,4 @@ class NestedArray
 
         return $result;
     }
-
 }

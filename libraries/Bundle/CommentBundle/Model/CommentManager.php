@@ -1,11 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace  Mozart\Bundle\CommentBundle\Model;
 
 use Mozart\Bundle\NucleusBundle\Model\AbstractManager;
 use Mozart\Bundle\PostBundle\Model\PostInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Request;
 
 class CommentManager extends AbstractManager implements CommentManagerInterface
 {
@@ -27,7 +36,7 @@ class CommentManager extends AbstractManager implements CommentManagerInterface
         $class = $this->getClass();
 
         /**
-         * @var $comment Comment
+         * @var Comment
          */
         $comment = new $class();
 
@@ -64,9 +73,9 @@ class CommentManager extends AbstractManager implements CommentManagerInterface
     public function findCommentsByPost(PostInterface $post)
     {
         return $this->repository->findBy(array(
-            'post'     => $post,
+            'post' => $post,
             'approved' => 1,
-            'type'     => ''
+            'type' => '',
         ));
     }
 }

@@ -1,24 +1,34 @@
 <?php
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Component\Post\Connection\Query;
 
 class QueryPost
 {
     public static function init()
     {
-        add_action( 'parse_query', array( __CLASS__, 'parse_query' ), 20 );
-        add_filter( 'posts_clauses', array( __CLASS__, 'posts_clauses' ), 20, 2 );
-        add_filter( 'posts_request', array( __CLASS__, 'capture' ), 999, 2 );
-        add_filter( 'the_posts', array( __CLASS__, 'cache_p2p_meta' ), 20, 2 );
+        add_action('parse_query', array(__CLASS__, 'parse_query'), 20);
+        add_filter('posts_clauses', array(__CLASS__, 'posts_clauses'), 20, 2);
+        add_filter('posts_request', array(__CLASS__, 'capture'), 999, 2);
+        add_filter('the_posts', array(__CLASS__, 'cache_p2p_meta'), 20, 2);
     }
 
     public static function parse_query(\WP_Query $wp_query)
     {
-        $r = Query::create_from_qv( $wp_query->query_vars, 'post' );
+        $r = Query::create_from_qv($wp_query->query_vars, 'post');
 
-        if (is_wp_error( $r )) {
+        if (is_wp_error($r)) {
             $wp_query->_p2p_error = $r;
 
-            $wp_query->set( 'year', 2525 );
+            $wp_query->set('year', 2525);
 
             return;
         }
@@ -27,7 +37,7 @@ class QueryPost
             return;
         }
 
-        list( $wp_query->_p2p_query, $wp_query->query_vars ) = $r;
+        list($wp_query->_p2p_query, $wp_query->query_vars) = $r;
 
         $wp_query->is_home = false;
         $wp_query->is_archive = true;
@@ -37,18 +47,18 @@ class QueryPost
     {
         global $wpdb;
 
-        if (!isset( $wp_query->_p2p_query )) {
+        if (!isset($wp_query->_p2p_query)) {
             return $clauses;
         }
 
-        return $wp_query->_p2p_query->alter_clauses( $clauses, "$wpdb->posts.ID" );
+        return $wp_query->_p2p_query->alter_clauses($clauses, "$wpdb->posts.ID");
     }
 
     public static function capture($request, $wp_query)
     {
         global $wpdb;
 
-        if (!isset( $wp_query->_p2p_capture )) {
+        if (!isset($wp_query->_p2p_capture)) {
             return $request;
         }
 
@@ -62,8 +72,8 @@ class QueryPost
      */
     public static function cache_p2p_meta($the_posts, $wp_query)
     {
-        if (isset( $wp_query->_p2p_query ) && !empty( $the_posts )) {
-            update_meta_cache( 'p2p', wp_list_pluck( $the_posts, 'p2p_id' ) );
+        if (isset($wp_query->_p2p_query) && !empty($the_posts)) {
+            update_meta_cache('p2p', wp_list_pluck($the_posts, 'p2p_id'));
         }
 
         return $the_posts;

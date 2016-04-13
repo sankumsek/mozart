@@ -1,12 +1,21 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Component\Plugin;
 
 use Mozart\Bundle\PluginBundle\Admin\UserInterfaceManager;
 use Mozart\Bundle\PluginBundle\Model\PluginManager;
 
-if (!class_exists( '\Bulk_Upgrader_Skin' )) {
-    require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+if (!class_exists('\Bulk_Upgrader_Skin')) {
+    require_once ABSPATH.'wp-admin/includes/class-wp-upgrader.php';
 }
 
 /**
@@ -20,7 +29,6 @@ if (!class_exists( '\Bulk_Upgrader_Skin' )) {
  */
 class BulkInstallerSkin extends \Bulk_Upgrader_Skin
 {
-
     /**
      * @var UserInterfaceManager
      */
@@ -46,7 +54,7 @@ class BulkInstallerSkin extends \Bulk_Upgrader_Skin
     /**
      * Integer to use for iteration through each plugin installation.
      *
-     * @var integer
+     * @var int
      */
     public $i = 0;
 
@@ -66,18 +74,17 @@ class BulkInstallerSkin extends \Bulk_Upgrader_Skin
 
         // Parse default and new args.
         $defaults = array(
-            'url'   => '',
+            'url' => '',
             'nonce' => '',
-            'names' => array()
+            'names' => array(),
         );
-        $args = wp_parse_args( $args, $defaults );
+        $args = wp_parse_args($args, $defaults);
 
         // Set plugin names to $this->plugin_names property.
         $this->plugin_names = $args['names'];
 
         // Extract the new args.
-        parent::__construct( $args );
-
+        parent::__construct($args);
     }
 
     /**
@@ -90,7 +97,7 @@ class BulkInstallerSkin extends \Bulk_Upgrader_Skin
     {
 
         // Automatic activation strings.
-        if ($this->userInterfaceManager->getOption( 'is_automatic' )) {
+        if ($this->userInterfaceManager->getOption('is_automatic')) {
             $this->upgrader->strings['skin_upgrade_start'] = __(
                 'The installation and activation process is starting. This process may take a while on some hosts, so please be patient.',
                 'tgmpa'
@@ -98,10 +105,10 @@ class BulkInstallerSkin extends \Bulk_Upgrader_Skin
             $this->upgrader->strings['skin_update_successful'] = __(
                     '%1$s installed and activated successfully.',
                     'tgmpa'
-                ) . ' <a onclick="%2$s" href="#" class="hide-if-no-js"><span>' . __(
+                ).' <a onclick="%2$s" href="#" class="hide-if-no-js"><span>'.__(
                     'Show Details',
                     'tgmpa'
-                ) . '</span><span class="hidden">' . __( 'Hide Details', 'tgmpa' ) . '</span>.</a>';
+                ).'</span><span class="hidden">'.__('Hide Details', 'tgmpa').'</span>.</a>';
             $this->upgrader->strings['skin_upgrade_end'] = __(
                 'All installations and activations have been completed.',
                 'tgmpa'
@@ -120,18 +127,17 @@ class BulkInstallerSkin extends \Bulk_Upgrader_Skin
                 'An error occurred while installing %1$s: <strong>%2$s</strong>.',
                 'tgmpa'
             );
-            $this->upgrader->strings['skin_update_failed'] = __( 'The installation of %1$s failed.', 'tgmpa' );
+            $this->upgrader->strings['skin_update_failed'] = __('The installation of %1$s failed.', 'tgmpa');
             $this->upgrader->strings['skin_update_successful'] = __(
                     '%1$s installed successfully.',
                     'tgmpa'
-                ) . ' <a onclick="%2$s" href="#" class="hide-if-no-js"><span>' . __(
+                ).' <a onclick="%2$s" href="#" class="hide-if-no-js"><span>'.__(
                     'Show Details',
                     'tgmpa'
-                ) . '</span><span class="hidden">' . __( 'Hide Details', 'tgmpa' ) . '</span>.</a>';
-            $this->upgrader->strings['skin_upgrade_end'] = __( 'All installations have been completed.', 'tgmpa' );
-            $this->upgrader->strings['skin_before_update_header'] = __( 'Installing Plugin %1$s (%2$d/%3$d)', 'tgmpa' );
+                ).'</span><span class="hidden">'.__('Hide Details', 'tgmpa').'</span>.</a>';
+            $this->upgrader->strings['skin_upgrade_end'] = __('All installations have been completed.', 'tgmpa');
+            $this->upgrader->strings['skin_before_update_header'] = __('Installing Plugin %1$s (%2$d/%3$d)', 'tgmpa');
         }
-
     }
 
     /**
@@ -146,23 +152,22 @@ class BulkInstallerSkin extends \Bulk_Upgrader_Skin
         $this->in_loop = true;
 
         printf(
-            '<h4>' . $this->upgrader->strings['skin_before_update_header'] . ' <img alt="" src="' . admin_url(
+            '<h4>'.$this->upgrader->strings['skin_before_update_header'].' <img alt="" src="'.admin_url(
                 'images/wpspin_light.gif'
-            ) . '" class="hidden waiting-' . $this->upgrader->update_current . '" style="vertical-align: middle;" /></h4>',
+            ).'" class="hidden waiting-'.$this->upgrader->update_current.'" style="vertical-align: middle;" /></h4>',
             $this->plugin_names[$this->i],
             $this->upgrader->update_current,
             $this->upgrader->update_count
         );
-        echo '<script type="text/javascript">jQuery(\'.waiting-' . esc_js(
+        echo '<script type="text/javascript">jQuery(\'.waiting-'.esc_js(
                 $this->upgrader->update_current
-            ) . '\').show();</script>';
-        echo '<div class="update-messages hide-if-js" id="progress-' . esc_attr(
+            ).'\').show();</script>';
+        echo '<div class="update-messages hide-if-js" id="progress-'.esc_attr(
                 $this->upgrader->update_current
-            ) . '"><p>';
+            ).'"><p>';
 
         // Flush header output buffer.
         $this->before_flush_output();
-
     }
 
     /**
@@ -182,41 +187,40 @@ class BulkInstallerSkin extends \Bulk_Upgrader_Skin
         // Output error strings if an error has occurred.
         if ($this->error || !$this->result) {
             if ($this->error) {
-                echo '<div class="error"><p>' . sprintf(
+                echo '<div class="error"><p>'.sprintf(
                         $this->upgrader->strings['skin_update_failed_error'],
                         $this->plugin_names[$this->i],
                         $this->error
-                    ) . '</p></div>';
+                    ).'</p></div>';
             } else {
-                echo '<div class="error"><p>' . sprintf(
+                echo '<div class="error"><p>'.sprintf(
                         $this->upgrader->strings['skin_update_failed'],
                         $this->plugin_names[$this->i]
-                    ) . '</p></div>';
+                    ).'</p></div>';
             }
 
-            echo '<script type="text/javascript">jQuery(\'#progress-' . esc_js(
+            echo '<script type="text/javascript">jQuery(\'#progress-'.esc_js(
                     $this->upgrader->update_current
-                ) . '\').show();</script>';
+                ).'\').show();</script>';
         }
 
         // If the result is set and there are no errors, success!
-        if (!empty( $this->result ) && !is_wp_error( $this->result )) {
-            echo '<div class="updated"><p>' . sprintf(
+        if (!empty($this->result) && !is_wp_error($this->result)) {
+            echo '<div class="updated"><p>'.sprintf(
                     $this->upgrader->strings['skin_update_successful'],
                     $this->plugin_names[$this->i],
-                    'jQuery(\'#progress-' . esc_js(
+                    'jQuery(\'#progress-'.esc_js(
                         $this->upgrader->update_current
-                    ) . '\').toggle();jQuery(\'span\', this).toggle(); return false;'
-                ) . '</p></div>';
-            echo '<script type="text/javascript">jQuery(\'.waiting-' . esc_js(
+                    ).'\').toggle();jQuery(\'span\', this).toggle(); return false;'
+                ).'</p></div>';
+            echo '<script type="text/javascript">jQuery(\'.waiting-'.esc_js(
                     $this->upgrader->update_current
-                ) . '\').hide();</script>';
+                ).'\').hide();</script>';
         }
 
         // Set in_loop and error to false and flush footer output buffer.
         $this->reset();
         $this->after_flush_output();
-
     }
 
     /**
@@ -234,14 +238,14 @@ class BulkInstallerSkin extends \Bulk_Upgrader_Skin
         // Display message based on if all plugins are now active or not.
         $complete = array();
         foreach ($this->pluginManager->getPlugins() as $plugin) {
-            if (!is_plugin_active( $plugin['file_path'] )) {
-                echo '<p><a href="' . add_query_arg(
+            if (!is_plugin_active($plugin['file_path'])) {
+                echo '<p><a href="'.add_query_arg(
                         'page',
-                        $this->userInterfaceManager->getOption( 'menu' ),
-                        network_admin_url( 'themes.php' )
-                    ) . '" title="' . esc_attr(
-                        $this->userInterfaceManager->getMessage( 'return' )
-                    ) . '" target="_parent">' . $this->userInterfaceManager->getMessage( 'return' ) . '</a></p>';
+                        $this->userInterfaceManager->getOption('menu'),
+                        network_admin_url('themes.php')
+                    ).'" title="'.esc_attr(
+                        $this->userInterfaceManager->getMessage('return')
+                    ).'" target="_parent">'.$this->userInterfaceManager->getMessage('return').'</a></p>';
                 $complete[] = $plugin;
                 break;
             } // Nothing to store.
@@ -251,20 +255,19 @@ class BulkInstallerSkin extends \Bulk_Upgrader_Skin
         }
 
         // Filter out any empty entries.
-        $complete = array_filter( $complete );
+        $complete = array_filter($complete);
 
         // All plugins are active, so we display the complete string and hide the menu to protect users.
-        if (empty( $complete )) {
-            echo '<p>' . sprintf(
-                    $this->userInterfaceManager->getMessage( 'complete' ),
-                    '<a href="' . network_admin_url() . '" title="' . __(
+        if (empty($complete)) {
+            echo '<p>'.sprintf(
+                    $this->userInterfaceManager->getMessage('complete'),
+                    '<a href="'.network_admin_url().'" title="'.__(
                         'Return to the Dashboard',
                         'tgmpa'
-                    ) . '">' . __( 'Return to the Dashboard', 'tgmpa' ) . '</a>'
-                ) . '</p>';
+                    ).'">'.__('Return to the Dashboard', 'tgmpa').'</a>'
+                ).'</p>';
             echo '<style type="text/css">#adminmenu .wp-submenu li.current { display: none !important; }</style>';
         }
-
     }
 
     /**
@@ -274,7 +277,6 @@ class BulkInstallerSkin extends \Bulk_Upgrader_Skin
     {
         wp_ob_end_flush_all();
         flush();
-
     }
 
     /**
@@ -285,8 +287,6 @@ class BulkInstallerSkin extends \Bulk_Upgrader_Skin
     {
         wp_ob_end_flush_all();
         flush();
-        $this->i++;
-
+        ++$this->i;
     }
-
 }

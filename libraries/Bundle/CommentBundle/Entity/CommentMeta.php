@@ -1,10 +1,19 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace  Mozart\Bundle\CommentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use  Mozart\Bundle\NucleusBundle\Annotation as Mozart;
-use  Mozart\Bundle\CommentBundle\Model\CommentMeta as ModelCommentaMeta;
+use Mozart\Bundle\CommentBundle\Model\CommentMeta as ModelCommentaMeta;
+use Mozart\Bundle\NucleusBundle\Annotation as Mozart;
 use Symfony\Component\Validator\Constraints as Constraints;
 
 /**
@@ -32,7 +41,7 @@ class CommentMeta extends ModelCommentaMeta
     protected $key;
 
     /**
-     * @var string $value
+     * @var string
      *
      * @ORM\Column(name="meta_value", type="wordpressmeta", nullable=true)
      */

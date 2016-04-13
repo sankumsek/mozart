@@ -1,8 +1,17 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Component\Cache;
 
 /**
@@ -10,7 +19,7 @@ namespace Mozart\Component\Cache;
  */
 abstract class FragmentCache
 {
-    static $in_callback = false;
+    public static $in_callback = false;
     public $timeout;
     protected $type;
 
@@ -21,7 +30,6 @@ abstract class FragmentCache
      */
     public function __construct($args)
     {
-
         $this->type = $args['type'];
         $this->timeout = $args['timeout'];
     }
@@ -47,32 +55,31 @@ abstract class FragmentCache
      */
     public function fetch($name, $args, $salt = '')
     {
-
         global $current_user;
 
         static $empty_user;
 
-        if (self::$in_callback || apply_filters( 'fc_skip_cache', false, $this->type, $name, $args, $salt )) {
-            return $this->callback( $name, $args );
+        if (self::$in_callback || apply_filters('fc_skip_cache', false, $this->type, $name, $args, $salt)) {
+            return $this->callback($name, $args);
         }
 
         // anonymize front-end run for consistency
         if (is_user_logged_in()) {
-            if (empty( $empty_user )) {
-                $empty_user = new \WP_User( 0 );
+            if (empty($empty_user)) {
+                $empty_user = new \WP_User(0);
             }
 
             $stored_user = $current_user;
             $current_user = $empty_user;
         }
 
-        $salt = maybe_serialize( $salt );
-        $output = tlc_transient( 'fragment-cache-' . $this->type . '-' . $name . $salt )
-            ->updates_with( array( $this, 'wrap_callback' ), array( $name, $args ) )
-            ->expires_in( $this->timeout )
+        $salt = maybe_serialize($salt);
+        $output = tlc_transient('fragment-cache-'.$this->type.'-'.$name.$salt)
+            ->updates_with(array($this, 'wrap_callback'), array($name, $args))
+            ->expires_in($this->timeout)
             ->get();
 
-        if (!empty( $stored_user )) {
+        if (!empty($stored_user)) {
             $current_user = $stored_user;
         }
 
@@ -89,9 +96,8 @@ abstract class FragmentCache
      */
     public function wrap_callback($name, $args)
     {
-
         self::$in_callback = true;
-        $output = $this->callback( $name, $args );
+        $output = $this->callback($name, $args);
         self::$in_callback = false;
 
         return $output;
@@ -116,8 +122,8 @@ abstract class FragmentCache
      */
     public function get_comment($name)
     {
-        return '<!-- ' . esc_html( $name ) . ' ' . esc_html( $this->type ) . ' cached on ' . date_i18n(
+        return '<!-- '.esc_html($name).' '.esc_html($this->type).' cached on '.date_i18n(
             DATE_RSS
-        ) . ' -->';
+        ).' -->';
     }
 }

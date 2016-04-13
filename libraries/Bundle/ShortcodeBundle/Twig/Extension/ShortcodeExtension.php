@@ -1,16 +1,23 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\ShortcodeBundle\Twig\Extension;
 
 use Mozart\Bundle\ShortcodeBundle\ShortcodeChain;
 
 /**
- * Class ShortcodeExtension
- *
- * @package Mozart\Bundle\ShortcodeBundle\Twig\Extension
+ * Class ShortcodeExtension.
  */
 class ShortcodeExtension extends \Twig_Extension
 {
@@ -45,7 +52,7 @@ class ShortcodeExtension extends \Twig_Extension
     public function doShortcode($content)
     {
         // replicates do_shortcode() from Wordpress
-        return $this->shortcodeChain->process( $content );
+        return $this->shortcodeChain->process($content);
     }
 
     /**
@@ -54,9 +61,9 @@ class ShortcodeExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter( 'do_shortcode', array( $this, 'doShortcode' ) ),
-            new \Twig_SimpleFilter( 'wp_shortcode', array( $this, 'doShortcode' ) ),
-            new \Twig_SimpleFilter( 'shortcode', array( $this, 'doShortcode' ) ),
+            new \Twig_SimpleFilter('do_shortcode', array($this, 'doShortcode')),
+            new \Twig_SimpleFilter('wp_shortcode', array($this, 'doShortcode')),
+            new \Twig_SimpleFilter('shortcode', array($this, 'doShortcode')),
         );
     }
 }

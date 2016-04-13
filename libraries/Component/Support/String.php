@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\String.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -14,7 +22,7 @@ namespace Mozart\Component\Support;
  */
 class String
 {
-  /**
+    /**
    * Encodes special characters in a plain-text string for display as HTML.
    *
    * Also validates strings as UTF-8.
@@ -32,7 +40,7 @@ class String
    */
   public static function checkPlain($text)
   {
-    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+      return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
   }
 
   /**
@@ -50,7 +58,7 @@ class String
    */
   public static function decodeEntities($text)
   {
-    return html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+      return html_entity_decode($text, ENT_QUOTES, 'UTF-8');
   }
 
   /**
@@ -96,9 +104,9 @@ class String
    */
   public static function format($string, array $args = array())
   {
-    // Transform arguments before inserting them.
+      // Transform arguments before inserting them.
     foreach ($args as $key => $value) {
-      switch ($key[0]) {
+        switch ($key[0]) {
         case '@':
           // Escaped only.
           $args[$key] = static::checkPlain($value);
@@ -115,7 +123,7 @@ class String
       }
     }
 
-    return strtr($string, $args);
+      return strtr($string, $args);
   }
 
   /**
@@ -131,7 +139,6 @@ class String
    */
   public static function placeholder($text)
   {
-    return '<em class="placeholder">' . static::checkPlain($text) . '</em>';
+      return '<em class="placeholder">'.static::checkPlain($text).'</em>';
   }
-
 }

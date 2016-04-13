@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\NucleusBundle\Doctrine;
 
 use Doctrine\Common\EventManager;
@@ -28,14 +37,15 @@ class WordpressEntityManager extends \Doctrine\ORM\EntityManager
     /**
      * Factory method to create EntityManager instances.
      *
-     * @param  mixed                  $conn         An array with the connection parameters or an existing
-     *                                              Connection instance.
-     * @param  Configuration          $config       The Configuration instance to use.
-     * @param  EventManager           $eventManager The EventManager instance to use.
+     * @param mixed         $conn         An array with the connection parameters or an existing
+     *                                    Connection instance.
+     * @param Configuration $config       The Configuration instance to use.
+     * @param EventManager  $eventManager The EventManager instance to use.
+     *
      * @return WordpressEntityManager The created EntityManager.
      */
     public static function create($conn, Configuration $config, EventManager $eventManager = null)
     {
-        return new WordpressEntityManager($conn, $config, $conn->getEventManager());
+        return new self($conn, $config, $conn->getEventManager());
     }
 }

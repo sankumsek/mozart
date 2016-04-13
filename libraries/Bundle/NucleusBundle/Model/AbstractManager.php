@@ -1,13 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\NucleusBundle\Model;
 
 use Symfony\Component\DependencyInjection\Container;
 
 /**
- * Class AbstractManager
- *
- * @package Mozart\Bundle\NucleusBundle\Model
+ * Class AbstractManager.
  */
 abstract class AbstractManager
 {
@@ -29,8 +36,8 @@ abstract class AbstractManager
      */
     protected function getEntityManager()
     {
-        $entityManagerName = $this->container->getParameter( 'wordpress.entity_manager' );
+        $entityManagerName = $this->container->getParameter('wordpress.entity_manager');
 
-        return $this->container->get( 'doctrine.orm.' . $entityManagerName . '_entity_manager' );
+        return $this->container->get('doctrine.orm.'.$entityManagerName.'_entity_manager');
     }
 }

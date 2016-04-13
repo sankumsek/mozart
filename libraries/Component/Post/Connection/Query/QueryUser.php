@@ -1,23 +1,33 @@
 <?php
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Component\Post\Connection\Query;
 
 class QueryUser
 {
     public static function init()
     {
-        add_action( 'pre_user_query', array( __CLASS__, 'pre_user_query' ), 20 );
+        add_action('pre_user_query', array(__CLASS__, 'pre_user_query'), 20);
     }
 
     public static function pre_user_query($query)
     {
         global $wpdb;
 
-        $r = Query::create_from_qv( $query->query_vars, 'user' );
+        $r = Query::create_from_qv($query->query_vars, 'user');
 
-        if (is_wp_error( $r )) {
+        if (is_wp_error($r)) {
             $query->_p2p_error = $r;
 
-            $query->query_where = " AND 1=0";
+            $query->query_where = ' AND 1=0';
 
             return;
         }
@@ -26,12 +36,12 @@ class QueryUser
             return;
         }
 
-        list( $p2p_q, $query->query_vars ) = $r;
+        list($p2p_q, $query->query_vars) = $r;
 
         $map = array(
-            'fields'  => 'query_fields',
-            'join'    => 'query_from',
-            'where'   => 'query_where',
+            'fields' => 'query_fields',
+            'join' => 'query_from',
+            'where' => 'query_where',
             'orderby' => 'query_orderby',
         );
 
@@ -41,10 +51,10 @@ class QueryUser
             $clauses[$clause] = $query->$key;
         }
 
-        $clauses = $p2p_q->alter_clauses( $clauses, "$wpdb->users.ID" );
+        $clauses = $p2p_q->alter_clauses($clauses, "$wpdb->users.ID");
 
-        if (0 !== strpos( $clauses['orderby'], 'ORDER BY ' )) {
-            $clauses['orderby'] = sprintf( 'ORDER BY %s', $clauses['orderby'] );
+        if (0 !== strpos($clauses['orderby'], 'ORDER BY ')) {
+            $clauses['orderby'] = sprintf('ORDER BY %s', $clauses['orderby']);
         }
 
         foreach ($map as $clause => $key) {

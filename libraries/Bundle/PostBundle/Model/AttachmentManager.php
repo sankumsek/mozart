@@ -1,16 +1,23 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\PostBundle\Model;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\DependencyInjection\Container;
 use Mozart\Bundle\NucleusBundle\Model\AbstractManager;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
- * Class AttachmentManager
- *
- * @package Mozart\Bundle\PostBundle\Model
+ * Class AttachmentManager.
  */
 class AttachmentManager extends AbstractManager implements AttachmentManagerInterface
 {
@@ -36,11 +43,11 @@ class AttachmentManager extends AbstractManager implements AttachmentManagerInte
      */
     public function __construct(Container $container)
     {
-        parent::__construct( $container );
+        parent::__construct($container);
 
-        $this->em              = $this->getEntityManager();
-        $this->repository      = $this->em->getRepository( 'MozartPostBundle:Post' );
-        $this->postMetaManager = new PostMetaManager( $container );
+        $this->em = $this->getEntityManager();
+        $this->repository = $this->em->getRepository('MozartPostBundle:Post');
+        $this->postMetaManager = new PostMetaManager($container);
     }
 
     /**
@@ -53,14 +60,14 @@ class AttachmentManager extends AbstractManager implements AttachmentManagerInte
         $posts = $this->repository->findBy(
             array(
                 'parent' => $post,
-                'type'   => 'attachment',
+                'type' => 'attachment',
             )
         );
 
         $result = array();
         /** @var $post Post */
         foreach ($posts as $post) {
-            $result[] = new Attachment( $post );
+            $result[] = new Attachment($post);
         }
 
         return $result;
@@ -75,12 +82,12 @@ class AttachmentManager extends AbstractManager implements AttachmentManagerInte
     {
         $post = $this->repository->findOneBy(
             array(
-                'id'   => $id,
+                'id' => $id,
                 'type' => 'attachment',
             )
         );
 
-        return new Attachment( $post );
+        return new Attachment($post);
     }
 
     /**
@@ -99,30 +106,30 @@ class AttachmentManager extends AbstractManager implements AttachmentManagerInte
         $meta = $this->postMetaManager->findOneMetaBy(
             array(
                 'post' => $attachment,
-                'key'  => '_wp_attachment_metadata'
+                'key' => '_wp_attachment_metadata',
             )
         );
 
         if (!$meta) {
-            return null;
+            return;
         }
 
         $rawMeta = $meta->getValue();
 
         $chosenSize = null;
-        $min        = 999999;
+        $min = 999999;
         foreach ($rawMeta['sizes'] as $meta) {
             if ($meta['width'] >= $size[0] && $meta['height'] >= $size[1]) {
                 $dimensionDiff = $meta['width'] - $size[0] + $meta['height'] - $size[1];
                 if ($dimensionDiff < $min) {
                     $chosenSize = $meta;
-                    $min        = $dimensionDiff;
+                    $min = $dimensionDiff;
                 }
             }
         }
 
         if ($chosenSize) {
-            return substr( $rawMeta['file'], 0, strrpos( $rawMeta['file'], '/' ) + 1 ) . $chosenSize['file'];
+            return substr($rawMeta['file'], 0, strrpos($rawMeta['file'], '/') + 1).$chosenSize['file'];
         } else {
             return $attachment->getUrl();
         }
@@ -139,14 +146,14 @@ class AttachmentManager extends AbstractManager implements AttachmentManagerInte
         $featuredImageId = $this->postMetaManager->findOneMetaBy(
             array(
                 'post' => $post,
-                'key'  => '_thumbnail_id'
+                'key' => '_thumbnail_id',
             )
         );
 
         if (!$featuredImageId) {
-            return null;
+            return;
         }
 
-        return $this->findOneAttachmentById( $featuredImageId->getValue() );
+        return $this->findOneAttachmentById($featuredImageId->getValue());
     }
 }

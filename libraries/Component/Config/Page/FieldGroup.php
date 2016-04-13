@@ -1,8 +1,17 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Component\Config\Page;
 
 use Mozart\Component\Support\Str;
@@ -27,37 +36,34 @@ class FieldGroup implements FieldGroupInterface
 
     protected function getClassBaseName()
     {
-        $className = get_class( $this );
-        $className = str_replace( 'FieldGroup', '', $className );
+        $className = get_class($this);
+        $className = str_replace('FieldGroup', '', $className);
 
-        return substr( strrchr( $className, '\\' ), 1 );
+        return substr(strrchr($className, '\\'), 1);
     }
 
-
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getKey()
     {
         if (null === $this->key) {
-
-            $this->key = Str::slug( Str::snake( static::DOMAIN . ' ' . $this->getClassBaseName() ), '-' );
+            $this->key = Str::slug(Str::snake(static::DOMAIN.' '.$this->getClassBaseName()), '-');
         }
 
         return $this->key;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getName()
     {
-        return Str::title( Str::snake( $this->getClassBaseName(), ' ' ) );
+        return Str::title(Str::snake($this->getClassBaseName(), ' '));
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getFields()
     {
@@ -65,7 +71,7 @@ class FieldGroup implements FieldGroupInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getConfigPage()
     {
@@ -88,23 +94,23 @@ class FieldGroup implements FieldGroupInterface
         return array(
             array(
                 array(
-                    'param'    => $this->configPage->getType(),
+                    'param' => $this->configPage->getType(),
                     'operator' => '==',
-                    'value'    => $this->configPage->getKey(),
+                    'value' => $this->configPage->getKey(),
                 ),
             ),
         );
     }
 
-	public function getDisplayOptions()
-	{
-		return array(
-			'menu_order'            => 0,
-			'position'              => 'normal',
-			'style'                 => 'default',
-			'label_placement'       => 'left',
-			'instruction_placement' => 'label',
-			'hide_on_screen'        => ''
-		);
-	}
+    public function getDisplayOptions()
+    {
+        return array(
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'left',
+            'instruction_placement' => 'label',
+            'hide_on_screen' => '',
+        );
+    }
 }

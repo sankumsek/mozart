@@ -1,16 +1,23 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Component\Post\Type;
 
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Interface PostTypeInterface
- *
- * @package Mozart\Bundle\PostBundle
+ * Interface PostTypeInterface.
  */
 interface PostTypeInterface
 {
@@ -32,5 +39,4 @@ interface PostTypeInterface
      * @param OptionsResolverInterface $resolver The resolver for the options.
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver);
-
 }

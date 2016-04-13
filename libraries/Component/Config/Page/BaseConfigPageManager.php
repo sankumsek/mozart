@@ -1,8 +1,17 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Component\Config\Page;
 
 class BaseConfigPageManager extends AbstractConfigPageManager
@@ -10,29 +19,29 @@ class BaseConfigPageManager extends AbstractConfigPageManager
     protected function lazyPreparePage(ConfigPageInterface $configPage)
     {
         return array(
-            'name'      => translate( $configPage->getName() ),
+            'name' => translate($configPage->getName()),
             'shortname' => translate($configPage->getShortName()),
-            'key'       => translate( $configPage->getKey() ),
+            'key' => translate($configPage->getKey()),
             'user_role' => $configPage->getUserCapabilities(),
-            'parent'    => $configPage->getParent(),
-            'position'  => $configPage->getMenuPosition(),
-            'icon'      => $configPage->getIconUrl(),
-            'redirect'  => $configPage->toRedirect()
+            'parent' => $configPage->getParent(),
+            'position' => $configPage->getMenuPosition(),
+            'icon' => $configPage->getIconUrl(),
+            'redirect' => $configPage->toRedirect(),
         );
     }
 
     public function registerPages()
     {
-        include_once ABSPATH . 'wp-admin/includes/plugin.php';
+        include_once ABSPATH.'wp-admin/includes/plugin.php';
 
         $pages = $this->getPages();
-        ksort( $pages );
+        ksort($pages);
 
         foreach ($pages as $position => $positionnedPages) {
             foreach ($positionnedPages as $page) {
-                $page = $this->lazyPreparePage( $page );
+                $page = $this->lazyPreparePage($page);
 
-                if (empty( $page['parent'] )) {
+                if (empty($page['parent'])) {
 
                     // add page
                     add_menu_page(
@@ -40,11 +49,10 @@ class BaseConfigPageManager extends AbstractConfigPageManager
                         $page['shortname'],
                         $page['user_role'],
                         $page['key'],
-                        array( $this, 'displayPageCode' ),
+                        array($this, 'displayPageCode'),
                         $page['icon'],
                         $page['position']
                     );
-
                 } else {
 
                     // add page
@@ -54,9 +62,8 @@ class BaseConfigPageManager extends AbstractConfigPageManager
                         $page['shortname'],
                         $page['user_role'],
                         $page['key'],
-                        array( $this, 'displayPageCode' )
+                        array($this, 'displayPageCode')
                     );
-
                 }
             }
         }

@@ -1,12 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\NucleusBundle\Twig\Extension;
 
 use Mozart\Bundle\NucleusBundle\Twig\TwigProxy;
 
 class NucleusExtension extends \Twig_Extension
 {
-
     /**
      * Returns a list of global variables to add to the existing list.
      *
@@ -17,7 +25,7 @@ class NucleusExtension extends \Twig_Extension
         return array(
             'wp' => new TwigProxy(),
             'q' => $_GET,
-            'p' => $_POST
+            'p' => $_POST,
         );
     }
 
@@ -62,7 +70,8 @@ class NucleusExtension extends \Twig_Extension
 
     /**
      * Get an array of all available template directories for plugins
-     * $dir can be the child theme root dir or parent theme root dir
+     * $dir can be the child theme root dir or parent theme root dir.
+     *
      * @return array
      */
     public function prepare_components_template_dirs($dir)
@@ -72,7 +81,7 @@ class NucleusExtension extends \Twig_Extension
         $modules = \Rhetina::service('kernel')->getContainer()->getParameter('container.modules');
 
         foreach ($modules as $moduleName => $moduleFile) {
-            $templates[] = dirname($moduleFile) . '/Resources/views';
+            $templates[] = dirname($moduleFile).'/Resources/views';
         }
 
         return $templates;
@@ -93,67 +102,67 @@ class NucleusExtension extends \Twig_Extension
         return comment_form();
     }
 
-    public function body_class($attrs = NULL)
+    public function body_class($attrs = null)
     {
         body_class($attrs);
     }
 
-    public function wp_list_comments($attrs = NULL)
+    public function wp_list_comments($attrs = null)
     {
         wp_list_comments();
     }
 
-    public function post_class($attrs = NULL)
+    public function post_class($attrs = null)
     {
         post_class($attrs);
     }
 
-    public function dynamic_sidebar($attrs = NULL)
+    public function dynamic_sidebar($attrs = null)
     {
         dynamic_sidebar($attrs);
     }
 
-    public function comments_template($attrs = NULL)
+    public function comments_template($attrs = null)
     {
         comments_template();
     }
 
-    public function paginate_comments_links($attrs = NULL)
+    public function paginate_comments_links($attrs = null)
     {
         paginate_comments_links();
     }
 
-    public function next_comments_link($attrs = NULL)
+    public function next_comments_link($attrs = null)
     {
         next_comments_link();
     }
 
-    public function previous_comments_link($attrs = NULL)
+    public function previous_comments_link($attrs = null)
     {
         paginate_comments_links();
     }
 
-    public function posts_nav_link($attrs = NULL)
+    public function posts_nav_link($attrs = null)
     {
         posts_nav_link($attrs);
     }
 
-    public function paginate_links($attrs = NULL)
+    public function paginate_links($attrs = null)
     {
         paginate_links($attrs);
     }
 
-    public function next_posts_link($attrs = NULL)
+    public function next_posts_link($attrs = null)
     {
         next_posts_link($attrs);
     }
 
-    public function previous_posts_link($attrs = NULL)
+    public function previous_posts_link($attrs = null)
     {
         previous_posts_link($attrs);
     }
 
-    public function kk_star_ratings($attrs = NULL)
+    public function kk_star_ratings($attrs = null)
     {
         if (function_exists('kk_star_ratings')) {
             return kk_star_ratings($attrs);
@@ -164,5 +173,4 @@ class NucleusExtension extends \Twig_Extension
     {
         return 'mozart_nucleus';
     }
-
 }

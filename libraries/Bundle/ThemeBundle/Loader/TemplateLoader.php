@@ -1,21 +1,28 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\ThemeBundle\Loader;
 
 class TemplateLoader
 {
     public function __construct()
     {
-
     }
 
     public function load()
     {
-
-        if ('HEAD' === $_SERVER['REQUEST_METHOD'] && apply_filters( 'exit_on_http_head', true )) {
+        if ('HEAD' === $_SERVER['REQUEST_METHOD'] && apply_filters('exit_on_http_head', true)) {
             return;
         }
         // Process feeds and trackbacks even if not using themes.
@@ -33,8 +40,7 @@ class TemplateLoader
         elseif (is_post_type_archive() && $template = get_post_type_archive_template()) :
         elseif (is_tax() && $template = get_taxonomy_template()) :
         elseif (is_attachment() && $template = get_attachment_template()) :
-            remove_filter( 'the_content', 'prepend_attachment' );
-        elseif (is_single() && $template = get_single_template()) :
+            remove_filter('the_content', 'prepend_attachment'); elseif (is_single() && $template = get_single_template()) :
         elseif (is_page() && $template = get_page_template()) :
         elseif (is_category() && $template = get_category_template()) :
         elseif (is_tag() && $template = get_tag_template()) :
@@ -47,8 +53,8 @@ class TemplateLoader
             $template = get_index_template();
         endif;
 
-        if ($template = apply_filters( 'template_include', $template )) {
-            include( $template );
+        if ($template = apply_filters('template_include', $template)) {
+            include $template;
         }
         exit;
     }

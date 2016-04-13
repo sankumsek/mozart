@@ -1,38 +1,45 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\TaxonomyBundle\Model;
 
 use Mozart\Bundle\PostBundle\Model\Post;
 
 /**
- * Class Taxonomy
- *
- * @package Mozart\Bundle\TaxonomyBundle\Model
+ * Class Taxonomy.
  */
 class Taxonomy
 {
     /**
-     * @var int $id
+     * @var int
      */
     protected $id;
 
     /**
-     * @var string $name
+     * @var string
      */
     protected $name;
 
     /**
-     * @var string $description
+     * @var string
      */
     protected $description = '';
 
     /**
-     * @var int $parent
+     * @var int
      */
     protected $parent;
 
     /**
-     * @var int $count
+     * @var int
      */
     protected $count = 0;
 
@@ -47,7 +54,7 @@ class Taxonomy
     protected $posts;
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -57,7 +64,7 @@ class Taxonomy
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      */
@@ -67,7 +74,7 @@ class Taxonomy
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -77,7 +84,7 @@ class Taxonomy
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      */
@@ -87,7 +94,7 @@ class Taxonomy
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -97,7 +104,7 @@ class Taxonomy
     }
 
     /**
-     * Set parent
+     * Set parent.
      *
      * @param int $parent
      */
@@ -107,7 +114,7 @@ class Taxonomy
     }
 
     /**
-     * Get parent
+     * Get parent.
      *
      * @return int
      */
@@ -117,7 +124,7 @@ class Taxonomy
     }
 
     /**
-     * Set count
+     * Set count.
      *
      * @param int $count
      */
@@ -127,7 +134,7 @@ class Taxonomy
     }
 
     /**
-     * Get count
+     * Get count.
      *
      * @return int
      */
@@ -137,7 +144,7 @@ class Taxonomy
     }
 
     /**
-     * Set term
+     * Set term.
      *
      * @param Term $term
      */
@@ -147,7 +154,7 @@ class Taxonomy
     }
 
     /**
-     * Get term
+     * Get term.
      *
      * @return Term
      */
@@ -157,7 +164,7 @@ class Taxonomy
     }
 
     /**
-     * Add post
+     * Add post.
      *
      * @param Post $post
      */
@@ -167,7 +174,7 @@ class Taxonomy
     }
 
     /**
-     * Get posts
+     * Get posts.
      *
      * @return \Doctrine\Common\Collections\Collection
      */

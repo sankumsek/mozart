@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\Bytes.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -12,7 +20,7 @@ namespace Mozart\Component\Support;
  */
 class Bytes
 {
-  /**
+    /**
    * The number of bytes in a kilobyte.
    *
    * @see http://en.wikipedia.org/wiki/Kilobyte
@@ -31,17 +39,16 @@ class Bytes
    */
   public static function toInt($size)
   {
-    // Remove the non-unit characters from the size.
+      // Remove the non-unit characters from the size.
     $unit = preg_replace('/[^bkmgtpezy]/i', '', $size);
     // Remove the non-numeric characters from the size.
     $size = preg_replace('/[^0-9\.]/', '', $size);
-    if ($unit) {
-      // Find the position of the unit in the ordered string which is the power
+      if ($unit) {
+          // Find the position of the unit in the ordered string which is the power
       // of magnitude to multiply a kilobyte by.
       return round($size * pow(self::KILOBYTE, stripos('bkmgtpezy', $unit[0])));
-    } else {
-      return round($size);
-    }
+      } else {
+          return round($size);
+      }
   }
-
 }

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\CommentBundle\Model;
 
 use Mozart\Bundle\PostBundle\Model\PostInterface;
@@ -8,69 +17,67 @@ use Mozart\Bundle\UserBundle\Model\UserInterface;
 class Comment implements CommentInterface
 {
     /**
-     * @var int $id
+     * @var int
      */
     protected $id;
 
     /**
-     * @var string $author
+     * @var string
      */
     protected $author;
 
     /**
-     * @var string $authorEmail
+     * @var string
      */
     protected $authorEmail = '';
 
     /**
-     * @var string $authorUrl
+     * @var string
      */
     protected $authorUrl = '';
 
     /**
-     * @var string $authorIp
+     * @var string
      */
     protected $authorIp = '';
 
     /**
-     * @var \DateTime $date
-     *
+     * @var \DateTime
      */
     protected $date;
 
     /**
-     * @var \DateTime $dateGmt
-     *
+     * @var \DateTime
      */
     protected $dateGmt;
 
     /**
-     * @var string $content
+     * @var string
      */
     protected $content;
 
     /**
-     * @var integer $karma
+     * @var int
      */
     protected $karma = 0;
 
     /**
-     * @var string $approved
+     * @var string
      */
     protected $approved = 1;
 
     /**
-     * @var string $agent
+     * @var string
      */
     protected $agent = '';
 
     /**
-     * @var string $type
+     * @var string
      */
     protected $type = '';
 
     /**
-     * @var int $parent
+     * @var int
      */
     protected $parent;
 
@@ -95,7 +102,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -105,7 +112,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set author
+     * Set author.
      *
      * @param string $author
      */
@@ -115,7 +122,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get author
+     * Get author.
      *
      * @return string
      */
@@ -125,7 +132,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set authorEmail
+     * Set authorEmail.
      *
      * @param string $authorEmail
      */
@@ -135,7 +142,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get authorEmail
+     * Get authorEmail.
      *
      * @return string
      */
@@ -145,7 +152,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set authorUrl
+     * Set authorUrl.
      *
      * @param string $authorUrl
      */
@@ -155,7 +162,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get authorUrl
+     * Get authorUrl.
      *
      * @return string
      */
@@ -165,7 +172,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set authorIp
+     * Set authorIp.
      *
      * @param string $authorIp
      */
@@ -175,7 +182,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get authorIp
+     * Get authorIp.
      *
      * @return string
      */
@@ -185,7 +192,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set date
+     * Set date.
      *
      * @param \DateTime $date
      */
@@ -195,7 +202,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get date
+     * Get date.
      *
      * @return \DateTime
      */
@@ -205,7 +212,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set date_gmt
+     * Set date_gmt.
      *
      * @param \DateTime $dateGmt
      */
@@ -215,7 +222,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get date_gmt
+     * Get date_gmt.
      *
      * @return \DateTime
      */
@@ -225,7 +232,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set content
+     * Set content.
      *
      * @param string $commentContent
      */
@@ -235,7 +242,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get content
+     * Get content.
      *
      * @return string
      */
@@ -245,9 +252,9 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set karma
+     * Set karma.
      *
-     * @param integer $karma
+     * @param int $karma
      */
     public function setKarma($karma)
     {
@@ -255,9 +262,9 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get karma
+     * Get karma.
      *
-     * @return integer
+     * @return int
      */
     public function getKarma()
     {
@@ -265,13 +272,13 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set approved
+     * Set approved.
      *
      * @param string $approved
      */
     public function setApproved($approved)
     {
-        if ( is_bool( $approved ) ) {
+        if (is_bool($approved)) {
             $this->approved = $approved ? 1 : 0;
         }
 
@@ -279,7 +286,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get approved
+     * Get approved.
      *
      * @return string
      */
@@ -289,7 +296,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set agent
+     * Set agent.
      *
      * @param string $agent
      */
@@ -299,7 +306,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get agent
+     * Get agent.
      *
      * @return string
      */
@@ -309,7 +316,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $commentType
      */
@@ -319,7 +326,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */
@@ -329,7 +336,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set parent
+     * Set parent.
      *
      * @param Comment $comment
      */
@@ -339,7 +346,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get parent
+     * Get parent.
      *
      * @return Comment
      */
@@ -349,7 +356,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Add meta
+     * Add meta.
      *
      * @param CommentMeta $meta
      */
@@ -359,7 +366,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get metas
+     * Get metas.
      *
      * @return CommentMeta[]
      */
@@ -369,7 +376,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set post
+     * Set post.
      *
      * @param PostInterface $post
      */
@@ -379,7 +386,7 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Get post
+     * Get post.
      *
      * @return PostInterface
      */
@@ -389,20 +396,20 @@ class Comment implements CommentInterface
     }
 
     /**
-     * Set user
+     * Set user.
      *
      * @param UserInterface $user
      */
     public function setUser(UserInterface $user)
     {
-        $this->user        = $user;
-        $this->author      = $user->getDisplayName();
-        $this->authorUrl   = $user->getUrl();
+        $this->user = $user;
+        $this->author = $user->getDisplayName();
+        $this->authorUrl = $user->getUrl();
         $this->authorEmail = $user->getEmail();
     }
 
     /**
-     * Get user
+     * Get user.
      *
      * @return UserInterface
      */

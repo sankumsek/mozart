@@ -1,18 +1,26 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\BlogBundle\Model;
 
-use \Redis;
-use \Memcache;
-use \Memcached;
 use Doctrine\DBAL\DBALException;
+use Memcache;
+use Memcached;
+use Mozart\Bundle\BlogBundle\Event\BlogEvent;
 use Mozart\Bundle\NucleusBundle\Model\AbstractManager;
-use  Mozart\Bundle\BlogBundle\Event\BlogEvent;
+use Redis;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
- * Class BlogManager
- * @package Mozart\Bundle\BlogBundle\Model
+ * Class BlogManager.
  */
 class BlogManager extends AbstractManager implements BlogManagerInterface
 {
@@ -31,40 +39,42 @@ class BlogManager extends AbstractManager implements BlogManagerInterface
      */
     public function __construct(Container $container)
     {
-        parent::__construct( $container );
+        parent::__construct($container);
     }
 
     /**
-     * @param  integer                    $id
+     * @param int $id
+     *
      * @throws \Doctrine\ORM\ORMException
+     *
      * @return Blog
      */
     public function findBlogById($id)
     {
         $config = $this->getEntityManagerConfiguration();
 
-        if (!isset( $this->blogs[$id] )) {
+        if (!isset($this->blogs[$id])) {
             $em = $this->getEntityManager();
 
-            $em->getMetadataFactory()->setCacheDriver( $this->getCacheImpl( 'metadata_cache', $id ) );
-            $em->getConfiguration()->setQueryCacheImpl( $this->getCacheImpl( 'query_cache', $id ) );
-            $em->getConfiguration()->setResultCacheImpl( $this->getCacheImpl( 'result_cache', $id ) );
+            $em->getMetadataFactory()->setCacheDriver($this->getCacheImpl('metadata_cache', $id));
+            $em->getConfiguration()->setQueryCacheImpl($this->getCacheImpl('query_cache', $id));
+            $em->getConfiguration()->setResultCacheImpl($this->getCacheImpl('result_cache', $id));
 
             try {
-                if (null === $em->getRepository( 'KayueWordpressBundle:Blog' )->findOneBy( array( 'id' => $id ) )) {
-                    throw new \Doctrine\ORM\ORMException( sprintf( 'Blog %d was not found.', $id ) );
+                if (null === $em->getRepository('KayueWordpressBundle:Blog')->findOneBy(array('id' => $id))) {
+                    throw new \Doctrine\ORM\ORMException(sprintf('Blog %d was not found.', $id));
                 }
-            } catch ( DBALException $e ) {
+            } catch (DBALException $e) {
                 if ($id > 1) {
-                    throw new \Exception( 'Multisite is not installed on your WordPress.' );
+                    throw new \Exception('Multisite is not installed on your WordPress.');
                 }
             }
 
-            $em->setBlogId( $id );
+            $em->setBlogId($id);
 
             $blog = new Blog();
-            $blog->setId( $id );
-            $blog->setEntityManager( $em );
+            $blog->setId($id);
+            $blog->setEntityManager($em);
 
             $this->blogs[$id] = $blog;
         }
@@ -74,12 +84,13 @@ class BlogManager extends AbstractManager implements BlogManagerInterface
 
     /**
      * @return Blog
+     *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Exception
      */
     public function getCurrentBlog()
     {
-        return $this->findBlogById( $this->getCurrentBlogId() );
+        return $this->findBlogById($this->getCurrentBlogId());
     }
 
     /**
@@ -97,9 +108,9 @@ class BlogManager extends AbstractManager implements BlogManagerInterface
     {
         $this->currentBlogId = $currentBlogId;
 
-        $event = new BlogEvent( $this->getCurrentBlog() );
-        $dispatcher = $this->container->get( 'event_dispatcher' );
-        $dispatcher->dispatch( BlogEvent::TYPE_SWITCH_BLOG, $event );
+        $event = new BlogEvent($this->getCurrentBlog());
+        $dispatcher = $this->container->get('event_dispatcher');
+        $dispatcher->dispatch(BlogEvent::TYPE_SWITCH_BLOG, $event);
     }
 
     /**
@@ -117,7 +128,6 @@ class BlogManager extends AbstractManager implements BlogManagerInterface
      * @param $blogId
      *
      * @return \Doctrine\Common\Cache\Cache
-     *
      */
     protected function getCacheImpl($cacheName, $blogId)
     {
@@ -143,13 +153,13 @@ class BlogManager extends AbstractManager implements BlogManagerInterface
                 );
         }
 
-        $namespace = 'mozart_bundle_blog_' . $blogId . '_' . md5(
-                $this->container->getParameter( 'kernel.root_dir' ) . $this->container->getParameter(
+        $namespace = 'mozart_bundle_blog_'.$blogId.'_'.md5(
+                $this->container->getParameter('kernel.root_dir').$this->container->getParameter(
                     'kernel.environment'
                 )
             );
 
-        $className = get_class( $baseCache );
+        $className = get_class($baseCache);
 
         switch ($className) {
             case 'Doctrine\Common\Cache\ApcCache':
@@ -162,18 +172,18 @@ class BlogManager extends AbstractManager implements BlogManagerInterface
             case 'Doctrine\Common\Cache\MemcacheCache':
                 $memcache = $baseCache->getMemcache();
                 $rawStats = $memcache->getExtendedStats();
-                $servers = array_keys( $rawStats );
+                $servers = array_keys($rawStats);
 
                 $cache = new $className();
                 $newMemcache = new Memcache();
 
                 foreach ($servers as $server) {
-                    $host = substr( $server, 0, strpos( $server, ':' ) );
-                    $port = substr( $server, strpos( $server, ':' ) + 1 );
-                    $newMemcache->connect( $host, $port );
+                    $host = substr($server, 0, strpos($server, ':'));
+                    $port = substr($server, strpos($server, ':') + 1);
+                    $newMemcache->connect($host, $port);
                 }
 
-                $cache->setMemcache( $newMemcache );
+                $cache->setMemcache($newMemcache);
                 break;
             case 'Doctrine\Common\Cache\MemcachedCache':
                 $memcached = $baseCache->getMemcached();
@@ -183,10 +193,10 @@ class BlogManager extends AbstractManager implements BlogManagerInterface
                 $newMemcached = new Memcached();
 
                 foreach ($servers as $server) {
-                    $newMemcached->connect( $server['host'], $server['port'] );
+                    $newMemcached->connect($server['host'], $server['port']);
                 }
 
-                $cache->setMemcached( $newMemcached );
+                $cache->setMemcached($newMemcached);
                 break;
             case 'Doctrine\Common\Cache\RedisCache':
                 $redis = $baseCache->getRedis();
@@ -196,19 +206,18 @@ class BlogManager extends AbstractManager implements BlogManagerInterface
                 $cache = new $className();
 
                 $newRedis = new Redis();
-                $newRedis->connect( $host, $port );
+                $newRedis->connect($host, $port);
 
-                $cache->setRedis( $newRedis );
+                $cache->setRedis($newRedis);
                 break;
             default:
                 throw new \InvalidArgumentException(
-                    sprintf( 'Unknown or unsupported cache type class in configuration: "%s"', get_class( $baseCache ) )
+                    sprintf('Unknown or unsupported cache type class in configuration: "%s"', get_class($baseCache))
                 );
         }
 
-        $cache->setNamespace( $namespace );
+        $cache->setNamespace($namespace);
 
         return $cache;
     }
-
 }

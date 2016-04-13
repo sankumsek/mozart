@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\Random.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -14,12 +22,11 @@ namespace Mozart\Component\Support;
  */
 class Random
 {
-  /**
+    /**
    * The maximum number of times name() and string() can loop.
    *
    * This prevents infinite loops if the length of the random value is very
    * small.
-   *
    */
   const MAXIMUM_TRIES = 100;
 
@@ -57,39 +64,39 @@ class Random
    *
    * @see \Mozart\Component\Support\Random::name()
    */
-  public function string($length = 8, $unique = FALSE, $validator = NULL)
+  public function string($length = 8, $unique = false, $validator = null)
   {
-    $counter = 0;
+      $counter = 0;
 
     // Continue to loop if $unique is TRUE and the generated string is not
     // unique or if $validator is a callable that returns FALSE. To generate a
     // random string this loop must be carried out at least once.
     do {
-      if ($counter == static::MAXIMUM_TRIES) {
-        throw new \RuntimeException('Unable to generate a unique random name');
-      }
-      $str = '';
-      for ($i = 0; $i < $length; $i++) {
-        $str .= chr(mt_rand(32, 126));
-      }
-      $counter++;
+        if ($counter === static::MAXIMUM_TRIES) {
+            throw new \RuntimeException('Unable to generate a unique random name');
+        }
+        $str = '';
+        for ($i = 0; $i < $length; ++$i) {
+            $str .= chr(mt_rand(32, 126));
+        }
+        ++$counter;
 
-      $continue = FALSE;
-      if ($unique) {
-        $continue = isset($this->strings[$str]);
-      }
-      if (!$continue && is_callable($validator)) {
-        // If the validator callback returns FALSE generate another random
+        $continue = false;
+        if ($unique) {
+            $continue = isset($this->strings[$str]);
+        }
+        if (!$continue && is_callable($validator)) {
+            // If the validator callback returns FALSE generate another random
         // string.
         $continue = !call_user_func($validator, $str);
-      }
+        }
     } while ($continue);
 
-    if ($unique) {
-      $this->strings[$str] = TRUE;
-    }
+      if ($unique) {
+          $this->strings[$str] = true;
+      }
 
-    return $str;
+      return $str;
   }
 
   /**
@@ -112,28 +119,28 @@ class Random
    *
    * @see \Mozart\Component\Support\Random::string()
    */
-  public function name($length = 8, $unique = FALSE)
+  public function name($length = 8, $unique = false)
   {
-    $values = array_merge(range(65, 90), range(97, 122), range(48, 57));
-    $max = count($values) - 1;
-    $counter = 0;
+      $values = array_merge(range(65, 90), range(97, 122), range(48, 57));
+      $max = count($values) - 1;
+      $counter = 0;
 
-    do {
-      if ($counter == static::MAXIMUM_TRIES) {
-        throw new \RuntimeException('Unable to generate a unique random name');
+      do {
+          if ($counter === static::MAXIMUM_TRIES) {
+              throw new \RuntimeException('Unable to generate a unique random name');
+          }
+          $str = chr(mt_rand(97, 122));
+          for ($i = 1; $i < $length; ++$i) {
+              $str .= chr($values[mt_rand(0, $max)]);
+          }
+          ++$counter;
+      } while ($unique && isset($this->names[$str]));
+
+      if ($unique) {
+          $this->names[$str] = true;
       }
-      $str = chr(mt_rand(97, 122));
-      for ($i = 1; $i < $length; $i++) {
-        $str .= chr($values[mt_rand(0, $max)]);
-      }
-      $counter++;
-    } while ($unique && isset($this->names[$str]));
 
-    if ($unique) {
-      $this->names[$str] = TRUE;
-    }
-
-    return $str;
+      return $str;
   }
 
   /**
@@ -148,14 +155,13 @@ class Random
    */
   public function object($size = 4)
   {
-    $object = new \stdClass();
-    for ($i = 0; $i < $size; $i++) {
-      $random_key = $this->name();
-      $random_value = $this->string();
-      $object->{$random_key} = $random_value;
-    }
+      $object = new \stdClass();
+      for ($i = 0; $i < $size; ++$i) {
+          $random_key = $this->name();
+          $random_value = $this->string();
+          $object->{$random_key} = $random_value;
+      }
 
-    return $object;
+      return $object;
   }
-
 }

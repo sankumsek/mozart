@@ -1,41 +1,52 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\PostBundle\Admin\Connection\Dropdown;
 
 class UserDropdown extends PostDropdown
 {
     public function __construct($directed, $title)
     {
-        parent::__construct( $directed, $title );
+        parent::__construct($directed, $title);
 
-        add_action( 'pre_user_query', array( __CLASS__, 'massage_query' ), 9 );
+        add_action('pre_user_query', array(__CLASS__, 'massage_query'), 9);
 
-        add_action( 'restrict_manage_users', array( $this, 'show_dropdown' ) );
+        add_action('restrict_manage_users', array($this, 'show_dropdown'));
     }
 
     public static function massage_query($query)
     {
-        if ( isset( $query->_p2p_capture ) )
+        if (isset($query->_p2p_capture)) {
             return;
+        }
 
         // Don't overwrite existing P2P query
-        if ( isset( $query->query_vars['connected_type'] ) )
+        if (isset($query->query_vars['connected_type'])) {
             return;
+        }
 
-        _p2p_append( $query->query_vars, self::get_qv() );
+        _p2p_append($query->query_vars, self::get_qv());
     }
 
     protected function render_dropdown()
     {
-        return html( 'div', array(
-            'style' => 'float: right; margin-left: 16px'
+        return html('div', array(
+            'style' => 'float: right; margin-left: 16px',
         ),
             parent::render_dropdown(),
-            html( 'input', array(
+            html('input', array(
                 'type' => 'submit',
                 'class' => 'button',
-                'value' => __( 'Filter', P2P_TEXTDOMAIN )
-            ) )
+                'value' => __('Filter', P2P_TEXTDOMAIN),
+            ))
         );
     }
 }

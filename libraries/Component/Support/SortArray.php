@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains \Mozart\Component\Support\SortArray.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -14,7 +22,7 @@ namespace Mozart\Component\Support;
  */
 class SortArray
 {
-  /**
+    /**
    * Sorts a structured array by the 'weight' element.
    *
    * Note that the sorting is by the 'weight' array element, not by the render
@@ -34,7 +42,7 @@ class SortArray
    */
   public static function sortByWeightElement(array $a, array $b)
   {
-    return static::sortByKeyInt($a, $b, 'weight');
+      return static::sortByKeyInt($a, $b, 'weight');
   }
 
   /**
@@ -53,28 +61,28 @@ class SortArray
    */
   public static function sortByTitleElement($a, $b)
   {
-    return static::sortByKeyString($a, $b, 'title');
+      return static::sortByKeyString($a, $b, 'title');
   }
 
-  /**
-   * Sorts a structured array by '#title' property.
-   *
-   * Callback for uasort() within:
-   * - system_modules()
-   * - theme_simpletest_test_table()
-   *
-   * @param array $a
-   *   First item for comparison. The compared items should be associative arrays
-   *   that optionally include a '#title' key.
-   * @param array $b
-   *   Second item for comparison.
-   *
-   * @return int
-   *   The comparison result for uasort().
-   */
+   /**
+    * Sorts a structured array by '#title' property.
+    *
+    * Callback for uasort() within:
+    * - system_modules()
+    * - theme_simpletest_test_table()
+    *
+    * @param array $a
+    *   First item for comparison. The compared items should be associative arrays
+    *   that optionally include a '#title' key.
+    * @param array $b
+    *   Second item for comparison.
+    *
+    * @return int
+    *   The comparison result for uasort().
+    */
    public static function sortByTitleProperty($a, $b)
    {
-     return static::sortByKeyString($a, $b, '#title');
+       return static::sortByKeyString($a, $b, '#title');
    }
 
   /**
@@ -94,16 +102,16 @@ class SortArray
    */
   public static function sortByWeightAndTitleKey($a, $b, $weight_key = 'weight', $title_key = 'title')
   {
-    $a = (array) $a;
-    $b = (array) $b;
+      $a = (array) $a;
+      $b = (array) $b;
 
-    $weight_cmp = static::sortByKeyInt($a, $b, $weight_key);
+      $weight_cmp = static::sortByKeyInt($a, $b, $weight_key);
 
-    if ($weight_cmp === 0) {
-      return static::sortByKeyString($a, $b, $title_key);
-    }
+      if ($weight_cmp === 0) {
+          return static::sortByKeyString($a, $b, $title_key);
+      }
 
-    return $weight_cmp;
+      return $weight_cmp;
   }
 
   /**
@@ -121,10 +129,10 @@ class SortArray
    */
   public static function sortByKeyString($a, $b, $key)
   {
-    $a_title = (is_array($a) && isset($a[$key])) ? $a[$key] : '';
-    $b_title = (is_array($b) && isset($b[$key])) ? $b[$key] : '';
+      $a_title = (is_array($a) && isset($a[$key])) ? $a[$key] : '';
+      $b_title = (is_array($b) && isset($b[$key])) ? $b[$key] : '';
 
-    return strnatcasecmp($a_title, $b_title);
+      return strnatcasecmp($a_title, $b_title);
   }
 
   /**
@@ -142,14 +150,13 @@ class SortArray
    */
   public static function sortByKeyInt($a, $b, $key)
   {
-    $a_weight = (is_array($a) && isset($a[$key])) ? $a[$key] : 0;
-    $b_weight = (is_array($b) && isset($b[$key])) ? $b[$key] : 0;
+      $a_weight = (is_array($a) && isset($a[$key])) ? $a[$key] : 0;
+      $b_weight = (is_array($b) && isset($b[$key])) ? $b[$key] : 0;
 
-    if ($a_weight == $b_weight) {
-      return 0;
-    }
+      if ($a_weight === $b_weight) {
+          return 0;
+      }
 
-    return ($a_weight < $b_weight) ? -1 : 1;
+      return ($a_weight < $b_weight) ? -1 : 1;
   }
-
 }

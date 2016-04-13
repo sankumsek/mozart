@@ -1,8 +1,17 @@
 <?php
-/**
- * Copyright 2014 Alexandru Furculita <alex@rhetina.com>
+
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
  */
 
+/**
+ * Copyright 2014 Alexandru Furculita <alex@rhetina.com>.
+ */
 namespace Mozart\Bundle\MenuBundle\EventListener;
 
 use Mozart\Component\Menu\Event\MenuEvent;
@@ -12,30 +21,30 @@ class MenuEventListener
 {
     public function onKernelBoot()
     {
-        add_filter( 'custom_menu_order', '__return_true' );
+        add_filter('custom_menu_order', '__return_true');
         add_filter(
             MenuEvents::ORDER,
             function ($menuOrder) {
                 $event = new MenuEvent();
-                $event->setAdminMenuOrder( $menuOrder );
+                $event->setAdminMenuOrder($menuOrder);
                 /** @var MenuEvent $event */
-                $event = \Mozart::dispatch( MenuEvents::ORDER, $event );
+                $event = \Mozart::dispatch(MenuEvents::ORDER, $event);
 
                 return $event->getAdminMenuOrder();
             },
             0
         );
 
-        /**
+        /*
          * @see add_menu_classes
          */
         add_filter(
             MenuEvents::FILTER,
             function ($menu) {
                 $event = new MenuEvent();
-                $event->setMenu( $menu );
+                $event->setMenu($menu);
                 /** @var MenuEvent $event */
-                $event = \Mozart::dispatch( MenuEvents::FILTER, $event );
+                $event = \Mozart::dispatch(MenuEvents::FILTER, $event);
 
                 return $event->getMenu();
             },
@@ -48,7 +57,7 @@ class MenuEventListener
             function () {
                 wp_enqueue_script(
                     'mozart-menu-delete',
-                    plugins_url( '/mozart/public/bundles/mozart/menu/js/delete.js' )
+                    plugins_url('/mozart/public/bundles/mozart/menu/js/delete.js')
                 );
             }
         );

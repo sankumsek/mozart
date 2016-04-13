@@ -1,10 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 /**
  * @file
  * Contains Mozart\Component\Support\DiffArray.
  */
-
 namespace Mozart\Component\Support;
 
 /**
@@ -14,7 +22,7 @@ namespace Mozart\Component\Support;
  */
 class DiffArray
 {
-  /**
+    /**
    * Recursively computes the difference of arrays with additional index check.
    *
    * This is a version of array_diff_assoc() that supports multidimensional
@@ -31,24 +39,23 @@ class DiffArray
    */
   public static function diffAssocRecursive(array $array1, array $array2)
   {
-    $difference = array();
+      $difference = array();
 
-    foreach ($array1 as $key => $value) {
-      if (is_array($value)) {
-        if (!array_key_exists($key, $array2) || !is_array($array2[$key])) {
-          $difference[$key] = $value;
-        } else {
-          $new_diff = static::diffAssocRecursive($value, $array2[$key]);
-          if (!empty($new_diff)) {
-            $difference[$key] = $new_diff;
+      foreach ($array1 as $key => $value) {
+          if (is_array($value)) {
+              if (!array_key_exists($key, $array2) || !is_array($array2[$key])) {
+                  $difference[$key] = $value;
+              } else {
+                  $new_diff = static::diffAssocRecursive($value, $array2[$key]);
+                  if (!empty($new_diff)) {
+                      $difference[$key] = $new_diff;
+                  }
+              }
+          } elseif (!array_key_exists($key, $array2) || $array2[$key] !== $value) {
+              $difference[$key] = $value;
           }
-        }
-      } elseif (!array_key_exists($key, $array2) || $array2[$key] !== $value) {
-        $difference[$key] = $value;
       }
-    }
 
-    return $difference;
+      return $difference;
   }
-
 }

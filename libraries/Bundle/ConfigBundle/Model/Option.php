@@ -1,31 +1,40 @@
 <?php
 
+/*
+ * This file is part of the Mozart library.
+ *
+ * (c) Alexandru Furculita <alex@rhetina.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Mozart\Bundle\ConfigBundle\Model;
 
 class Option
 {
     /**
-     * @var int $id
+     * @var int
      */
     protected $id;
 
     /**
-     * @var string $name
+     * @var string
      */
     protected $name;
 
     /**
-     * @var string $value
+     * @var string
      */
     protected $value;
 
     /**
-     * @var string $autoload
+     * @var string
      */
     protected $autoload = 'yes';
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -35,7 +44,7 @@ class Option
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      */
@@ -45,7 +54,7 @@ class Option
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -55,7 +64,7 @@ class Option
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
      */
@@ -65,7 +74,7 @@ class Option
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -75,7 +84,7 @@ class Option
     }
 
     /**
-     * Set autoload
+     * Set autoload.
      *
      * @param string $autoload Yes or no
      */
@@ -85,7 +94,7 @@ class Option
     }
 
     /**
-     * Get autoload
+     * Get autoload.
      *
      * @return string
      */

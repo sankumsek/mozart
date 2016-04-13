@@ -1,7 +1,7 @@
 <?php
 /**
  * Code-snippet for WordPress pointers.
- * Used in function TheLib::pointer()
+ * Used in function TheLib::pointer().
  *
  * Variables:
  *   - $pointer_id
@@ -15,12 +15,12 @@ $code = <<<EOC
     <p>$body</p>
 </div>
 EOC;
-$code = str_replace( array("\r", "\n"), '', $code );
+$code = str_replace(array("\r", "\n"), '', $code);
 ?>
 <script>
     jQuery(document).ready(function () {
         if ( typeof( jQuery().pointer ) != 'undefined' ) {
-            jQuery( '<?php echo esc_attr( $html_el ); ?>' ).pointer({
+            jQuery( '<?php echo esc_attr($html_el); ?>' ).pointer({
                 content: '<?php echo $code; ?>',
                 position: {
                     edge: 'left',
@@ -28,7 +28,7 @@ $code = str_replace( array("\r", "\n"), '', $code );
                 },
                 close: function () {
                     jQuery.post( ajaxurl, {
-                        pointer: '<?php echo esc_js( $pointer_id ) ?>',
+                        pointer: '<?php echo esc_js($pointer_id) ?>',
                         action: 'dismiss-wp-pointer'
                     });
                 }
